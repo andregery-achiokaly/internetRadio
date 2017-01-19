@@ -1,4 +1,4 @@
-package com.noname.internetradio3;
+package com.somenameofpackage.internetradiowithmosby;
 
 
 import android.media.AudioManager;
