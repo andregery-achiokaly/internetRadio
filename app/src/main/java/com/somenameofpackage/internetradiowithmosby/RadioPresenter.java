@@ -8,6 +8,8 @@ import android.os.IBinder;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
+import static android.support.v4.app.ServiceCompat.START_STICKY;
+
 class RadioPresenter extends MvpBasePresenter<RadioView> {
     private RadioModel radioModel;
     private RadioListener radioListener = new RadioListener() {
@@ -31,6 +33,7 @@ class RadioPresenter extends MvpBasePresenter<RadioView> {
 
     private void initService(final String source, Context context) {
         Intent intent = new Intent(context, RadioService.class);
+        intent.addFlags(START_STICKY);
         context.startService(intent);
 
         ServiceConnection sConn = new ServiceConnection() {
@@ -65,7 +68,7 @@ class RadioPresenter extends MvpBasePresenter<RadioView> {
     public void detachView(boolean retainPresenterInstance) {
         super.detachView(retainPresenterInstance);
         if (!retainPresenterInstance) {
-            if (radioModel != null) radioModel.closeMediaPlayer();
+//            if (radioModel != null) radioModel.closeMediaPlayer();
         }
     }
 }
