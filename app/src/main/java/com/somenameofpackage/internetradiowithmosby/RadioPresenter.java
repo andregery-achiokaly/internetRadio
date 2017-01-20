@@ -31,6 +31,7 @@ class RadioPresenter extends MvpBasePresenter<RadioView> {
 
     private void initService(final String source, Context context) {
         Intent intent = new Intent(context, RadioService.class);
+        context.startService(intent);
 
         ServiceConnection sConn = new ServiceConnection() {
             public void onServiceConnected(ComponentName name, IBinder binder) {
