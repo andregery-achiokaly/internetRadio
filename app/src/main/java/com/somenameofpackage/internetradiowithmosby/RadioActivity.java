@@ -11,7 +11,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class RadioActivity extends MvpActivity<RadioView, RadioPresenter> implements RadioView {
-    final String DATA_STREAM = "http://online.radiorecord.ru:8101/rr_128";
+    final String SOURCE = "http://cast.radiogroup.com.ua:8000/europaplus";
 
     @BindView(R.id.message)
     TextView textView;
@@ -31,7 +31,7 @@ public class RadioActivity extends MvpActivity<RadioView, RadioPresenter> implem
 
     @OnClick(R.id.play_btn)
     public void onPlayClicked() {
-        presenter.startPlaying(DATA_STREAM);
+        presenter.startPlaying(SOURCE, getApplicationContext());
     }
 
     @OnClick(R.id.stop_btn)
