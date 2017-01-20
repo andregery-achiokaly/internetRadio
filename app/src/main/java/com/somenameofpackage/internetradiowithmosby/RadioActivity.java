@@ -2,14 +2,19 @@ package com.somenameofpackage.internetradiowithmosby;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.widget.TextView;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class RadioActivity extends MvpActivity<RadioView, RadioPresenter> implements RadioView {
     final String DATA_STREAM = "http://online.radiorecord.ru:8101/rr_128";
+
+    @BindView(R.id.message)
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +40,12 @@ public class RadioActivity extends MvpActivity<RadioView, RadioPresenter> implem
     }
 
     @Override
-    public void showPlay() {
-
+    public void showPlay(String message) {
+        textView.setText(message);
     }
 
     @Override
-    public void showPause() {
-
+    public void showPause(String message) {
+        textView.setText(message);
     }
 }

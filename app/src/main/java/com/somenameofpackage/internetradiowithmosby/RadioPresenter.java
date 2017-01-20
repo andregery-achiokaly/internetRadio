@@ -1,12 +1,20 @@
 package com.somenameofpackage.internetradiowithmosby;
 
 
-import android.util.Log;
-
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 class RadioPresenter extends MvpBasePresenter<RadioView> {
-    RadioModel radioModel = new RadioModel();
+    RadioModel radioModel = new RadioModel(new RadioListener() {
+        @Override
+        public void onPlay(String message) {
+            getView().showPlay(message);
+        }
+
+        @Override
+        public void onPause(String message) {
+            getView().showPause(message);
+        }
+    });
 
     void startPlaying(String source) {
         radioModel.startPlay(source);
@@ -19,7 +27,7 @@ class RadioPresenter extends MvpBasePresenter<RadioView> {
     public void detachView(boolean retainPresenterInstance) {
         super.detachView(retainPresenterInstance);
         if (!retainPresenterInstance) {
-            Log.v("GGG", " detachView");
+            radioModel.closePlayer();
         }
     }
 }

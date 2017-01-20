@@ -10,14 +10,20 @@ import java.io.IOException;
 public class RadioModel implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener{
     private MediaPlayer mediaPlayer;
+    private RadioListener radioListener;
 
-    RadioModel(){
+    RadioModel(RadioListener radioListener){
+        this.radioListener = radioListener;
         Log.v("GGG", "Radiomodel create");
     }
 
     public void stopPlay(){
-        if (mediaPlayer.isPlaying())
-            mediaPlayer.pause();
+       if(mediaPlayer!=null) {
+           if (mediaPlayer.isPlaying()) {
+               mediaPlayer.pause();
+               radioListener.onPlay("I'm stop");
+           }
+       }
     }
 
     public void startPlay(String source){
@@ -33,6 +39,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
+        radioListener.onPlay("I'm playing");
     }
 
     private void createMediaPlayer(String source) {
