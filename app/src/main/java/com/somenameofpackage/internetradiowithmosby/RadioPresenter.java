@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
-
 import static android.support.v4.app.ServiceCompat.START_STICKY;
 
 class RadioPresenter extends MvpBasePresenter<RadioView> {
@@ -63,6 +62,9 @@ class RadioPresenter extends MvpBasePresenter<RadioView> {
 
     void stopPlaying() {
         if (radioModel != null) radioModel.stopPlay();
+        else {
+
+        }
     }
 
     public void detachView(boolean retainPresenterInstance) {

@@ -1,6 +1,5 @@
 package com.somenameofpackage.internetradiowithmosby;
 
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -12,7 +11,8 @@ public class RadioService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+        super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Nullable

@@ -10,7 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RadioActivity extends MvpActivity<RadioView, RadioPresenter> implements RadioView {
+public class RadioActivity extends MvpActivity<RadioView, RadioPresenter>  implements RadioView {
     final String SOURCE = "http://cast.radiogroup.com.ua:8000/europaplus";
 
     @BindView(R.id.message)
