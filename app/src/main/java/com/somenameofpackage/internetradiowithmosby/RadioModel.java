@@ -10,31 +10,32 @@ class RadioModel implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener {
     private MediaPlayer mediaPlayer;
     private RadioListener radioListener;
+    private boolean play = false;
 
     void stopPlay() {
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
                 radioListener.onPause("I'm stop");
+                play = false;
             }
         }
     }
 
-    void startPlay(String source) {
-        if (mediaPlayer == null) createMediaPlayer(source);
+    void startPlay() {
         if (!mediaPlayer.isPlaying()) {
             mediaPlayer.start();
+            play = true;
         }
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        //show wait dialog
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        mp.start();
+        if (play) mp.start();
         if (mp.isPlaying()) {
             radioListener.onPlay("I'm playing");
         }
@@ -59,6 +60,7 @@ class RadioModel implements MediaPlayer.OnPreparedListener,
             try {
                 mediaPlayer.release();
                 mediaPlayer = null;
+                play = false;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -70,6 +72,8 @@ class RadioModel implements MediaPlayer.OnPreparedListener,
     }
 
     void setSource(String source) {
-        createMediaPlayer(source);
+        if(mediaPlayer == null) {
+            createMediaPlayer(source);
+        }
     }
 }

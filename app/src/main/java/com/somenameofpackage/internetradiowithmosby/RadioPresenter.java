@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+
 import static android.support.v4.app.ServiceCompat.START_STICKY;
 
 class RadioPresenter extends MvpBasePresenter<RadioView> {
@@ -31,17 +32,25 @@ class RadioPresenter extends MvpBasePresenter<RadioView> {
     private boolean bound = false;
 
     private void initService(final String source, Context context) {
+        startService(context);
+        bindToService(source, context);
+    }
+
+    private void startService(Context context) {
         Intent intent = new Intent(context, RadioService.class);
         intent.addFlags(START_STICKY);
         context.startService(intent);
+    }
+
+    public void bindToService(final String source, Context context) {
+        Intent intent = new Intent(context, RadioService.class);
 
         ServiceConnection sConn = new ServiceConnection() {
             public void onServiceConnected(ComponentName name, IBinder binder) {
                 bound = true;
                 radioModel = ((RadioService.RadioBinder) binder).getModel(radioListener, source);
-                if (radioModel != null) {
-                    radioModel.startPlay(source);
-                }
+                getView().showMessage("Wait...");
+                radioModel.startPlay();
             }
 
             public void onServiceDisconnected(ComponentName name) {
@@ -57,14 +66,11 @@ class RadioPresenter extends MvpBasePresenter<RadioView> {
         if (!bound) {
             initService(source, context);
         }
-        if (radioModel != null) radioModel.startPlay(source);
+        if (radioModel != null) radioModel.startPlay();
     }
 
     void stopPlaying() {
         if (radioModel != null) radioModel.stopPlay();
-        else {
-
-        }
     }
 
     public void detachView(boolean retainPresenterInstance) {
