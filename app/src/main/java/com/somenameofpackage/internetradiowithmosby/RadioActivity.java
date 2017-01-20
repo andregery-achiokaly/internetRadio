@@ -35,12 +35,12 @@ public class RadioActivity extends MvpActivity<RadioView, RadioPresenter> implem
     }
 
     @Override
-    public void startPlay() {
+    public void showPlay() {
 
     }
 
     @Override
-    public void stopPlay() {
+    public void showPause() {
 
     }
 }
