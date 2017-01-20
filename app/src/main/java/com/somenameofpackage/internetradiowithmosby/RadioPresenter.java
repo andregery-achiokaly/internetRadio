@@ -7,12 +7,17 @@ class RadioPresenter extends MvpBasePresenter<RadioView> {
     RadioModel radioModel = new RadioModel(new RadioListener() {
         @Override
         public void onPlay(String message) {
-            getView().showPlay(message);
+            getView().showMessage(message);
         }
 
         @Override
         public void onPause(String message) {
-            getView().showPause(message);
+            getView().showMessage(message);
+        }
+
+        @Override
+        public void onError(String message) {
+            getView().showMessage(message);
         }
     });
 

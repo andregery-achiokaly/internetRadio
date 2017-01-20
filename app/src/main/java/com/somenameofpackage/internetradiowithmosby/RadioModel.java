@@ -21,7 +21,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
        if(mediaPlayer!=null) {
            if (mediaPlayer.isPlaying()) {
                mediaPlayer.pause();
-               radioListener.onPlay("I'm stop");
+               radioListener.onPause("I'm stop");
            }
        }
     }
@@ -51,6 +51,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             mediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
+            radioListener.onError("Oh no... Something went wrong :(");
         }
     }
 

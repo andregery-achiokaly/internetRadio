@@ -40,12 +40,7 @@ public class RadioActivity extends MvpActivity<RadioView, RadioPresenter> implem
     }
 
     @Override
-    public void showPlay(String message) {
-        textView.setText(message);
-    }
-
-    @Override
-    public void showPause(String message) {
+    public void showMessage(String message) {
         textView.setText(message);
     }
 }
