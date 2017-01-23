@@ -1,7 +1,9 @@
-package com.somenameofpackage.internetradiowithmosby;
+package com.somenameofpackage.internetradiowithmosby.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.somenameofpackage.internetradiowithmosby.R;
 
 import butterknife.ButterKnife;
 

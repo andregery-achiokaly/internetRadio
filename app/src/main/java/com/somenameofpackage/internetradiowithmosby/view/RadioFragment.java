@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby;
+package com.somenameofpackage.internetradiowithmosby.view;
 
 
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
+import com.somenameofpackage.internetradiowithmosby.R;
+import com.somenameofpackage.internetradiowithmosby.presenter.RadioPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

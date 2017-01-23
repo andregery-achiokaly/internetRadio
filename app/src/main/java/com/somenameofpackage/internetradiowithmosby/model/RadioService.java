@@ -1,10 +1,12 @@
-package com.somenameofpackage.internetradiowithmosby;
+package com.somenameofpackage.internetradiowithmosby.model;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+
+import com.somenameofpackage.internetradiowithmosby.presenter.RadioListener;
 
 public class RadioService extends Service {
     RadioModel radioModel = new RadioModel();
@@ -21,8 +23,8 @@ public class RadioService extends Service {
         return new RadioBinder();
     }
 
-    class RadioBinder extends Binder {
-        RadioModel getModel(RadioListener listener, String source) {
+   public class RadioBinder extends Binder {
+        public RadioModel getModel(RadioListener listener, String source) {
             radioModel.setSource(source);
             radioModel.setRadioListener(listener);
             return radioModel;

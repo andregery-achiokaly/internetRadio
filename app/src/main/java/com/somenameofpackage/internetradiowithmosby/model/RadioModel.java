@@ -1,18 +1,20 @@
-package com.somenameofpackage.internetradiowithmosby;
+package com.somenameofpackage.internetradiowithmosby.model;
 
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
+import com.somenameofpackage.internetradiowithmosby.presenter.RadioListener;
+
 import java.io.IOException;
 
-class RadioModel implements MediaPlayer.OnPreparedListener,
+public class RadioModel implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener {
     private MediaPlayer mediaPlayer;
     private RadioListener radioListener;
     private boolean play = false;
 
-    void stopPlay() {
+    public void stopPlay() {
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
@@ -22,7 +24,7 @@ class RadioModel implements MediaPlayer.OnPreparedListener,
         }
     }
 
-    void startPlay() {
+    public void startPlay() {
         if (!mediaPlayer.isPlaying()) {
             mediaPlayer.start();
             play = true;
@@ -55,7 +57,7 @@ class RadioModel implements MediaPlayer.OnPreparedListener,
         }
     }
 
-    void closeMediaPlayer() {
+    public void closeMediaPlayer() {
         if (mediaPlayer != null) {
             try {
                 mediaPlayer.release();
@@ -72,7 +74,7 @@ class RadioModel implements MediaPlayer.OnPreparedListener,
     }
 
     void setSource(String source) {
-        if(mediaPlayer == null) {
+        if (mediaPlayer == null) {
             createMediaPlayer(source);
         }
     }

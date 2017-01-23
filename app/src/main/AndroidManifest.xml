@@ -10,14 +10,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.somenameofpackage.internetradiowithmosby.RadioActivity">
+        <activity android:name="com.somenameofpackage.internetradiowithmosby.view.RadioActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <service android:name=".RadioService"/>
+        <service android:name=".model.RadioService"/>
     </application>
 
 </manifest>
