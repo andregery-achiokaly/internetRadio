@@ -31,6 +31,12 @@ public class RadioService extends Service {
         }
     }
 
+
+    @Override
+    public void onRebind(Intent intent) {
+        super.onRebind(intent);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

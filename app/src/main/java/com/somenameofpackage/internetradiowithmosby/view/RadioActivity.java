@@ -21,6 +21,7 @@ public class RadioActivity extends AppCompatActivity {
 
         //temporary
         stationsDB = new StationsDB(getApplicationContext());
+        stationsDB.clearBD();
         stationsDB.addStation("BestFM", "http://radio.bestfm.fm:8080/bestfm", BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round));
         stationsDB.addStation("JamFM", "http://cast.radiogroup.com.ua:8000/jamfm", BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
 
@@ -37,7 +38,6 @@ public class RadioActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         //temporary
         stationsDB.clearBD();
         stationsDB.closeBD();

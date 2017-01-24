@@ -22,7 +22,7 @@ class PlayerUtil {
 
     private static void bindToService(final ServiceConnection serviceConnection, Context context) {
         Intent intent = new Intent(context, RadioService.class);
-        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        context.bindService(intent, serviceConnection, 0);
     }
 
     static void stopService(Context context) {

@@ -8,18 +8,19 @@ import android.os.IBinder;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
+import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
 import com.somenameofpackage.internetradiowithmosby.view.controlUI.RadioView;
 
-import static com.somenameofpackage.internetradiowithmosby.presenter.PlayerUtil.initPlayerService;
 
 public class RadioPresenter extends MvpBasePresenter<RadioView> {
     private RadioModel radioModel;
     private ServiceConnection serviceConnection;
     private RadioListener radioListener;
-
     private boolean bound = false;
+    private StationsDB stationsDB;
 
-    public RadioPresenter() {
+    public RadioPresenter(Context context) {
+        stationsDB = new StationsDB(context);
         radioListenerInit();
     }
 
@@ -42,10 +43,12 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         };
     }
 
-    public void startPlaying(String source, Context context) {
+    public void startPlaying(Context context) {
+        String source = stationsDB.getPlaying().getSource();
+        stationsDB.setPlayStation(source);
         if (!bound) {
-            serviceConnection = new RadioPresenterServiceConnection(source);
-            initPlayerService(serviceConnection, context);
+            serviceConnection = new RadioServiceConnection(source);
+            PlayerUtil.initPlayerService(serviceConnection, context);
         }
         if (radioModel != null) radioModel.startPlay(source);
     }
@@ -57,16 +60,10 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         PlayerUtil.stopService(context);
     }
 
-    void closePlayer(Context context) {
-        radioModel.closeMediaPlayer();
-        context.unbindService(serviceConnection);
-        PlayerUtil.stopService(context);
-    }
-
-    class RadioPresenterServiceConnection implements ServiceConnection {
+    private class RadioServiceConnection implements ServiceConnection {
         String source;
 
-        public RadioPresenterServiceConnection(String source) {
+        RadioServiceConnection(String source) {
             this.source = source;
         }
 

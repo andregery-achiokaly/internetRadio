@@ -18,8 +18,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ControlFragment extends MvpFragment<RadioView, RadioPresenter> implements RadioView {
-    final String SOURCE = "http://cast.radiogroup.com.ua:8000/europaplus";
-
     @BindView(R.id.message)
     TextView textView;
 
@@ -40,13 +38,13 @@ public class ControlFragment extends MvpFragment<RadioView, RadioPresenter> impl
     @NonNull
     @Override
     public RadioPresenter createPresenter() {
-        return new RadioPresenter();
+        return new RadioPresenter(getContext());
     }
 
 
     @OnClick(R.id.play_btn)
     public void onPlayClicked() {
-        presenter.startPlaying(SOURCE, getContext());
+        presenter.startPlaying(getContext());
     }
 
     @OnClick(R.id.stop_btn)

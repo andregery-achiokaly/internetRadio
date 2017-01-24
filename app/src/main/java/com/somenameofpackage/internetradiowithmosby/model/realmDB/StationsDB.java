@@ -11,10 +11,11 @@ import io.realm.RealmResults;
 
 public class StationsDB {
     private Realm realm;
+    private static final String nameOfConfiguration = "default2";
 
     public StationsDB(Context context) {
         RealmConfiguration config2 = new RealmConfiguration.Builder(context)
-                .name("default2")
+                .name(nameOfConfiguration)
                 .schemaVersion(2)
                 .deleteRealmIfMigrationNeeded()
                 .build();
@@ -22,7 +23,21 @@ public class StationsDB {
         realm = Realm.getInstance(config2);
     }
 
-    public void addStation(String stationName, String stationSource, Bitmap icon){
+    public Station getPlaying() {
+        realm.beginTransaction();
+        Station station = realm
+                .where(Station.class)
+                .equalTo(Station.getIsPlayFieldName(), true)
+                .findFirst();
+
+        if (station == null) {
+            station = realm.where(Station.class).findFirst();
+        }
+        realm.commitTransaction();
+        return station;
+    }
+
+    public void addStation(String stationName, String stationSource, Bitmap icon) {
         realm.beginTransaction();
         Station station = realm.createObject(Station.class);
         station.setName(stationName);
@@ -35,29 +50,53 @@ public class StationsDB {
         realm.commitTransaction();
     }
 
-    public void deleteStation(){
+    public void deleteStation() {
 
     }
 
-    public void getStation(){
+    public void getStation() {
 
     }
 
-    public RealmResults<Station> getStations(){
+    public RealmResults<Station> getStations() {
         return realm.allObjects(Station.class);
     }
 
-    public void changeStation(){
+    public void changeStation() {
 
+    }
+
+    public void setPlayStation(String source) {
+        setAllPlayStationOff();
+        realm.beginTransaction();
+        Station station = realm
+                .where(Station.class)
+                .equalTo(Station.getSourceFieldName(), source)
+                .findFirst();
+
+        if (station != null) station.setPlay(true);
+        realm.commitTransaction();
     }
 
     public void closeBD() {
         realm.close();
     }
 
-    public void clearBD(){
+    public void clearBD() {
         realm.beginTransaction();
         realm.clear(Station.class);
+        realm.commitTransaction();
+    }
+
+    public void setAllPlayStationOff() {
+        realm.beginTransaction();
+
+        RealmResults<Station> stations = realm.where(Station.class).findAll();
+        if (!stations.isEmpty()) {
+            for (int i = stations.size() - 1; i >= 0; i--) {
+                stations.get(i).setPlay(false);
+            }
+        }
         realm.commitTransaction();
     }
 }

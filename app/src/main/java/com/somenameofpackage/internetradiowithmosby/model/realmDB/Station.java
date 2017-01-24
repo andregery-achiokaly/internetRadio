@@ -2,6 +2,7 @@ package com.somenameofpackage.internetradiowithmosby.model.realmDB;
 
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
 public class Station extends RealmObject {
@@ -10,6 +11,7 @@ public class Station extends RealmObject {
     @Required
     private String name;
     @Required
+    @PrimaryKey
     private String source;
     @Required
     private byte[] image;
@@ -46,4 +48,9 @@ public class Station extends RealmObject {
     public void setPlay(boolean play) {
         isPlay = play;
     }
+
+    public static String getSourceFieldName(){ return "source";}
+    public static String getNameFieldName(){ return "name";}
+    public static String getImageFieldName(){ return "image";}
+    public static String getIsPlayFieldName(){ return "isPlay";}
 }

@@ -52,10 +52,10 @@ public class StationsListFragment extends MvpFragment<StationsView, StationsPres
                 new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        presenter.startPlay(((StationsListAdapter) recyclerView.getAdapter())
-                                        .getStationById(position)
-                                        .getSource(),
-                                getContext());
+                        String source = ((StationsListAdapter) recyclerView.getAdapter())
+                                .getStationById(position)
+                                .getSource();
+                        presenter.startPlay(source, getContext());
                         oldPosition = currentPosition;
                         currentPosition = position;
                     }
@@ -75,7 +75,7 @@ public class StationsListFragment extends MvpFragment<StationsView, StationsPres
 
     @Override
     public void showCurrentStation() {
-        recyclerView.getChildAt(currentPosition).setBackgroundColor(Color.RED);
         recyclerView.getChildAt(oldPosition).setBackgroundColor(Color.WHITE);
+        recyclerView.getChildAt(currentPosition).setBackgroundColor(Color.RED);
     }
 }
