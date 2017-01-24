@@ -3,9 +3,10 @@ package com.somenameofpackage.internetradiowithmosby.model.radio;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.util.Log;
+import android.media.audiofx.Visualizer;
 
 import com.somenameofpackage.internetradiowithmosby.presenter.RadioListener;
+import com.somenameofpackage.internetradiowithmosby.view.audioWave.AudioWaveView;
 
 import java.io.IOException;
 
@@ -14,6 +15,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
     private MediaPlayer mediaPlayer;
     private RadioListener radioListener;
     private String currentSource = "";
+
 
     public void stopPlay() {
         if (mediaPlayer != null) {
@@ -40,6 +42,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
 
     @Override
     public void onCompletion(MediaPlayer mp) {
+//        mVisualizer.setEnabled(false);
     }
 
     @Override
@@ -81,5 +84,9 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
         if (mediaPlayer == null) {
             createMediaPlayer(source);
         }
+    }
+
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
     }
 }

@@ -1,11 +1,13 @@
 package com.somenameofpackage.internetradiowithmosby.view;
 
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
+import com.somenameofpackage.internetradiowithmosby.view.audioWave.AudioWaveFragment;
 import com.somenameofpackage.internetradiowithmosby.view.controlUI.ControlFragment;
 import com.somenameofpackage.internetradiowithmosby.view.radioList.StationsListFragment;
 
@@ -18,7 +20,6 @@ public class RadioActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //temporary
         stationsDB = new StationsDB(getApplicationContext());
         stationsDB.clearBD();
@@ -28,6 +29,7 @@ public class RadioActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_radio_layout, new ControlFragment())
+                    .replace(R.id.fragment_audio_wave_layout, new AudioWaveFragment())
                     .replace(R.id.list_container, new StationsListFragment())
                     .commit();
         }
