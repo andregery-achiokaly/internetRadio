@@ -3,17 +3,16 @@ package com.somenameofpackage.internetradiowithmosby.model.radio;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.audiofx.Visualizer;
 
 import com.somenameofpackage.internetradiowithmosby.presenter.RadioListener;
-import com.somenameofpackage.internetradiowithmosby.view.audioWave.AudioWaveView;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class RadioModel implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener {
     private MediaPlayer mediaPlayer;
-    private RadioListener radioListener;
+    private LinkedList<RadioListener> radioListener = new LinkedList<>();
     private String currentSource = "";
 
 
@@ -21,7 +20,9 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
-                radioListener.onPause("I'm stop");
+                for (RadioListener r : radioListener) {
+                    if (r != null) r.onPause("I'm stop");
+                }
             }
         }
     }
@@ -42,18 +43,18 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-//        mVisualizer.setEnabled(false);
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
-        radioListener.onPlay("I'm playing");
+        for (RadioListener r : radioListener) if (r != null) r.onPlay("I'm playing");
     }
 
     private void createMediaPlayer(String source) {
         try {
-            mediaPlayer = new MediaPlayer();
+            if (mediaPlayer == null) mediaPlayer = new MediaPlayer();
+            else mediaPlayer.release();
             mediaPlayer.setDataSource(source);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setOnPreparedListener(this);
@@ -61,7 +62,8 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             mediaPlayer.setOnCompletionListener(this);
         } catch (IOException e) {
             e.printStackTrace();
-            radioListener.onError("RadioModel. Oh no... Something went wrong :(");
+            for (RadioListener r : radioListener)
+                if (r != null) r.onError("RadioModel. Oh no... Something went wrong :(");
         }
     }
 
@@ -76,8 +78,8 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
         }
     }
 
-    void setRadioListener(RadioListener radioListener) {
-        this.radioListener = radioListener;
+    void addRadioListener(RadioListener radioListener) {
+        this.radioListener.add(radioListener);
     }
 
     void setSource(String source) {

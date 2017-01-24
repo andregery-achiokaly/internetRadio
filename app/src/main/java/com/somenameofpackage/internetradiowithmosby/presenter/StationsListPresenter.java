@@ -15,8 +15,6 @@ import com.somenameofpackage.internetradiowithmosby.view.radioList.StationsView;
 
 import io.realm.RealmResults;
 
-import static com.somenameofpackage.internetradiowithmosby.presenter.PlayerUtil.initPlayerService;
-
 public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     private StationsDB stationsDB;
     private boolean bound = false;
@@ -27,28 +25,10 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         stationsDB = new StationsDB(context);
         radioListenerInit();
         String source = stationsDB.getPlaying().getSource();
-        initPlayerService(new StationsListServiceConnection(source), context);
+        PlayerUtil.initPlayerService(new StationsListServiceConnection(source), context);
     }
 
-    private void radioListenerInit() {
-        radioListener = new RadioListener() {
-            @Override
-            public void onPlay(String message) {
-                if (getView() != null)
-                    getView().showCurrentStation(stationsDB.getNumberOfPlayingStation());
-            }
 
-            @Override
-            public void onPause(String message) {
-
-            }
-
-            @Override
-            public void onError(String message) {
-
-            }
-        };
-    }
 
     public RealmResults<Station> getStations() {
         return stationsDB.getStations();
@@ -61,7 +41,7 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     public void startPlay(String source, Context context) {
         stationsDB.setPlayStation(source);
         if (!bound) {
-            initPlayerService(new StationsListServiceConnection(source), context);
+            PlayerUtil.initPlayerService(new StationsListServiceConnection(source), context);
         }
         if (radioModel != null) {
             radioModel.startPlay(source);
@@ -86,5 +66,25 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         public void onServiceDisconnected(ComponentName name) {
             bound = false;
         }
+    }
+
+    private void radioListenerInit() {
+        radioListener = new RadioListener() {
+            @Override
+            public void onPlay(String message) {
+                if (getView() != null)
+                    getView().showCurrentStation(stationsDB.getNumberOfPlayingStation());
+            }
+
+            @Override
+            public void onPause(String message) {
+
+            }
+
+            @Override
+            public void onError(String message) {
+
+            }
+        };
     }
 }

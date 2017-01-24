@@ -3,7 +3,6 @@ package com.somenameofpackage.internetradiowithmosby.presenter;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
-import android.media.MediaPlayer;
 import android.media.audiofx.Visualizer;
 import android.os.IBinder;
 
@@ -14,16 +13,19 @@ import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
 import com.somenameofpackage.internetradiowithmosby.view.audioWave.WaveView;
 
 public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
-    private MediaPlayer mediaPlayer;
+    private RadioModel radioModel;
+    private Visualizer mVisualizer;
+
     private RadioListener radioListener = new RadioListener() {
         @Override
         public void onPlay(String message) {
-
+            setupVisualizerFxAndUI();
         }
 
         @Override
         public void onPause(String message) {
-
+            mVisualizer.setEnabled(false);
+            mVisualizer.release();
         }
 
         @Override
@@ -39,8 +41,7 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
         ServiceConnection serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                RadioModel radioModel = ((RadioService.RadioBinder) iBinder).getModel(radioListener, source);
-                mediaPlayer = radioModel.getMediaPlayer();
+                radioModel = ((RadioService.RadioBinder) iBinder).getModel(radioListener, source);
                 setupVisualizerFxAndUI();
             }
 
@@ -54,13 +55,15 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     }
 
     private void setupVisualizerFxAndUI() {
-        Visualizer mVisualizer = new Visualizer(mediaPlayer.getAudioSessionId());
+        mVisualizer = new Visualizer(radioModel.getMediaPlayer().getAudioSessionId());
+        mVisualizer.setEnabled(false);
         mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-        mVisualizer.setDataCaptureListener(new Mv(), Visualizer.getMaxCaptureRate() / 2, true, false);
+        mVisualizer.setDataCaptureListener(new AudioWaveDataCaptureListener(),
+                Visualizer.getMaxCaptureRate() / 2, true, false);
         mVisualizer.setEnabled(true);
     }
 
-    private class Mv implements Visualizer.OnDataCaptureListener {
+    private class AudioWaveDataCaptureListener implements Visualizer.OnDataCaptureListener {
         public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
             if (getView() != null) getView().updateVisualizer(bytes);
         }

@@ -26,11 +26,15 @@ public class RadioService extends Service {
    public class RadioBinder extends Binder {
         public RadioModel getModel(RadioListener listener, String source) {
             radioModel.setSource(source);
-            radioModel.setRadioListener(listener);
+            radioModel.addRadioListener(listener);
             return radioModel;
         }
     }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+        return super.onUnbind(intent);
+    }
 
     @Override
     public void onRebind(Intent intent) {
