@@ -3,6 +3,7 @@ package com.somenameofpackage.internetradiowithmosby.model.radio;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.util.Log;
 
 import com.somenameofpackage.internetradiowithmosby.presenter.RadioListener;
 
@@ -32,6 +33,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             } else {
                 closeMediaPlayer();
                 createMediaPlayer(source);
+                currentSource = source;
             }
         }
     }
@@ -60,7 +62,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
         }
     }
 
-    public void closeMediaPlayer() {
+    void closeMediaPlayer() {
         if (mediaPlayer != null) {
             try {
                 mediaPlayer.release();

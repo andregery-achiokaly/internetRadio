@@ -17,22 +17,24 @@ import io.realm.RealmResults;
 
 import static com.somenameofpackage.internetradiowithmosby.presenter.PlayerUtil.initPlayerService;
 
-public class StationsPresenter extends MvpBasePresenter<StationsView> {
+public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     private StationsDB stationsDB;
     private boolean bound = false;
     private RadioModel radioModel;
     private RadioListener radioListener;
 
-    public StationsPresenter(Context context) {
+    public StationsListPresenter(Context context) {
         stationsDB = new StationsDB(context);
         radioListenerInit();
+        String source = stationsDB.getPlaying().getSource();
+        initPlayerService(new StationsListServiceConnection(source), context);
     }
 
     private void radioListenerInit() {
         radioListener = new RadioListener() {
             @Override
             public void onPlay(String message) {
-                getView().showCurrentStation();
+                getView().showCurrentStation(stationsDB.getNumberOfPlayingStation());
             }
 
             @Override
@@ -55,33 +57,32 @@ public class StationsPresenter extends MvpBasePresenter<StationsView> {
         stationsDB.closeBD();
     }
 
-    private ServiceConnection getServiceConnectionInit(final String source) {
-        return new ServiceConnection() {
-            public void onServiceConnected(ComponentName name, IBinder binder) {
-                bound = true;
-                radioModel = ((RadioService.RadioBinder) binder).getModel(radioListener, source);
-                radioModel.startPlay(source);
-            }
-
-            public void onServiceDisconnected(ComponentName name) {
-                bound = false;
-            }
-        };
-    }
-
-
     public void startPlay(String source, Context context) {
         stationsDB.setPlayStation(source);
         if (!bound) {
-            initPlayerService(getServiceConnectionInit(source), context);
+            initPlayerService(new StationsListServiceConnection(source), context);
         }
         if (radioModel != null) {
             radioModel.startPlay(source);
-            getView().showCurrentStation();
+            getView().showCurrentStation(stationsDB.getNumberOfPlayingStation());
         }
     }
 
-    public void startChangeStation() {
+    private class StationsListServiceConnection implements ServiceConnection {
+        String source;
 
+        StationsListServiceConnection(String source) {
+            this.source = source;
+        }
+
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            bound = true;
+            radioModel = ((RadioService.RadioBinder) binder).getModel(radioListener, source);
+            radioModel.startPlay(source);
+        }
+
+        public void onServiceDisconnected(ComponentName name) {
+            bound = false;
+        }
     }
 }

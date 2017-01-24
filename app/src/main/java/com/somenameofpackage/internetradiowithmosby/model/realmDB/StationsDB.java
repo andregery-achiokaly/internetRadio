@@ -37,6 +37,20 @@ public class StationsDB {
         return station;
     }
 
+    public int getNumberOfPlayingStation() {
+        realm.beginTransaction();
+        RealmResults<Station> stations = realm.where(Station.class).findAll();
+        int id = 0;
+        if (!stations.isEmpty()) {
+            for (int i = 0; i < stations.size(); i++) {
+                if (stations.get(i).isPlay()) break;
+                id++;
+            }
+        }
+        realm.commitTransaction();
+        return id;
+    }
+
     public void addStation(String stationName, String stationSource, Bitmap icon) {
         realm.beginTransaction();
         Station station = realm.createObject(Station.class);
@@ -50,20 +64,8 @@ public class StationsDB {
         realm.commitTransaction();
     }
 
-    public void deleteStation() {
-
-    }
-
-    public void getStation() {
-
-    }
-
     public RealmResults<Station> getStations() {
         return realm.allObjects(Station.class);
-    }
-
-    public void changeStation() {
-
     }
 
     public void setPlayStation(String source) {
@@ -88,7 +90,7 @@ public class StationsDB {
         realm.commitTransaction();
     }
 
-    public void setAllPlayStationOff() {
+    private void setAllPlayStationOff() {
         realm.beginTransaction();
 
         RealmResults<Station> stations = realm.where(Station.class).findAll();

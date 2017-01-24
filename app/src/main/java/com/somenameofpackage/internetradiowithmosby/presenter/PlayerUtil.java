@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
-
 import static android.support.v4.app.ServiceCompat.START_STICKY;
 
 class PlayerUtil {

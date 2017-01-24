@@ -11,7 +11,6 @@ import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
 import com.somenameofpackage.internetradiowithmosby.view.controlUI.RadioView;
 
-
 public class RadioPresenter extends MvpBasePresenter<RadioView> {
     private RadioModel radioModel;
     private ServiceConnection serviceConnection;
@@ -22,6 +21,9 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
     public RadioPresenter(Context context) {
         stationsDB = new StationsDB(context);
         radioListenerInit();
+        String source = stationsDB.getPlaying().getSource();
+        serviceConnection = new RadioServiceConnection(source);
+        PlayerUtil.initPlayerService(serviceConnection, context);
     }
 
     private void radioListenerInit() {
@@ -50,7 +52,9 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
             serviceConnection = new RadioServiceConnection(source);
             PlayerUtil.initPlayerService(serviceConnection, context);
         }
-        if (radioModel != null) radioModel.startPlay(source);
+        if (radioModel != null) {
+            radioModel.startPlay(source);
+        }
     }
 
     public void stopPlaying(Context context) {
