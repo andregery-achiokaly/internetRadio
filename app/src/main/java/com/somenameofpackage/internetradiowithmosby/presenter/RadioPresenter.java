@@ -30,22 +30,23 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         radioListener = new RadioListener() {
             @Override
             public void onPlay(String message) {
-                getView().showStatus(message);
+                if (getView() != null) getView().showStatus(message);
             }
 
             @Override
             public void onPause(String message) {
-                getView().showStatus(message);
+                if (getView() != null) getView().showStatus(message);
             }
 
             @Override
             public void onError(String message) {
-                getView().showStatus(message);
+                if (getView() != null) getView().showStatus(message);
             }
         };
     }
 
     public void startPlaying(Context context) {
+        if (getView() != null) getView().showStatus("Wait...");
         String source = stationsDB.getPlaying().getSource();
         stationsDB.setPlayStation(source);
         if (!bound) {
@@ -74,13 +75,14 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         public void onServiceConnected(ComponentName name, IBinder binder) {
             bound = true;
             radioModel = ((RadioService.RadioBinder) binder).getModel(radioListener, source);
-            getView().showStatus("Wait...");
+            if (getView() != null) getView().showStatus("Wait...");
             radioModel.startPlay(source);
         }
 
         public void onServiceDisconnected(ComponentName name) {
             bound = false;
-            getView().showStatus("Service disconnected. Something went wrong!");
+            if (getView() != null)
+                getView().showStatus("Service disconnected. Something went wrong!");
         }
     }
 }

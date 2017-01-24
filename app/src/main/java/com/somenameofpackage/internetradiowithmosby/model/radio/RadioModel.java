@@ -58,7 +58,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             mediaPlayer.setOnCompletionListener(this);
         } catch (IOException e) {
             e.printStackTrace();
-            radioListener.onError("Oh no... Something went wrong :(");
+            radioListener.onError("RadioModel. Oh no... Something went wrong :(");
         }
     }
 

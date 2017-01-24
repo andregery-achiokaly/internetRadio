@@ -34,7 +34,8 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         radioListener = new RadioListener() {
             @Override
             public void onPlay(String message) {
-                getView().showCurrentStation(stationsDB.getNumberOfPlayingStation());
+                if (getView() != null)
+                    getView().showCurrentStation(stationsDB.getNumberOfPlayingStation());
             }
 
             @Override
@@ -64,7 +65,8 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         }
         if (radioModel != null) {
             radioModel.startPlay(source);
-            getView().showCurrentStation(stationsDB.getNumberOfPlayingStation());
+            if (getView() != null)
+                getView().showCurrentStation(stationsDB.getNumberOfPlayingStation());
         }
     }
 
