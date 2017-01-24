@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.view;
+package com.somenameofpackage.internetradiowithmosby.view.controlUI;
 
 
 import android.os.Bundle;
@@ -17,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RadioFragment extends MvpFragment<RadioView, RadioPresenter> implements RadioView {
+public class ControlFragment extends MvpFragment<RadioView, RadioPresenter> implements RadioView {
     final String SOURCE = "http://cast.radiogroup.com.ua:8000/europaplus";
 
     @BindView(R.id.message)
@@ -51,11 +51,11 @@ public class RadioFragment extends MvpFragment<RadioView, RadioPresenter> implem
 
     @OnClick(R.id.stop_btn)
     public void onStopClicked() {
-        presenter.stopPlaying();
+        presenter.stopPlaying(getContext());
     }
 
     @Override
-    public void showMessage(String message) {
-        textView.setText(message);
+    public void showStatus(String status) {
+        textView.setText(status);
     }
 }

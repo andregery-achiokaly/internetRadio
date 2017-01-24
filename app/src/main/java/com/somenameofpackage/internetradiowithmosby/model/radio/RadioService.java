@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.model;
+package com.somenameofpackage.internetradiowithmosby.model.radio;
 
 import android.app.Service;
 import android.content.Intent;

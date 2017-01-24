@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".model.RadioService"/>
+        <service android:name=".model.radio.RadioService"/>
     </application>
 
 </manifest>
