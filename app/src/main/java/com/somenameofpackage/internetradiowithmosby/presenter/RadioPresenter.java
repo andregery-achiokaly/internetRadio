@@ -30,18 +30,18 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
     private void radioListenerInit() {
         radioListener = new RadioListener() {
             @Override
-            public void onPlay(String message) {
-                if (getView() != null) getView().showStatus(message);
+            public void onPlay() {
+                if (getView() != null) getView().showStatus("play");
             }
 
             @Override
-            public void onPause(String message) {
-                if (getView() != null) getView().showStatus(message);
+            public void onPause() {
+                if (getView() != null) getView().showStatus("stop");
             }
 
             @Override
             public void onError(String message) {
-                if (getView() != null) getView().showStatus(message);
+                if (getView() != null) getView().showStatus("Error: " + message);
             }
         };
     }

@@ -21,7 +21,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
                 for (RadioListener r : listOfRadioListener) {
-                    if (r != null) r.onPause("stop");
+                    if (r != null) r.onPause();
                 }
             }
         }
@@ -40,7 +40,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
                 currentSource = source;
             }
             for (RadioListener r : listOfRadioListener) {
-                if (r != null) r.onPlay("play");
+                if (r != null) r.onPlay();
             }
         }
         isPlay = true;
@@ -53,7 +53,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
     @Override
     public void onPrepared(MediaPlayer mp) {
         if (isPlay) mp.start();
-        for (RadioListener r : listOfRadioListener) if (r != null) r.onPlay("play");
+        for (RadioListener r : listOfRadioListener) if (r != null) r.onPlay();
     }
 
     private void createMediaPlayer(String source) {

@@ -18,12 +18,12 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
 
     private RadioListener radioListener = new RadioListener() {
         @Override
-        public void onPlay(String message) {
+        public void onPlay() {
             setupVisualizerFxAndUI();
         }
 
         @Override
-        public void onPause(String message) {
+        public void onPause() {
             mVisualizer.setEnabled(false);
             mVisualizer.release();
         }
@@ -59,7 +59,7 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
         mVisualizer.setEnabled(false);
         mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
         mVisualizer.setDataCaptureListener(new AudioWaveDataCaptureListener(),
-                Visualizer.getMaxCaptureRate() / 2, true, false);
+                Visualizer.getMaxCaptureRate(), true, false);
         mVisualizer.setEnabled(true);
     }
 
