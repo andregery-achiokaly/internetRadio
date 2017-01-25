@@ -22,6 +22,7 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         stationsDB = new StationsDB(context);
         radioListenerInit();
         String source = stationsDB.getPlaying().getSource();
+        stationsDB.setPlayStation(source);
         serviceConnection = new RadioServiceConnection(source);
         PlayerUtil.initPlayerService(serviceConnection, context);
     }
@@ -62,7 +63,7 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         if (radioModel != null) {
             radioModel.stopPlay();
         }
-        PlayerUtil.stopService(context);
+        bound = false;
     }
 
     private class RadioServiceConnection implements ServiceConnection {
@@ -82,7 +83,7 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         public void onServiceDisconnected(ComponentName name) {
             bound = false;
             if (getView() != null)
-                getView().showStatus("Service disconnected. Something went wrong!");
+                getView().showStatus("Paused");
         }
     }
 }

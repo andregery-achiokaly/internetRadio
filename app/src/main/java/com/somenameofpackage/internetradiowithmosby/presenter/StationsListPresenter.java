@@ -1,10 +1,10 @@
 package com.somenameofpackage.internetradiowithmosby.presenter;
 
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
@@ -27,8 +27,6 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         String source = stationsDB.getPlaying().getSource();
         PlayerUtil.initPlayerService(new StationsListServiceConnection(source), context);
     }
-
-
 
     public RealmResults<Station> getStations() {
         return stationsDB.getStations();
@@ -72,13 +70,16 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         radioListener = new RadioListener() {
             @Override
             public void onPlay(String message) {
-                if (getView() != null)
+                if (getView() != null) {
                     getView().showCurrentStation(stationsDB.getNumberOfPlayingStation());
+                    Log.v("GGG", stationsDB.getNumberOfPlayingStation() + " ");
+                }
             }
 
             @Override
             public void onPause(String message) {
-
+                if (getView() != null)
+                    getView().disableAllStation();
             }
 
             @Override

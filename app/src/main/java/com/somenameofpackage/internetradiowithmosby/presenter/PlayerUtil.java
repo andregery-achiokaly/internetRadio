@@ -7,8 +7,8 @@ import android.content.ServiceConnection;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import static android.support.v4.app.ServiceCompat.START_STICKY;
 
-public class PlayerUtil {
-    public static void initPlayerService(final ServiceConnection serviceConnection, Context context) {
+class PlayerUtil {
+    static void initPlayerService(final ServiceConnection serviceConnection, Context context) {
         startService(context);
         bindToService(serviceConnection, context);
     }

@@ -73,10 +73,20 @@ public class StationsListFragment extends MvpFragment<StationsView, StationsList
 
     @Override
     public void showCurrentStation(int newPosition) {
-        recyclerView.getChildAt(currentPosition).setBackgroundColor(Color.WHITE);
+        disableAllStation();
         if (newPosition < recyclerView.getChildCount()) {
             recyclerView.getChildAt(newPosition).setBackgroundColor(Color.RED);
-            currentPosition = newPosition;
+        }
+    }
+
+    @Override
+    public void disableAllStation() {
+        disableStations();
+    }
+
+    private void disableStations() {
+        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+            recyclerView.getChildAt(i).setBackgroundColor(Color.WHITE);
         }
     }
 }

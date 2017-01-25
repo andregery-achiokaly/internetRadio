@@ -2,6 +2,7 @@ package com.somenameofpackage.internetradiowithmosby.model.realmDB;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 
@@ -43,6 +44,7 @@ public class StationsDB {
         int id = 0;
         if (!stations.isEmpty()) {
             for (int i = 0; i < stations.size(); i++) {
+                Log.v("GGG", "s: " + stations.get(i).getName());
                 if (stations.get(i).isPlay()) break;
                 id++;
             }

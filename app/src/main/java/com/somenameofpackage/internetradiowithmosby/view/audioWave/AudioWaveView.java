@@ -1,40 +1,54 @@
 package com.somenameofpackage.internetradiowithmosby.view.audioWave;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
+import com.somenameofpackage.internetradiowithmosby.R;
+
+import java.util.Random;
 
 public class AudioWaveView extends View {
     private byte[] mBytes;
     private float[] mPoints;
-    private Rect mRect = new Rect();
-    private Paint mForePaint = new Paint();
+    private Rect mRect;
+    private Paint mForePaint;
 
     public AudioWaveView(Context context) {
         super(context);
-        init();
+        init(new Random().nextInt());
     }
 
     public AudioWaveView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.ColorWave);
+        int color = attributes.getColor(R.styleable.ColorWave_wave_color, Color.RED);
+
+        attributes.recycle();
+        init(color);
     }
 
     public AudioWaveView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.ColorWave);
+        int color = attributes.getColor(R.styleable.ColorWave_wave_color, Color.RED);
+        init(color);
     }
 
-    private void init() {
+    private void init(int color) {
+        mRect = new Rect();
+        mForePaint = new Paint();
+
         mBytes = null;
-        mForePaint.setStrokeWidth(1f);
+        mForePaint.setStrokeWidth(3f);
         mForePaint.setAntiAlias(true);
-        mForePaint.setColor(Color.rgb(0, 128, 255));
+        mForePaint.setColor(color);
     }
 
     public void updateVisualizer(byte[] bytes) {
