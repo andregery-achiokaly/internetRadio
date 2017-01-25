@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.somenameofpackage.internetradiowithmosby.R;
@@ -22,7 +21,7 @@ public class AudioWaveView extends View {
 
     public AudioWaveView(Context context) {
         super(context);
-        init(new Random().nextInt());
+        init(Color.RED);
     }
 
     public AudioWaveView(Context context, AttributeSet attrs) {
@@ -38,6 +37,8 @@ public class AudioWaveView extends View {
         super(context, attrs, defStyleAttr);
         TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.ColorWave);
         int color = attributes.getColor(R.styleable.ColorWave_wave_color, Color.RED);
+
+        attributes.recycle();
         init(color);
     }
 
@@ -46,7 +47,7 @@ public class AudioWaveView extends View {
         mForePaint = new Paint();
 
         mBytes = null;
-        mForePaint.setStrokeWidth(3f);
+        mForePaint.setStrokeWidth(2f);
         mForePaint.setAntiAlias(true);
         mForePaint.setColor(color);
     }

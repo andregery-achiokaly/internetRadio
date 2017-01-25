@@ -82,6 +82,11 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
             }
 
             @Override
+            public void onWait() {
+
+            }
+
+            @Override
             public void onError(String message) {
 
             }

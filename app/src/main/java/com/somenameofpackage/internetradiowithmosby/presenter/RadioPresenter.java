@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
@@ -40,6 +41,11 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
             }
 
             @Override
+            public void onWait() {
+                if (getView() != null) getView().showStatus("wait");
+            }
+
+            @Override
             public void onError(String message) {
                 if (getView() != null) getView().showStatus("Error: " + message);
             }
@@ -59,7 +65,7 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         }
     }
 
-    public void stopPlaying(Context context) {
+    public void stopPlaying() {
         if (radioModel != null) {
             radioModel.stopPlay();
         }

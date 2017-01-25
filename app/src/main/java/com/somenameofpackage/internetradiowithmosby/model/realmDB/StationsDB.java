@@ -44,7 +44,6 @@ public class StationsDB {
         int id = 0;
         if (!stations.isEmpty()) {
             for (int i = 0; i < stations.size(); i++) {
-                Log.v("GGG", "s: " + stations.get(i).getName());
                 if (stations.get(i).isPlay()) break;
                 id++;
             }

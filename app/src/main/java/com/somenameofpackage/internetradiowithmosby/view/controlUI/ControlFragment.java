@@ -49,7 +49,7 @@ public class ControlFragment extends MvpFragment<RadioView, RadioPresenter> impl
 
     @OnClick(R.id.stop_btn)
     public void onStopClicked() {
-        presenter.stopPlaying(getContext());
+        presenter.stopPlaying();
     }
 
     @Override

@@ -24,14 +24,19 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
 
         @Override
         public void onPause() {
-            mVisualizer.setEnabled(false);
-            mVisualizer.release();
+
+        }
+
+        @Override
+        public void onWait() {
+
         }
 
         @Override
         public void onError(String message) {
 
         }
+
     };
 
     public AudioWavePresenter(Context context) {
@@ -55,6 +60,7 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     }
 
     private void setupVisualizerFxAndUI() {
+        if (mVisualizer != null) mVisualizer.release();
         mVisualizer = new Visualizer(radioModel.getMediaPlayer().getAudioSessionId());
         mVisualizer.setEnabled(false);
         mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
