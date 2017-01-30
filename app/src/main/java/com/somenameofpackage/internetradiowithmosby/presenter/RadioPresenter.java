@@ -11,16 +11,17 @@ import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
 import com.somenameofpackage.internetradiowithmosby.view.controlUI.RadioView;
+import com.somenameofpackage.internetradiowithmosby.view.controlUI.Status;
 
 public class RadioPresenter extends MvpBasePresenter<RadioView> {
     private RadioModel radioModel;
     private ServiceConnection serviceConnection;
     private RadioListener radioListener;
     private boolean bound = false;
+    private boolean isPlay = false;
     private StationsDB stationsDB;
 
     public RadioPresenter(Context context) {
-        Log.v("GGG", this.getClass().getSimpleName() + " was created");
         stationsDB = new StationsDB(context);
         radioListenerInit();
         String source = stationsDB.getPlaying().getSource();
@@ -33,28 +34,32 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         radioListener = new RadioListener() {
             @Override
             public void onPlay() {
-                if (getView() != null) getView().showStatus("play");
+                if (getView() != null) getView().showStatus(Status.Play);
             }
 
             @Override
             public void onPause() {
-                if (getView() != null) getView().showStatus("stop");
-            }
-
-            @Override
-            public void onWait() {
-                if (getView() != null) getView().showStatus("wait");
+                if (getView() != null) getView().showStatus(Status.Stop);
             }
 
             @Override
             public void onError(String message) {
-                if (getView() != null) getView().showStatus("Error: " + message);
+                if (getView() != null) getView().showStatus(Status.Error);
             }
         };
     }
 
-    public void startPlaying(Context context) {
-        if (getView() != null) getView().showStatus("Wait...");
+    public void buttonPressed(Context context){
+        if(isPlay){
+            isPlay = false;
+            startPlaying(context);
+        } else {
+            isPlay = true;
+            stopPlaying();
+        }
+    }
+
+    private void startPlaying(Context context) {
         String source = stationsDB.getPlaying().getSource();
         stationsDB.setPlayStation(source);
         if (!bound) {
@@ -66,7 +71,7 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         }
     }
 
-    public void stopPlaying() {
+    private void stopPlaying() {
         if (radioModel != null) {
             radioModel.stopPlay();
         }
@@ -83,14 +88,13 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         public void onServiceConnected(ComponentName name, IBinder binder) {
             bound = true;
             radioModel = ((RadioService.RadioBinder) binder).getModel(radioListener, source);
-            if (getView() != null) getView().showStatus("Wait...");
             radioModel.startPlay(source);
         }
 
         public void onServiceDisconnected(ComponentName name) {
             bound = false;
             if (getView() != null)
-                getView().showStatus("Paused");
+                getView().showStatus(Status.Stop);
         }
     }
 }

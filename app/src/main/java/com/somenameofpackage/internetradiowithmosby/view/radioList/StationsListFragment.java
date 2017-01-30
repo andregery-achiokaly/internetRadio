@@ -83,6 +83,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
             public void run() {
                 if (newPosition < recyclerView.getChildCount() && newPosition != -1) {
                     recyclerView.getChildAt(newPosition).setBackgroundColor(Color.RED);
+                    recyclerView.scrollToPosition(newPosition);
                 }
             }
         });

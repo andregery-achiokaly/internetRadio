@@ -1,7 +1,7 @@
 package com.somenameofpackage.internetradiowithmosby.view;
 
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -14,17 +14,14 @@ import com.somenameofpackage.internetradiowithmosby.view.radioList.StationsListF
 import butterknife.ButterKnife;
 
 public class RadioActivity extends AppCompatActivity {
-    StationsDB stationsDB;
+    SharedPreferences sharedPreferences;
+    final private static String INITIAL_DB = "INITIAL_DB";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //temporary
-        stationsDB = new StationsDB(getApplicationContext());
-        stationsDB.clearBD();
-        stationsDB.addStation("BestFM", "http://radio.bestfm.fm:8080/bestfm", BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round));
-        stationsDB.addStation("JamFM", "http://cast.radiogroup.com.ua:8000/jamfm", BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+        createBD();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -37,11 +34,35 @@ public class RadioActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //temporary
+    }
+
+    void createBD() {
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        Boolean isCreated = sharedPreferences.getBoolean(INITIAL_DB, false);
+        if (!isCreated) {
+            firstInitialBD();
+        }
+    }
+
+    void firstInitialBD() {
+        StationsDB stationsDB = new StationsDB(getApplicationContext());
         stationsDB.clearBD();
-        stationsDB.closeBD();
+        stationsDB.addStation(getString(R.string.best_fm_name),
+                getString(R.string.best_fm_source),
+                BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round));
+
+        stationsDB.addStation(getString(R.string.jam_fm_name),
+                getString(R.string.jam_fm_source),
+                BitmapFactory.decodeResource(getResources(),
+                        R.mipmap.ic_launcher));
+
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor ed = sharedPreferences.edit();
+        ed.putBoolean(INITIAL_DB, true);
+        ed.apply();
     }
 }

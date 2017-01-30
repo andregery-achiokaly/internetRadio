@@ -22,8 +22,6 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     private RadioListener radioListener;
 
     public StationsListPresenter(Context context) {
-        Log.v("GGG", this.getClass().getSimpleName() + " was created");
-
         stationsDB = new StationsDB(context);
         radioListenerInit();
         String source = stationsDB.getPlaying().getSource();
@@ -84,13 +82,8 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
             }
 
             @Override
-            public void onWait() {
-
-            }
-
-            @Override
             public void onError(String message) {
-
+                Log.v(getClass().getSimpleName(), message);
             }
         };
     }

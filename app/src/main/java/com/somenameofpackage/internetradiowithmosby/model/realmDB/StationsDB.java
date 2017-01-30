@@ -2,7 +2,6 @@ package com.somenameofpackage.internetradiowithmosby.model.realmDB;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 
@@ -15,13 +14,13 @@ public class StationsDB {
     private static final String nameOfConfiguration = "default2";
 
     public StationsDB(Context context) {
-        RealmConfiguration config2 = new RealmConfiguration.Builder(context)
+        RealmConfiguration config = new RealmConfiguration.Builder(context)
                 .name(nameOfConfiguration)
                 .schemaVersion(2)
                 .deleteRealmIfMigrationNeeded()
                 .build();
 
-        realm = Realm.getInstance(config2);
+        realm = Realm.getInstance(config);
     }
 
     public Station getPlaying() {
@@ -48,7 +47,6 @@ public class StationsDB {
                 id++;
             }
         }
-        Log.v("GGG", id + " id");
         realm.commitTransaction();
         return id;
     }
@@ -78,9 +76,8 @@ public class StationsDB {
                 .equalTo(Station.getSourceFieldName(), source)
                 .findFirst();
 
-        if (station != null){
+        if (station != null) {
             station.setPlay(true);
-            Log.v("GGG", " setPlay");
         }
         realm.commitTransaction();
     }

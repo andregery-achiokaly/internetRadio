@@ -58,7 +58,6 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
 
     private void createMediaPlayer(String source) {
         isPlay = false;
-        for (RadioListener r : listOfRadioListener) if (r != null) r.onWait();
         try {
             if (mediaPlayer == null) mediaPlayer = new MediaPlayer();
             else mediaPlayer.release();

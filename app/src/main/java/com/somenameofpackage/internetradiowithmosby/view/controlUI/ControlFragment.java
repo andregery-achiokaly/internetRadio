@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
@@ -19,8 +20,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ControlFragment extends MvpViewStateFragment<RadioView, RadioPresenter> implements RadioView {
-    @BindView(R.id.message)
-    TextView textView;
+    @BindView(R.id.play_btn)
+    Button playButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,19 +46,18 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, RadioPresen
 
     @OnClick(R.id.play_btn)
     public void onPlayClicked() {
-        presenter.startPlaying(getContext());
-    }
-
-    @OnClick(R.id.stop_btn)
-    public void onStopClicked() {
-        presenter.stopPlaying();
+        presenter.buttonPressed(getContext());
     }
 
     @Override
-    public void showStatus(String status) {
+    public void showStatus(Status status) {
         ControlViewState controlViewState = (ControlViewState) viewState;
         controlViewState.setStatus(status);
-        textView.setText(status);
+        switch (status){
+            case Stop: playButton.setText(Status.Play.name()); break;
+            case Play: playButton.setText(Status.Stop.name()); break;
+            case Error: playButton.setText(Status.Error.name()); break;
+        }
     }
 
     @NonNull
@@ -68,6 +68,6 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, RadioPresen
 
     @Override
     public void onNewViewStateInstance() {
-        showStatus("");
+        showStatus(Status.Stop);
     }
 }

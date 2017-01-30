@@ -11,16 +11,24 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
+import com.somenameofpackage.internetradiowithmosby.model.visualizer.VisualizerModel;
 import com.somenameofpackage.internetradiowithmosby.view.audioWave.WaveView;
 
 public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     private RadioModel radioModel;
-    private Visualizer mVisualizer;
+    private VisualizerModel visualizerModel;
+    private VisualizerListener visualizerListener = new VisualizerListener() {
+        @Override
+        public void updateVisualizer(byte[] bytes) {
+            if (getView() != null) getView().updateVisualizer(bytes);
+        }
+    };
+
 
     private RadioListener radioListener = new RadioListener() {
         @Override
         public void onPlay() {
-            setupVisualizerFxAndUI();
+            visualizerModel.setupVisualizerFxAndUI();
         }
 
         @Override
@@ -29,19 +37,13 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
         }
 
         @Override
-        public void onWait() {
-
-        }
-
-        @Override
         public void onError(String message) {
-
+            Log.v(getClass().getSimpleName(), message);
         }
-
     };
 
     public AudioWavePresenter(Context context) {
-        Log.v("GGG", this.getClass().getSimpleName() + " was created");
+
 
         StationsDB stationsDB = new StationsDB(context);
         final String source = stationsDB.getPlaying().getSource();
@@ -50,7 +52,7 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 radioModel = ((RadioService.RadioBinder) iBinder).getModel(radioListener, source);
-                setupVisualizerFxAndUI();
+                visualizerModel = new VisualizerModel(radioModel, visualizerListener);
             }
 
             @Override
@@ -62,24 +64,5 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
         PlayerUtil.initPlayerService(serviceConnection, context);
     }
 
-    private void setupVisualizerFxAndUI() {
-        if (mVisualizer != null) mVisualizer.release();
-        mVisualizer = new Visualizer(radioModel.getMediaPlayer().getAudioSessionId());
-        mVisualizer.setEnabled(false);
-        mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-        mVisualizer.setDataCaptureListener(new AudioWaveDataCaptureListener(),
-                Visualizer.getMaxCaptureRate(), true, false);
-        mVisualizer.setEnabled(true);
-    }
 
-    private class AudioWaveDataCaptureListener implements Visualizer.OnDataCaptureListener {
-        public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-            if (getView() != null) getView().updateVisualizer(bytes);
-        }
-
-        @Override
-        public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int i) {
-
-        }
-    }
 }
