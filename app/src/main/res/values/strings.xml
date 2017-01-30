@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">InternetRadio3</string>
-    <string name="Greating">Hello! There is some sort of music</string>
+    <string name="app_name">InternetRadio</string>
     <string name="best_fm_source">http://radio.bestfm.fm:8080/bestfm</string>
     <string name="jam_fm_source">http://cast.radiogroup.com.ua:8000/jamfm</string>
     <string name="best_fm_name">BestFM</string>
