@@ -1,6 +1,5 @@
 package com.somenameofpackage.internetradiowithmosby.view.radioList;
 
-
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -57,7 +56,6 @@ class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapter.Stati
 
         StationViewHolder(final View itemView) {
             super(itemView);
-
             stationNameTextView = (TextView) itemView.findViewById(R.id.stationName);
             stationSourceTextView = (TextView) itemView.findViewById(R.id.stationSource);
             stationIconImageView = (ImageView) itemView.findViewById(R.id.stationIcon);

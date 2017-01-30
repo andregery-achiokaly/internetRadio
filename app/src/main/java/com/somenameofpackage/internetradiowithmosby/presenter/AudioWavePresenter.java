@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.ServiceConnection;
 import android.media.audiofx.Visualizer;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
@@ -40,8 +41,10 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     };
 
     public AudioWavePresenter(Context context) {
+        Log.v("GGG", this.getClass().getSimpleName() + " was created");
+
         StationsDB stationsDB = new StationsDB(context);
-        String source = stationsDB.getPlaying().getSource();
+        final String source = stationsDB.getPlaying().getSource();
 
         ServiceConnection serviceConnection = new ServiceConnection() {
             @Override

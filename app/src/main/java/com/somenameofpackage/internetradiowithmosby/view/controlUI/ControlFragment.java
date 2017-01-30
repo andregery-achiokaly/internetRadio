@@ -9,7 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.hannesdorfmann.mosby.mvp.MvpFragment;
+import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
+import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.presenter.RadioPresenter;
 
@@ -17,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ControlFragment extends MvpFragment<RadioView, RadioPresenter> implements RadioView {
+public class ControlFragment extends MvpViewStateFragment<RadioView, RadioPresenter> implements RadioView {
     @BindView(R.id.message)
     TextView textView;
 
@@ -54,6 +55,19 @@ public class ControlFragment extends MvpFragment<RadioView, RadioPresenter> impl
 
     @Override
     public void showStatus(String status) {
+        ControlViewState controlViewState = (ControlViewState) viewState;
+        controlViewState.setStatus(status);
         textView.setText(status);
+    }
+
+    @NonNull
+    @Override
+    public ViewState createViewState() {
+        return new ControlViewState();
+    }
+
+    @Override
+    public void onNewViewStateInstance() {
+        showStatus("");
     }
 }

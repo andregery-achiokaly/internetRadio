@@ -48,6 +48,7 @@ public class StationsDB {
                 id++;
             }
         }
+        Log.v("GGG", id + " id");
         realm.commitTransaction();
         return id;
     }
@@ -77,7 +78,10 @@ public class StationsDB {
                 .equalTo(Station.getSourceFieldName(), source)
                 .findFirst();
 
-        if (station != null) station.setPlay(true);
+        if (station != null){
+            station.setPlay(true);
+            Log.v("GGG", " setPlay");
+        }
         realm.commitTransaction();
     }
 

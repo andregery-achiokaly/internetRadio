@@ -8,6 +8,7 @@
     android:paddingRight="16dp"
     android:paddingTop="16dp"
     android:orientation="vertical"
+    android:background="#ffffff"
     tools:context=".view.RadioActivity">
 
     <FrameLayout

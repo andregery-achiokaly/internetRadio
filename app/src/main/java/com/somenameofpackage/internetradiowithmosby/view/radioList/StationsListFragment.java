@@ -6,26 +6,28 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
+import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
+import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.presenter.StationsListPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StationsListFragment extends MvpFragment<StationsView, StationsListPresenter> implements StationsView {
-    private int currentPosition = 0;
-
+public class StationsListFragment extends MvpViewStateFragment<StationsView, StationsListPresenter> implements StationsView {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Nullable
@@ -55,7 +57,6 @@ public class StationsListFragment extends MvpFragment<StationsView, StationsList
                                 .getStationById(position)
                                 .getSource();
                         presenter.startPlay(source, getContext());
-                        currentPosition = position;
                     }
 
                     @Override
@@ -72,15 +73,27 @@ public class StationsListFragment extends MvpFragment<StationsView, StationsList
     }
 
     @Override
-    public void showCurrentStation(int newPosition) {
-        disableAllStation();
-        if (newPosition < recyclerView.getChildCount()) {
-            recyclerView.getChildAt(newPosition).setBackgroundColor(Color.RED);
-        }
+    public void showCurrentStation(final int newPosition) {
+        StationsListViewState stationsListViewState = (StationsListViewState) viewState;
+        stationsListViewState.setCurrentStation(newPosition);
+
+        disableStations();
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (newPosition < recyclerView.getChildCount() && newPosition != -1) {
+                    recyclerView.getChildAt(newPosition).setBackgroundColor(Color.RED);
+                }
+            }
+        });
     }
 
     @Override
     public void disableAllStation() {
+        StationsListViewState stationsListViewState = (StationsListViewState) viewState;
+        int disableAllStation = -1;
+        stationsListViewState.setCurrentStation(disableAllStation);
+
         disableStations();
     }
 
@@ -88,5 +101,15 @@ public class StationsListFragment extends MvpFragment<StationsView, StationsList
         for (int i = 0; i < recyclerView.getChildCount(); i++) {
             recyclerView.getChildAt(i).setBackgroundColor(Color.WHITE);
         }
+    }
+
+    @Override
+    public ViewState createViewState() {
+        return new StationsListViewState();
+    }
+
+    @Override
+    public void onNewViewStateInstance() {
+        disableAllStation();
     }
 }

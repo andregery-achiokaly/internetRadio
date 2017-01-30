@@ -20,6 +20,7 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
     private StationsDB stationsDB;
 
     public RadioPresenter(Context context) {
+        Log.v("GGG", this.getClass().getSimpleName() + " was created");
         stationsDB = new StationsDB(context);
         radioListenerInit();
         String source = stationsDB.getPlaying().getSource();
