@@ -55,7 +55,7 @@ public class AddStationDialog extends DialogFragment {
         if (drawable != null) {
             bitmap = ((BitmapDrawable) drawable).getBitmap();
         }
-        if (name.isEmpty() || source.isEmpty() || bitmap==null)
+        if (name.isEmpty() || source.isEmpty() || bitmap == null)
             Toast.makeText(getContext(), R.string.addStationErr_set_name_and_source, Toast.LENGTH_SHORT).show();
         else {
             ((AddStation) getActivity()).addStationToBD(name, source, bitmap);
