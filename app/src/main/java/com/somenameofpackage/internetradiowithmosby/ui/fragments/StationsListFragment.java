@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.view.radioList;
+package com.somenameofpackage.internetradiowithmosby.ui.fragments;
 
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -18,6 +18,11 @@ import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.presenter.StationsListPresenter;
+import com.somenameofpackage.internetradiowithmosby.ui.AddStation;
+import com.somenameofpackage.internetradiowithmosby.ui.adapters.StationsListAdapter;
+import com.somenameofpackage.internetradiowithmosby.ui.listeners.RecyclerItemClickListener;
+import com.somenameofpackage.internetradiowithmosby.ui.viewStates.StationsListViewState;
+import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,7 +82,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
                                     public void onClick(DialogInterface dialog, int which) {
                                         presenter.deleteStation(source);
                                         recyclerView.removeViewAt(position);
-                                        Toast.makeText(getContext(), "Station: " + name + " was removed!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "RadioStation: " + name + " was removed!", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     }

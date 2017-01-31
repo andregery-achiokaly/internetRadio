@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.view.radioList;
+package com.somenameofpackage.internetradiowithmosby.ui.listeners;
 
 
 import android.content.Context;
@@ -7,16 +7,16 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
     private GestureDetector gestureDetector;
     private OnItemClickListener onItemClickListener;
 
-    interface OnItemClickListener {
+    public interface OnItemClickListener {
         void onItemClick(View view, int position);
         void onLongItemClick(View view, int position);
     }
 
-    RecyclerItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
+    public RecyclerItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
         onItemClickListener = listener;
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override

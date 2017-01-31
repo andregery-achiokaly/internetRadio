@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.view.radioList;
+package com.somenameofpackage.internetradiowithmosby.ui;
 
 
 import android.graphics.Bitmap;

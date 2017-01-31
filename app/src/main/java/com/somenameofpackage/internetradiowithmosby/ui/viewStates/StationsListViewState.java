@@ -1,9 +1,8 @@
-package com.somenameofpackage.internetradiowithmosby.view.radioList;
+package com.somenameofpackage.internetradiowithmosby.ui.viewStates;
 
-
-import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
+import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
 public class StationsListViewState implements ViewState<StationsView> {
     private int currentStation;

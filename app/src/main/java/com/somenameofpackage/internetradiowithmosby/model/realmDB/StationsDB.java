@@ -11,39 +11,40 @@ import io.realm.RealmResults;
 
 public class StationsDB {
     private Realm realm;
-    private static final String nameOfConfiguration = "default2";
+    private static final String nameOfConfiguration = "Configuration1";
 
     public StationsDB(Context context) {
+
         RealmConfiguration config = new RealmConfiguration.Builder(context)
                 .name(nameOfConfiguration)
-                .schemaVersion(2)
+                .schemaVersion(1)
                 .deleteRealmIfMigrationNeeded()
                 .build();
 
         realm = Realm.getInstance(config);
     }
 
-    public Station getPlaying() {
+    public RadioStation getPlaying() {
         realm.beginTransaction();
-        Station station = realm
-                .where(Station.class)
-                .equalTo(Station.getIsPlayFieldName(), true)
+        RadioStation radioStation = realm
+                .where(RadioStation.class)
+                .equalTo(RadioStation.getIsPlayFieldName(), true)
                 .findFirst();
 
-        if (station == null) {
-            station = realm.where(Station.class).findFirst();
+        if (radioStation == null) {
+            radioStation = realm.where(RadioStation.class).findFirst();
         }
         realm.commitTransaction();
-        return station;
+        return radioStation;
     }
 
     public int getNumberOfPlayingStation() {
         realm.beginTransaction();
-        RealmResults<Station> stations = realm.where(Station.class).findAll();
+        RealmResults<RadioStation> radioStations = realm.where(RadioStation.class).findAll();
         int id = 0;
-        if (!stations.isEmpty()) {
-            for (int i = 0; i < stations.size(); i++) {
-                if (stations.get(i).isPlay()) break;
+        if (!radioStations.isEmpty()) {
+            for (int i = 0; i < radioStations.size(); i++) {
+                if (radioStations.get(i).isPlay()) break;
                 id++;
             }
         }
@@ -52,32 +53,49 @@ public class StationsDB {
     }
 
     public void addStation(String stationName, String stationSource, Bitmap icon) {
+        int id = getNextKey();
         realm.beginTransaction();
-        Station station = realm.createObject(Station.class);
-        station.setName(stationName);
-        station.setSource(stationSource);
-        station.setPlay(false);
+        RadioStation radioStation = new RadioStation();
+        radioStation.setName(stationName);
+        radioStation.setSource(stationSource);
+        radioStation.setPlay(false);
+        radioStation.setId(id);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        station.setImage(stream.toByteArray());
+        radioStation.setImage(stream.toByteArray());
+
+        realm.copyToRealm(radioStation);
         realm.commitTransaction();
     }
 
-    public RealmResults<Station> getStations() {
-        return realm.allObjects(Station.class);
+    private int getNextKey() {
+        realm.beginTransaction();
+        int id = 0;
+        try {
+            id = realm.where(RadioStation.class).max("id").intValue() + 1;
+        } catch (Exception e) {
+            realm.commitTransaction();
+            return id;
+        }
+        realm.commitTransaction();
+        return id;
+    }
+
+    public RealmResults<RadioStation> getStations() {
+        return realm.allObjects(RadioStation.class);
     }
 
     public void setPlayStation(String source) {
         setAllPlayStationOff();
         realm.beginTransaction();
-        Station station = realm
-                .where(Station.class)
-                .equalTo(Station.getSourceFieldName(), source)
+        RadioStation radioStation = realm
+                .where(RadioStation.class)
+                .equalTo(RadioStation.getSourceFieldName(), source)
                 .findFirst();
 
-        if (station != null) {
-            station.setPlay(true);
+        if (radioStation != null) {
+            radioStation.setPlay(true);
         }
         realm.commitTransaction();
     }
@@ -88,26 +106,26 @@ public class StationsDB {
 
     public void clearBD() {
         realm.beginTransaction();
-        realm.clear(Station.class);
+        realm.clear(RadioStation.class);
         realm.commitTransaction();
     }
 
     private void setAllPlayStationOff() {
         realm.beginTransaction();
 
-        RealmResults<Station> stations = realm.where(Station.class).findAll();
-        if (!stations.isEmpty()) {
-            for (int i = stations.size() - 1; i >= 0; i--) {
-                stations.get(i).setPlay(false);
+        RealmResults<RadioStation> radioStations = realm.where(RadioStation.class).findAll();
+        if (!radioStations.isEmpty()) {
+            for (int i = radioStations.size() - 1; i >= 0; i--) {
+                radioStations.get(i).setPlay(false);
             }
         }
         realm.commitTransaction();
     }
 
 
-    public void deleteStation(String source){
+    public void deleteStation(String source) {
         realm.beginTransaction();
-        realm.where(Station.class).equalTo(Station.getSourceFieldName(),source).findFirst().removeFromRealm();
+        realm.where(RadioStation.class).equalTo(RadioStation.getSourceFieldName(), source).findFirst().removeFromRealm();
         realm.commitTransaction();
     }
 }

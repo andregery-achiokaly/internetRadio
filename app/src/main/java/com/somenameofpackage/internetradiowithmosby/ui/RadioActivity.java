@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.view;
+package com.somenameofpackage.internetradiowithmosby.ui;
 
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -10,13 +10,13 @@ import android.widget.Toast;
 
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
-import com.somenameofpackage.internetradiowithmosby.view.audioWave.AudioWaveFragment;
-import com.somenameofpackage.internetradiowithmosby.view.controlUI.ControlFragment;
-import com.somenameofpackage.internetradiowithmosby.view.radioList.AddStation;
-import com.somenameofpackage.internetradiowithmosby.view.radioList.AddStationDialog;
-import com.somenameofpackage.internetradiowithmosby.view.radioList.StationsListFragment;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.AudioWaveFragment;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.ControlFragment;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.dialogs.AddStationDialog;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.StationsListFragment;
 
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 public class RadioActivity extends AppCompatActivity implements AddStation {
     SharedPreferences sharedPreferences;

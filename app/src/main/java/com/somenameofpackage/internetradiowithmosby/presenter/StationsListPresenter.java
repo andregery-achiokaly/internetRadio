@@ -10,9 +10,9 @@ import android.util.Log;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
-import com.somenameofpackage.internetradiowithmosby.model.realmDB.Station;
+import com.somenameofpackage.internetradiowithmosby.model.realmDB.RadioStation;
 import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
-import com.somenameofpackage.internetradiowithmosby.view.radioList.StationsView;
+import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
 import io.realm.RealmResults;
 
@@ -29,7 +29,7 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         PlayerUtil.initPlayerService(new StationsListServiceConnection(source), context);
     }
 
-    public RealmResults<Station> getStations() {
+    public RealmResults<RadioStation> getStations() {
         return stationsDB.getStations();
     }
 

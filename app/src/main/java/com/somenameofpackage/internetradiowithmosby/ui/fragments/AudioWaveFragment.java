@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.view.audioWave;
+package com.somenameofpackage.internetradiowithmosby.ui.fragments;
 
 
 import android.media.AudioManager;
@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.presenter.AudioWavePresenter;
+import com.somenameofpackage.internetradiowithmosby.ui.views.AudioWaveView;
+import com.somenameofpackage.internetradiowithmosby.ui.views.WaveView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

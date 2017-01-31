@@ -4,14 +4,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
-import com.somenameofpackage.internetradiowithmosby.view.controlUI.RadioView;
-import com.somenameofpackage.internetradiowithmosby.view.controlUI.Status;
+import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
 public class RadioPresenter extends MvpBasePresenter<RadioView> {
     private RadioModel radioModel;

@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.view.controlUI;
+package com.somenameofpackage.internetradiowithmosby.ui.fragments;
 
 
 import android.os.Bundle;
@@ -8,12 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.presenter.RadioPresenter;
+import com.somenameofpackage.internetradiowithmosby.ui.viewStates.ControlViewState;
+import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,7 +43,6 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, RadioPresen
     public RadioPresenter createPresenter() {
         return new RadioPresenter(getContext());
     }
-
 
     @OnClick(R.id.play_btn)
     public void onPlayClicked() {

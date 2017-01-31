@@ -3,7 +3,6 @@ package com.somenameofpackage.internetradiowithmosby.presenter;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
-import android.media.audiofx.Visualizer;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -12,7 +11,7 @@ import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
 import com.somenameofpackage.internetradiowithmosby.model.visualizer.VisualizerModel;
-import com.somenameofpackage.internetradiowithmosby.view.audioWave.WaveView;
+import com.somenameofpackage.internetradiowithmosby.ui.views.WaveView;
 
 public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     private RadioModel radioModel;

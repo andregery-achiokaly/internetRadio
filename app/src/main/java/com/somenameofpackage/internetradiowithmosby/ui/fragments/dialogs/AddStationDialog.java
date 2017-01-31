@@ -1,5 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.view.radioList;
-
+package com.somenameofpackage.internetradiowithmosby.ui.fragments.dialogs;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.somenameofpackage.internetradiowithmosby.R;
+import com.somenameofpackage.internetradiowithmosby.ui.AddStation;
 
 import java.io.IOException;
 
@@ -28,7 +28,6 @@ import static android.app.Activity.RESULT_OK;
 
 public class AddStationDialog extends DialogFragment {
     final private static int RESULT_LOAD_IMAGE = 42;
-
     @BindView(R.id.station_name)
     EditText stationNameEditText;
 

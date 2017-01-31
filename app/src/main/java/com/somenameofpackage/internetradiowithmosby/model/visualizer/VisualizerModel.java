@@ -5,7 +5,6 @@ import android.media.audiofx.Visualizer;
 
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.presenter.VisualizerListener;
-import com.somenameofpackage.internetradiowithmosby.view.controlUI.RadioView;
 
 public class VisualizerModel {
     private Visualizer mVisualizer;

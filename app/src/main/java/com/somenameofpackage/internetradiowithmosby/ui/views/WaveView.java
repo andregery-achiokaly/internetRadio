@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.view.audioWave;
+package com.somenameofpackage.internetradiowithmosby.ui.views;
 
 
 import com.hannesdorfmann.mosby.mvp.MvpView;

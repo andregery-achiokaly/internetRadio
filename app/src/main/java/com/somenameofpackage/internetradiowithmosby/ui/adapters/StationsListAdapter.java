@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.view.radioList;
+package com.somenameofpackage.internetradiowithmosby.ui.adapters;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -11,19 +11,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.somenameofpackage.internetradiowithmosby.R;
-import com.somenameofpackage.internetradiowithmosby.model.realmDB.Station;
+import com.somenameofpackage.internetradiowithmosby.model.realmDB.RadioStation;
 
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapter.StationViewHolder> implements RealmChangeListener {
-    private final RealmResults<Station> stations;
+public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapter.StationViewHolder> implements RealmChangeListener {
+    private final RealmResults<RadioStation> radioStations;
     private final LayoutInflater inflater;
 
-    StationsListAdapter(RealmResults<Station> stations, Context context) {
+    public StationsListAdapter(RealmResults<RadioStation> radioStations, Context context) {
         inflater = LayoutInflater.from(context);
-        this.stations = stations;
-        stations.addChangeListener(this);
+        this.radioStations = radioStations;
+        radioStations.addChangeListener(this);
     }
 
     @Override
@@ -34,15 +34,15 @@ class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapter.Stati
 
     @Override
     public void onBindViewHolder(final StationViewHolder holder, final int position) {
-        holder.stationNameTextView.setText(stations.get(position).getName());
-        holder.stationSourceTextView.setText(stations.get(position).getSource());
-        byte[] bytes = stations.get(position).getImage();
+        holder.stationNameTextView.setText(radioStations.get(position).getName());
+        holder.stationSourceTextView.setText(radioStations.get(position).getSource());
+        byte[] bytes = radioStations.get(position).getImage();
         holder.stationIconImageView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
     }
 
     @Override
     public int getItemCount() {
-        return stations.size();
+        return radioStations.size();
     }
 
     @Override
@@ -63,8 +63,8 @@ class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapter.Stati
         }
     }
 
-    Station getStationById(int id) {
+    public RadioStation getStationById(int id) {
         if (id < 0) Log.v("GGG", " ++++" + id);
-        return stations.get(id);
+        return radioStations.get(id);
     }
 }

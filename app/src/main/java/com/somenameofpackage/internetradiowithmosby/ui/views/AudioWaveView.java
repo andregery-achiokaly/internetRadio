@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.view.audioWave;
+package com.somenameofpackage.internetradiowithmosby.ui.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,8 +10,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.somenameofpackage.internetradiowithmosby.R;
-
-import java.util.Random;
 
 public class AudioWaveView extends View {
     private byte[] mBytes;
