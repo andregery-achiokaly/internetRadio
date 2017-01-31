@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -72,22 +71,27 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
                                 .getStationById(position)
                                 .getSource();
 
-                        AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
-                        adb.setTitle("Delete");
-                        adb.setMessage("Do you want to delete " + name + "?");
-                        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                presenter.deleteStation(source);
-                                recyclerView.removeViewAt(position);
-                                Toast.makeText(getContext(), "Station: " + name + " was removed!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        adb.setNegativeButton("No", null);
-                        adb.create();
-                        adb.show();
+                        showDeleteDialog(name,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        presenter.deleteStation(source);
+                                        recyclerView.removeViewAt(position);
+                                        Toast.makeText(getContext(), "Station: " + name + " was removed!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
                 }));
+    }
+
+    private void showDeleteDialog(String name, DialogInterface.OnClickListener listener) {
+        AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
+        adb.setTitle("Delete");
+        adb.setMessage("Do you want to delete " + name + "?");
+        adb.setPositiveButton("Yes", listener);
+        adb.setNegativeButton("No", null);
+        adb.create();
+        adb.show();
     }
 
     @Override
