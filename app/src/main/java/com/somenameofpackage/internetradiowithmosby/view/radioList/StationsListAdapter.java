@@ -3,6 +3,7 @@ package com.somenameofpackage.internetradiowithmosby.view.radioList;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,8 @@ class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapter.Stati
         }
     }
 
-    Station getStationById(int id){
+    Station getStationById(int id) {
+        if (id < 0) Log.v("GGG", " ++++" + id);
         return stations.get(id);
     }
 }

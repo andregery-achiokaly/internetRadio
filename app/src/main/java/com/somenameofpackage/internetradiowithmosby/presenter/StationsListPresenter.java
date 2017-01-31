@@ -3,6 +3,7 @@ package com.somenameofpackage.internetradiowithmosby.presenter;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -46,6 +47,10 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
             if (getView() != null)
                 getView().showCurrentStation(stationsDB.getNumberOfPlayingStation());
         }
+    }
+
+    public void addStation(String name, String source, Bitmap icon) {
+        stationsDB.addStation(name, source, icon);
     }
 
     private class StationsListServiceConnection implements ServiceConnection {

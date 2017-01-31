@@ -4,4 +4,10 @@
     <string name="jam_fm_source">http://cast.radiogroup.com.ua:8000/jamfm</string>
     <string name="best_fm_name">BestFM</string>
     <string name="jam_fm_name">JamFM</string>
+    <string name="station_name">Station name</string>
+    <string name="station_source">Station source</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="addStationErr_set_name_and_source">Set name and source!</string>
+    <string name="something_went_wrong">Something went wrong...</string>
 </resources>

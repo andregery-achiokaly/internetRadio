@@ -1,17 +1,17 @@
 package com.somenameofpackage.internetradiowithmosby.view.radioList;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.somenameofpackage.internetradiowithmosby.R;
@@ -19,6 +19,7 @@ import com.somenameofpackage.internetradiowithmosby.presenter.StationsListPresen
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class StationsListFragment extends MvpViewStateFragment<StationsView, StationsListPresenter> implements StationsView {
     @BindView(R.id.recycler_view)
@@ -61,7 +62,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
 
                     @Override
                     public void onLongItemClick(View view, int position) {
-                        //change setting of station
+                        //delete station
                     }
                 }));
     }
@@ -70,6 +71,11 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     public void onDestroy() {
         super.onDestroy();
         presenter.closeBD();
+    }
+
+    @OnClick(R.id.add_station_btn)
+    public void addStation() {
+        ((AddStation) getActivity()).createStationDialog("Add station");
     }
 
     @Override
@@ -104,6 +110,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
         }
     }
 
+    @NonNull
     @Override
     public ViewState createViewState() {
         return new StationsListViewState();
@@ -112,5 +119,9 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     @Override
     public void onNewViewStateInstance() {
         disableAllStation();
+    }
+
+    public void addStationToBD(String name, String source, Bitmap icon){
+        presenter.addStation(name, source, icon);
     }
 }
