@@ -103,4 +103,11 @@ public class StationsDB {
         }
         realm.commitTransaction();
     }
+
+
+    public void deleteStation(String source){
+        realm.beginTransaction();
+        realm.where(Station.class).equalTo(Station.getSourceFieldName(),source).findFirst().removeFromRealm();
+        realm.commitTransaction();
+    }
 }

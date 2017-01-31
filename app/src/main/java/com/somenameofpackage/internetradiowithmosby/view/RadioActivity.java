@@ -50,9 +50,9 @@ public class RadioActivity extends AppCompatActivity implements AddStation {
         }
     }
 
-    public void createStationDialog(String title){
+    public void createStationDialog(String tag){
         DialogFragment dialogFragment = new AddStationDialog();
-        dialogFragment.show(getSupportFragmentManager(), "title");
+        dialogFragment.show(getSupportFragmentManager(), tag);
     }
 
     void createBD() {

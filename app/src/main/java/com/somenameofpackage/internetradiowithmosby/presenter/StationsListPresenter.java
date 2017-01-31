@@ -53,6 +53,10 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         stationsDB.addStation(name, source, icon);
     }
 
+    public void deleteStation(String source) {
+        stationsDB.deleteStation(source);
+    }
+
     private class StationsListServiceConnection implements ServiceConnection {
         String source;
 

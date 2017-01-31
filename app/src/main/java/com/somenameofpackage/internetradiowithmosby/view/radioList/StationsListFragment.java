@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
@@ -62,7 +63,15 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
 
                     @Override
                     public void onLongItemClick(View view, int position) {
-                        //delete station
+                        String name = ((StationsListAdapter) recyclerView.getAdapter())
+                                .getStationById(position)
+                                .getName();
+                        String source = ((StationsListAdapter) recyclerView.getAdapter())
+                                .getStationById(position)
+                                .getSource();
+                        presenter.deleteStation(source);
+                        recyclerView.removeViewAt(position);
+                        Toast.makeText(getContext(), "Station: " + name + " was removed!", Toast.LENGTH_SHORT).show();
                     }
                 }));
     }
@@ -75,7 +84,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
 
     @OnClick(R.id.add_station_btn)
     public void addStation() {
-        ((AddStation) getActivity()).createStationDialog("Add station");
+        ((AddStation) getActivity()).createStationDialog("AddStation");
     }
 
     @Override

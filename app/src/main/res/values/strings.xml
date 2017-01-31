@@ -8,6 +8,6 @@
     <string name="station_source">Station source</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
-    <string name="addStationErr_set_name_and_source">Set name and source!</string>
-    <string name="something_went_wrong">Something went wrong...</string>
+    <string name="addStationErr_set_name_and_source">Set name, source and image!</string>
+    <string name="something_went_wrong">Something went wrong…</string>
 </resources>
