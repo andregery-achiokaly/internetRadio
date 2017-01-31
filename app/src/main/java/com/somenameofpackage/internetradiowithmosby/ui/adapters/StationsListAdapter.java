@@ -64,7 +64,6 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
     }
 
     public RadioStation getStationById(int id) {
-        if (id < 0) Log.v("GGG", " ++++" + id);
         return radioStations.get(id);
     }
 }

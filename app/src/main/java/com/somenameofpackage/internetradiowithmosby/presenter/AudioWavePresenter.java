@@ -45,7 +45,7 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
 
 
         StationsDB stationsDB = new StationsDB(context);
-        final String source = stationsDB.getPlaying().getSource();
+        final String source = stationsDB.getPlayingSource();
 
         ServiceConnection serviceConnection = new ServiceConnection() {
             @Override

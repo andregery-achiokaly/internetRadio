@@ -25,7 +25,7 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     public StationsListPresenter(Context context) {
         stationsDB = new StationsDB(context);
         radioListenerInit();
-        String source = stationsDB.getPlaying().getSource();
+        String source = stationsDB.getPlayingSource();
         PlayerUtil.initPlayerService(new StationsListServiceConnection(source), context);
     }
 

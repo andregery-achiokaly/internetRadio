@@ -23,7 +23,7 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
     public RadioPresenter(Context context) {
         stationsDB = new StationsDB(context);
         radioListenerInit();
-        String source = stationsDB.getPlaying().getSource();
+        String source = stationsDB.getPlayingSource();
         stationsDB.setPlayStation(source);
         serviceConnection = new RadioServiceConnection(source);
         PlayerUtil.initPlayerService(serviceConnection, context);
@@ -59,7 +59,7 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
     }
 
     private void startPlaying(Context context) {
-        String source = stationsDB.getPlaying().getSource();
+        String source = stationsDB.getPlayingSource();
         stationsDB.setPlayStation(source);
         if (!bound) {
             serviceConnection = new RadioServiceConnection(source);

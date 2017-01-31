@@ -68,6 +68,8 @@ public class RadioStation extends RealmObject {
         return "id";
     }
 
+    public static String getNameTable(){ return RadioStation.class.getSimpleName();}
+
     public int getId() {
         return id;
     }

@@ -3,13 +3,15 @@ package com.somenameofpackage.internetradiowithmosby.model.realmDB;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
+
 import java.io.ByteArrayOutputStream;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
-public class StationsDB {
+public class StationsDB implements DataBase{
     private Realm realm;
     private static final String nameOfConfiguration = "Configuration1";
 
@@ -24,7 +26,7 @@ public class StationsDB {
         realm = Realm.getInstance(config);
     }
 
-    public RadioStation getPlaying() {
+    public String getPlayingSource() {
         realm.beginTransaction();
         RadioStation radioStation = realm
                 .where(RadioStation.class)
@@ -35,7 +37,7 @@ public class StationsDB {
             radioStation = realm.where(RadioStation.class).findFirst();
         }
         realm.commitTransaction();
-        return radioStation;
+        return radioStation.getSource();
     }
 
     public int getNumberOfPlayingStation() {
