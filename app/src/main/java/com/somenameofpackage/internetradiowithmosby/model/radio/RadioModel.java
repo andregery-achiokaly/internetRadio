@@ -29,7 +29,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
     }
 
     public void startPlay(String source) {
-        if (mediaPlayer != null) {
+        if (mediaPlayer != null && source != null) {
             if (currentSource.equals(source)) {
                 if (!mediaPlayer.isPlaying()) {
                     mediaPlayer.start();
@@ -48,6 +48,9 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
 
     @Override
     public void onCompletion(MediaPlayer mp) {
+        for (RadioListener r : listOfRadioListener) {
+            if (r != null) r.onError("Error");
+        }
     }
 
     @Override
@@ -70,6 +73,10 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             e.printStackTrace();
             for (RadioListener r : listOfRadioListener)
                 if (r != null) r.onError("RadioModel crash :(");
+        } catch (NullPointerException e){
+            currentSource = "";
+            for (RadioListener r : listOfRadioListener)
+                if (r != null) r.onError("No radio station");
         }
     }
 

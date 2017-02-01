@@ -1,21 +1,21 @@
-package com.somenameofpackage.internetradiowithmosby.model.realmDB;
+package com.somenameofpackage.internetradiowithmosby.model.db.realmDB;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 
 import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
+import com.somenameofpackage.internetradiowithmosby.model.db.RadioStation;
 
-import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
-public class StationsDB implements DataBase{
+public class StationsRelamDB implements DataBase{
     private Realm realm;
     private static final String nameOfConfiguration = "Configuration1";
 
-    public StationsDB(Context context) {
+    public StationsRelamDB(Context context) {
 
         RealmConfiguration config = new RealmConfiguration.Builder(context)
                 .name(nameOfConfiguration)
@@ -26,7 +26,7 @@ public class StationsDB implements DataBase{
         realm = Realm.getInstance(config);
     }
 
-    public String getPlayingSource() {
+    public String getPlayingStationSource() {
         realm.beginTransaction();
         RadioStation radioStation = realm
                 .where(RadioStation.class)
@@ -37,55 +37,31 @@ public class StationsDB implements DataBase{
             radioStation = realm.where(RadioStation.class).findFirst();
         }
         realm.commitTransaction();
+        if(radioStation == null) return null;
         return radioStation.getSource();
     }
 
-    public int getNumberOfPlayingStation() {
-        realm.beginTransaction();
-        RealmResults<RadioStation> radioStations = realm.where(RadioStation.class).findAll();
-        int id = 0;
-        if (!radioStations.isEmpty()) {
-            for (int i = 0; i < radioStations.size(); i++) {
-                if (radioStations.get(i).isPlay()) break;
-                id++;
-            }
-        }
-        realm.commitTransaction();
-        return id;
+    public void addStation(RadioStation radioStation) {
+        addStation(radioStation.getName(), radioStation.getSource(), radioStation.getImage());
     }
 
-    public void addStation(String stationName, String stationSource, Bitmap icon) {
-        int id = getNextKey();
+    private void addStation(String stationName, String stationSource, byte[] icon) {
         realm.beginTransaction();
         RadioStation radioStation = new RadioStation();
         radioStation.setName(stationName);
         radioStation.setSource(stationSource);
         radioStation.setPlay(false);
-        radioStation.setId(id);
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        radioStation.setImage(stream.toByteArray());
+        radioStation.setImage(icon);
 
         realm.copyToRealm(radioStation);
         realm.commitTransaction();
     }
 
-    private int getNextKey() {
+    public List<RadioStation> getStations() {
         realm.beginTransaction();
-        int id = 0;
-        try {
-            id = realm.where(RadioStation.class).max("id").intValue() + 1;
-        } catch (Exception e) {
-            realm.commitTransaction();
-            return id;
-        }
+        List<RadioStation> radioStations = realm.allObjects(RadioStation.class);
         realm.commitTransaction();
-        return id;
-    }
-
-    public RealmResults<RadioStation> getStations() {
-        return realm.allObjects(RadioStation.class);
+        return radioStations;
     }
 
     public void setPlayStation(String source) {

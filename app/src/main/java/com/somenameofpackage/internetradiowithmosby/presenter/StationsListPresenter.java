@@ -8,53 +8,56 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
+import com.somenameofpackage.internetradiowithmosby.model.db.RadioStation;
+import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
-import com.somenameofpackage.internetradiowithmosby.model.realmDB.RadioStation;
-import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
+import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
-import io.realm.RealmResults;
+import java.util.List;
 
 public class StationsListPresenter extends MvpBasePresenter<StationsView> {
-    private StationsDB stationsDB;
+    private RadioStations dataBase;
     private boolean bound = false;
     private RadioModel radioModel;
     private RadioListener radioListener;
+    private DBChangeListener dbChangeListener;
 
     public StationsListPresenter(Context context) {
-        stationsDB = new StationsDB(context);
+        dataBase = new RadioStations(context, dbChangeListener);
         radioListenerInit();
-        String source = stationsDB.getPlayingSource();
+        String source = dataBase.getPlayingStationSource();
         PlayerUtil.initPlayerService(new StationsListServiceConnection(source), context);
     }
 
-    public RealmResults<RadioStation> getStations() {
-        return stationsDB.getStations();
+    public List<RadioStation> getStations() {
+        return dataBase.getStations();
     }
 
     public void closeBD() {
-        stationsDB.closeBD();
+        dataBase.closeBD();
     }
 
     public void startPlay(String source, Context context) {
-        stationsDB.setPlayStation(source);
+        dataBase.setPlayStation(source);
         if (!bound) {
             PlayerUtil.initPlayerService(new StationsListServiceConnection(source), context);
         }
         if (radioModel != null) {
             radioModel.startPlay(source);
             if (getView() != null)
-                getView().showCurrentStation(stationsDB.getNumberOfPlayingStation());
+                getView().showCurrentStation(dataBase.getPlayingStationSource());
         }
     }
 
     public void addStation(String name, String source, Bitmap icon) {
-        stationsDB.addStation(name, source, icon);
+        dataBase.addStation(name, source, icon);
     }
 
     public void deleteStation(String source) {
-        stationsDB.deleteStation(source);
+        dataBase.removeStation(source);
     }
 
     private class StationsListServiceConnection implements ServiceConnection {
@@ -80,7 +83,7 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
             @Override
             public void onPlay() {
                 if (getView() != null) {
-                    getView().showCurrentStation(stationsDB.getNumberOfPlayingStation());
+                    getView().showCurrentStation(dataBase.getPlayingStationSource());
                 }
             }
 

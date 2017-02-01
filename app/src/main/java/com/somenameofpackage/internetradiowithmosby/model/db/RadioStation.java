@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.model.realmDB;
+package com.somenameofpackage.internetradiowithmosby.model.db;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -7,14 +7,22 @@ import io.realm.annotations.Required;
 public class RadioStation extends RealmObject {
     private boolean isPlay;
 
-    @PrimaryKey
-    private int id;
     @Required
     private String name;
     @Required
+    @PrimaryKey
     private String source;
     @Required
     private byte[] image;
+
+    public RadioStation(String name, String source, byte[] image) {
+        this.name = name;
+        this.source = source;
+        this.image = image;
+    }
+
+    public RadioStation() {
+    }
 
     public String getName() {
         return name;
@@ -64,17 +72,5 @@ public class RadioStation extends RealmObject {
         return "isPlay";
     }
 
-    public static String getIdFieldName() {
-        return "id";
-    }
-
     public static String getNameTable(){ return RadioStation.class.getSimpleName();}
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }

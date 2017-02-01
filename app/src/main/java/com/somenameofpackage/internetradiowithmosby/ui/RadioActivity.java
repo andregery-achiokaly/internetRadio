@@ -1,11 +1,6 @@
 package com.somenameofpackage.internetradiowithmosby.ui;
 
-import android.content.ContentValues;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteCursorDriver;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQuery;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -14,22 +9,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.somenameofpackage.internetradiowithmosby.R;
-import com.somenameofpackage.internetradiowithmosby.model.SQLiteHelpDB.StationsDBHelper;
-import com.somenameofpackage.internetradiowithmosby.model.realmDB.RadioStation;
-import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
+import com.somenameofpackage.internetradiowithmosby.model.db.RadioStation;
+import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
+import com.somenameofpackage.internetradiowithmosby.model.db.SQLiteHelpDB.StationsDBHelper;
+import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.AudioWaveFragment;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.ControlFragment;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.dialogs.AddStationDialog;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.StationsListFragment;
-
-import java.io.ByteArrayOutputStream;
 
 import butterknife.ButterKnife;
 
 public class RadioActivity extends AppCompatActivity implements AddStation {
     SharedPreferences sharedPreferences;
     final private static String INITIAL_DB = "INITIAL_DB";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +61,12 @@ public class RadioActivity extends AppCompatActivity implements AddStation {
         sharedPreferences = getPreferences(MODE_PRIVATE);
         Boolean isCreated = sharedPreferences.getBoolean(INITIAL_DB, false);
         if (!isCreated) {
-            firstInitialBD();
+            firstInitial();
         }
     }
 
-
-    void firstInitialBD() {
-        StationsDB stationsDB = new StationsDB(getApplicationContext());
+    void firstInitial() {
+        RadioStations stationsDB = new RadioStations(getApplicationContext());
         stationsDB.addStation(getString(R.string.best_fm_name),
                 getString(R.string.best_fm_source),
                 BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round));

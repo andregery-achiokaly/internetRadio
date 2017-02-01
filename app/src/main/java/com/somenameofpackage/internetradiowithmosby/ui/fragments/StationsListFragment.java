@@ -111,29 +111,43 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     }
 
     @Override
-    public void showCurrentStation(final int newPosition) {
+    public void showCurrentStation(final String station) {
         StationsListViewState stationsListViewState = (StationsListViewState) viewState;
-        stationsListViewState.setCurrentStation(newPosition);
+        stationsListViewState.setCurrentStation(station);
 
         disableStations();
-        recyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                if (newPosition < recyclerView.getChildCount() && newPosition != -1) {
-                    recyclerView.getChildAt(newPosition).setBackgroundColor(Color.RED);
-                    recyclerView.scrollToPosition(newPosition);
+        if (station != null) {
+            recyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                        String source = ((StationsListAdapter) recyclerView.getAdapter())
+                                .getStationById(i)
+                                .getSource();
+
+                        if (source.equals(station)) {
+                            recyclerView.getChildAt(i).setBackgroundColor(Color.RED);
+                            recyclerView.scrollToPosition(i);
+                            break;
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
     public void disableAllStation() {
         StationsListViewState stationsListViewState = (StationsListViewState) viewState;
-        int disableAllStation = -1;
+        String disableAllStation = null;
         stationsListViewState.setCurrentStation(disableAllStation);
 
         disableStations();
+    }
+
+    @Override
+    public void updateStations() {
+        ((StationsListAdapter) recyclerView.getAdapter()).update();
     }
 
     private void disableStations() {

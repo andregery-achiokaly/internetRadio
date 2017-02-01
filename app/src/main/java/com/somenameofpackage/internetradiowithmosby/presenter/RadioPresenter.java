@@ -6,9 +6,11 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
+import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
-import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
+import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
@@ -18,13 +20,12 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
     private RadioListener radioListener;
     private boolean bound = false;
     private boolean isPlay = false;
-    private StationsDB stationsDB;
+    private RadioStations dataBase;
 
     public RadioPresenter(Context context) {
-        stationsDB = new StationsDB(context);
+        dataBase = new RadioStations(context);
         radioListenerInit();
-        String source = stationsDB.getPlayingSource();
-        stationsDB.setPlayStation(source);
+        String source = dataBase.getPlayingStationSource();
         serviceConnection = new RadioServiceConnection(source);
         PlayerUtil.initPlayerService(serviceConnection, context);
     }
@@ -59,8 +60,8 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
     }
 
     private void startPlaying(Context context) {
-        String source = stationsDB.getPlayingSource();
-        stationsDB.setPlayStation(source);
+        String source = dataBase.getPlayingStationSource();
+        dataBase.setPlayStation(source);
         if (!bound) {
             serviceConnection = new RadioServiceConnection(source);
             PlayerUtil.initPlayerService(serviceConnection, context);

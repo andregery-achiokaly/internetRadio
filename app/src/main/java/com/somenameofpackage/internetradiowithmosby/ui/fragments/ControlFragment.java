@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
@@ -56,7 +57,11 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, RadioPresen
         switch (status){
             case Stop: playButton.setText(Status.Play.name()); break;
             case Play: playButton.setText(Status.Stop.name()); break;
-            case Error: playButton.setText(Status.Error.name()); break;
+            case Error:{
+                playButton.setText(Status.Play.name());
+                Toast.makeText(getContext(), R.string.cant_play_this_station, Toast.LENGTH_SHORT).show();
+                break;
+            }
         }
     }
 

@@ -9,7 +9,7 @@ import android.util.Log;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
-import com.somenameofpackage.internetradiowithmosby.model.realmDB.StationsDB;
+import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.model.visualizer.VisualizerModel;
 import com.somenameofpackage.internetradiowithmosby.ui.views.WaveView;
 
@@ -44,8 +44,8 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     public AudioWavePresenter(Context context) {
 
 
-        StationsDB stationsDB = new StationsDB(context);
-        final String source = stationsDB.getPlayingSource();
+        StationsRelamDB stationsRelamDB = new StationsRelamDB(context);
+        final String source = stationsRelamDB.getPlayingStationSource();
 
         ServiceConnection serviceConnection = new ServiceConnection() {
             @Override
