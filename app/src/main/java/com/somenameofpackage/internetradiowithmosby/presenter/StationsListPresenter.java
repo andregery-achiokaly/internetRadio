@@ -23,10 +23,16 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     private boolean bound = false;
     private RadioModel radioModel;
     private RadioListener radioListener;
-    private DBChangeListener dbChangeListener;
+    private DBChangeListener dbChangeListener = new DBChangeListener() {
+        @Override
+        public void update() {
+            getView().updateStations();
+        }
+    };
 
     public StationsListPresenter(Context context) {
-        dataBase = new RadioStations(context, dbChangeListener);
+        dataBase = new RadioStations(context);
+        dataBase.addListener(dbChangeListener);
         radioListenerInit();
         String source = dataBase.getPlayingStationSource();
         PlayerUtil.initPlayerService(new StationsListServiceConnection(source), context);

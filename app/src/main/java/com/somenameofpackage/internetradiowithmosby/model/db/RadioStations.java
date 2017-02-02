@@ -3,6 +3,7 @@ package com.somenameofpackage.internetradiowithmosby.model.db;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.somenameofpackage.internetradiowithmosby.model.db.SQLiteHelpDB.StationsDBHelper;
 import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.presenter.DBChangeListener;
 
@@ -17,7 +18,7 @@ public class RadioStations{
 
     public RadioStations(Context context) {
         radioStations = new LinkedList<>();
-        dataBase = new StationsRelamDB(context);
+        dataBase = new StationsDBHelper(context);
         radioStations.addAll(dataBase.getStations());
     }
 
@@ -86,6 +87,10 @@ public class RadioStations{
     }
 
     private void updateListeners(){
-        
+        for(DBChangeListener listener: listeners) listener.update();
+    }
+
+    public void addListener(DBChangeListener dbChangeListener) {
+        listeners.add(dbChangeListener);
     }
 }

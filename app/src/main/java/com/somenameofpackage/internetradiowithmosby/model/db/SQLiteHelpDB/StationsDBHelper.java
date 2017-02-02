@@ -75,7 +75,7 @@ public class StationsDBHelper extends SQLiteOpenHelper implements DataBase {
                 null,
                 null,
                 null);
-
+        if (c == null) return null;
         int sourceCI = c.getColumnIndex(RadioStation.getSourceFieldName());
         String source = c.getString(sourceCI);
         c.close();
@@ -88,7 +88,7 @@ public class StationsDBHelper extends SQLiteOpenHelper implements DataBase {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.query(RadioStation.getNameTable(), null, null, null, null, null, null);
         List<RadioStation> result = new LinkedList<>();
-
+        if (c == null) return result;
         int nameCI = c.getColumnIndex(RadioStation.getNameFieldName());
         int sourceCI = c.getColumnIndex(RadioStation.getSourceFieldName());
         int isPlayCI = c.getColumnIndex(RadioStation.getIsPlayFieldName());

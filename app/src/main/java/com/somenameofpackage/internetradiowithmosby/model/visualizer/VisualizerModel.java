@@ -14,7 +14,6 @@ public class VisualizerModel {
     public VisualizerModel(RadioModel radioModel, VisualizerListener visualizerListener){
         this.radioModel = radioModel;
         this.visualizerListener = visualizerListener;
-        setupVisualizerFxAndUI();
     }
 
 

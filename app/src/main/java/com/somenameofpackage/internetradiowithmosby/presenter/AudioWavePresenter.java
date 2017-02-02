@@ -42,8 +42,6 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     };
 
     public AudioWavePresenter(Context context) {
-
-
         StationsRelamDB stationsRelamDB = new StationsRelamDB(context);
         final String source = stationsRelamDB.getPlayingStationSource();
 
@@ -59,9 +57,6 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
 
             }
         };
-
         PlayerUtil.initPlayerService(serviceConnection, context);
     }
-
-
 }
