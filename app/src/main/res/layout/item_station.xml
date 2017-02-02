@@ -7,6 +7,7 @@
 
     <ImageView
         android:id="@+id/stationIcon"
+        android:contentDescription="@string/icon_of_radio_station"
         android:layout_width="@dimen/iconSize"
         android:layout_height="@dimen/iconSize"/>
 

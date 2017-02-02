@@ -26,7 +26,7 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     private DBChangeListener dbChangeListener = new DBChangeListener() {
         @Override
         public void update() {
-            getView().updateStations();
+            if (getView() != null) getView().updateStations();
         }
     };
 
