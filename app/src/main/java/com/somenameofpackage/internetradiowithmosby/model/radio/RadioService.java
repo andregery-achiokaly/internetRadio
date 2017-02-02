@@ -6,7 +6,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.somenameofpackage.internetradiowithmosby.presenter.RadioListener;
+import com.somenameofpackage.internetradiowithmosby.presenter.listeners.RadioListener;
 
 public class RadioService extends Service {
     RadioModel radioModel = new RadioModel();

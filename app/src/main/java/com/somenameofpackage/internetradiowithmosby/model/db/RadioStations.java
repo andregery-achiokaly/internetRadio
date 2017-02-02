@@ -2,39 +2,39 @@ package com.somenameofpackage.internetradiowithmosby.model.db;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
+import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.SQLiteHelpDB.StationsDBHelper;
-import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
-import com.somenameofpackage.internetradiowithmosby.presenter.DBChangeListener;
+import com.somenameofpackage.internetradiowithmosby.presenter.listeners.DBChangeListener;
 
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-public class RadioStations{
-    private List<RadioStation> radioStations;
+public class RadioStations {
     private DataBase dataBase;
-    List<DBChangeListener> listeners = new LinkedList<>();
+    private List<DBChangeListener> listeners = new LinkedList<>();
 
     public RadioStations(Context context) {
-        radioStations = new LinkedList<>();
         dataBase = new StationsDBHelper(context);
-        radioStations.addAll(dataBase.getStations());
+        updateListeners();
     }
 
-    public RadioStations(Context context, List<RadioStation> r) {
-        this(context);
-        radioStations.addAll(r);
-    }
+    public void firstInitial(Context context) {
+        addStation(context.getString(R.string.best_fm_name),
+                context.getString(R.string.best_fm_source),
+                BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher_round));
 
-    public RadioStations(Context context, List<RadioStation> r, DBChangeListener listener) {
-        this(context);
-        radioStations.addAll(r);
-        listeners.add(listener);
+        addStation(context.getString(R.string.jam_fm_name),
+                context.getString(R.string.jam_fm_source),
+                BitmapFactory.decodeResource(context.getResources(),
+                        R.mipmap.ic_launcher));
     }
 
     public List<RadioStation> getStations() {
-        return radioStations;
+        return dataBase.getStations();
     }
 
     public void addStation(String name, String source, Bitmap icon) {
@@ -43,35 +43,24 @@ public class RadioStations{
 
         RadioStation radioStation = new RadioStation(name, source, stream.toByteArray());
         dataBase.addStation(radioStation);
-        if (!radioStations.contains(radioStation)) radioStations.add(radioStation);
+
+        updateListeners();
     }
 
     public void addStation(String name, String source, byte[] icon) {
         RadioStation radioStation = new RadioStation(name, source, icon);
         dataBase.addStation(radioStation);
-        if (!radioStations.contains(radioStation)) radioStations.add(radioStation);
+        updateListeners();
     }
 
     public void removeStation(RadioStation radioStation) {
         dataBase.deleteStation(radioStation.getSource());
+        updateListeners();
     }
 
     public void removeStation(String source) {
         dataBase.deleteStation(source);
-        for (int i = 0; i < radioStations.size(); i++) {
-            if (radioStations.get(i).getSource().equals(source)) {
-                radioStations.remove(i);
-                break;
-            }
-        }
-    }
-
-    public RadioStation get(int index) {
-        return radioStations.get(index);
-    }
-
-    public int size() {
-        return radioStations.size();
+        updateListeners();
     }
 
     public String getPlayingStationSource() {
@@ -82,12 +71,12 @@ public class RadioStations{
         dataBase.setPlayStation(source);
     }
 
-    public void closeBD(){
+    public void closeBD() {
         dataBase.closeBD();
     }
 
-    private void updateListeners(){
-        for(DBChangeListener listener: listeners) listener.update();
+    private void updateListeners() {
+        for (DBChangeListener listener : listeners) listener.update();
     }
 
     public void addListener(DBChangeListener dbChangeListener) {

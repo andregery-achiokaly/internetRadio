@@ -1,4 +1,4 @@
-package com.somenameofpackage.internetradiowithmosby.presenter;
+package com.somenameofpackage.internetradiowithmosby.presenter.listeners;
 
 
 public interface VisualizerListener {

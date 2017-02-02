@@ -4,7 +4,7 @@ package com.somenameofpackage.internetradiowithmosby.model.radio;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
-import com.somenameofpackage.internetradiowithmosby.presenter.RadioListener;
+import com.somenameofpackage.internetradiowithmosby.presenter.listeners.RadioListener;
 
 import java.io.IOException;
 import java.util.LinkedList;

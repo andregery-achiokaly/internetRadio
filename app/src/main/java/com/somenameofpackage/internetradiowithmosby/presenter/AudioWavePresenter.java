@@ -11,6 +11,8 @@ import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.model.visualizer.VisualizerModel;
+import com.somenameofpackage.internetradiowithmosby.presenter.listeners.RadioListener;
+import com.somenameofpackage.internetradiowithmosby.presenter.listeners.VisualizerListener;
 import com.somenameofpackage.internetradiowithmosby.ui.views.WaveView;
 
 public class AudioWavePresenter extends MvpBasePresenter<WaveView> {

@@ -2,7 +2,6 @@ package com.somenameofpackage.internetradiowithmosby.ui;
 
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +17,6 @@ import com.somenameofpackage.internetradiowithmosby.ui.fragments.StationsListFra
 import butterknife.ButterKnife;
 
 public class RadioActivity extends AppCompatActivity implements AddStation {
-    SharedPreferences sharedPreferences;
     final private static String INITIAL_DB = "INITIAL_DB";
 
     @Override
@@ -55,27 +53,14 @@ public class RadioActivity extends AppCompatActivity implements AddStation {
     }
 
     void createBD() {
-        sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         Boolean isCreated = sharedPreferences.getBoolean(INITIAL_DB, false);
         if (!isCreated) {
-            firstInitial();
+            new RadioStations(getApplicationContext()).firstInitial(getApplicationContext());
+            sharedPreferences = getPreferences(MODE_PRIVATE);
+            SharedPreferences.Editor ed = sharedPreferences.edit();
+            ed.putBoolean(INITIAL_DB, true);
+            ed.apply();
         }
-    }
-
-    void firstInitial() {
-        RadioStations stationsDB = new RadioStations(getApplicationContext());
-        stationsDB.addStation(getString(R.string.best_fm_name),
-                getString(R.string.best_fm_source),
-                BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round));
-
-        stationsDB.addStation(getString(R.string.jam_fm_name),
-                getString(R.string.jam_fm_source),
-                BitmapFactory.decodeResource(getResources(),
-                        R.mipmap.ic_launcher));
-
-        sharedPreferences = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = sharedPreferences.edit();
-        ed.putBoolean(INITIAL_DB, true);
-        ed.apply();
     }
 }

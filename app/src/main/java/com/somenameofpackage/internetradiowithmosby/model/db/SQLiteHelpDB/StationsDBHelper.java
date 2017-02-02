@@ -9,18 +9,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQuery;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStation;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
 public class StationsDBHelper extends SQLiteOpenHelper implements DataBase {
     public StationsDBHelper(Context context) {
-        super(context, "RadioStations", new SQLiteDatabase.CursorFactory() {
+        super(context, null, new SQLiteDatabase.CursorFactory() {
             @Override
             public Cursor newCursor(SQLiteDatabase db, SQLiteCursorDriver masterQuery, String editTable, SQLiteQuery query) {
                 return null;
@@ -29,13 +31,18 @@ public class StationsDBHelper extends SQLiteOpenHelper implements DataBase {
     }
 
     @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + RadioStation.getNameTable()
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + RadioStation.getNameTable()
                 + " ("
-                + "name text,"
-                + "source text primary key,"
-                + "isPlay boolean,"
-                + "image blob"
+                + RadioStation.getNameFieldName() + " text,"
+                + RadioStation.getSourceFieldName() + " text primary key,"
+                + RadioStation.getIsPlayFieldName() + " boolean,"
+                + RadioStation.getImageFieldName() + " blob"
                 + ");");
     }
 
@@ -58,7 +65,8 @@ public class StationsDBHelper extends SQLiteOpenHelper implements DataBase {
         cv.put(RadioStation.getImageFieldName(), bitmap);
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.insert(RadioStation.getNameTable(), null, cv);
+        db.beginTransaction();
+        db.endTransaction();
         db.close();
     }
 
@@ -77,7 +85,8 @@ public class StationsDBHelper extends SQLiteOpenHelper implements DataBase {
                 null);
         if (c == null) return null;
         int sourceCI = c.getColumnIndex(RadioStation.getSourceFieldName());
-        String source = c.getString(sourceCI);
+        String source = null;
+        if (c.moveToFirst()) source = c.getString(sourceCI);
         c.close();
         db.close();
         return source;
@@ -93,15 +102,17 @@ public class StationsDBHelper extends SQLiteOpenHelper implements DataBase {
         int sourceCI = c.getColumnIndex(RadioStation.getSourceFieldName());
         int isPlayCI = c.getColumnIndex(RadioStation.getIsPlayFieldName());
         int imageCI = c.getColumnIndex(RadioStation.getImageFieldName());
-        do {
-            RadioStation radioStation = new RadioStation();
-            radioStation.setName(c.getString(nameCI));
-            radioStation.setSource(c.getString(sourceCI));
-            radioStation.setImage(c.getBlob(imageCI));
-            if (c.getInt(isPlayCI) == 1) radioStation.setPlay(true);
-            else radioStation.setPlay(false);
-            result.add(radioStation);
-        } while (c.moveToNext());
+        if (c.moveToFirst()) {
+            do {
+                RadioStation radioStation = new RadioStation();
+                radioStation.setName(c.getString(nameCI));
+                radioStation.setSource(c.getString(sourceCI));
+                radioStation.setImage(c.getBlob(imageCI));
+                if (c.getInt(isPlayCI) == 1) radioStation.setPlay(true);
+                else radioStation.setPlay(false);
+                result.add(radioStation);
+            } while (c.moveToNext());
+        }
         c.close();
         db.close();
         return result;
@@ -113,10 +124,12 @@ public class StationsDBHelper extends SQLiteOpenHelper implements DataBase {
         SQLiteDatabase db = this.getWritableDatabase();
 
         cv.put(RadioStation.getIsPlayFieldName(), 1);
+        db.beginTransaction();
         db.update(RadioStation.getNameTable(),
                 cv,
                 RadioStation.getSourceFieldName() + " = ?",
                 new String[]{source});
+        db.endTransaction();
     }
 
     @Override
@@ -132,8 +145,10 @@ public class StationsDBHelper extends SQLiteOpenHelper implements DataBase {
     @Override
     public void deleteStation(String source) {
         SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
         db.delete(RadioStation.getNameTable(),
                 RadioStation.getSourceFieldName() + " = " + source,
                 null);
+        db.endTransaction();
     }
 }

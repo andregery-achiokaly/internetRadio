@@ -4,7 +4,7 @@ package com.somenameofpackage.internetradiowithmosby.model.visualizer;
 import android.media.audiofx.Visualizer;
 
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
-import com.somenameofpackage.internetradiowithmosby.presenter.VisualizerListener;
+import com.somenameofpackage.internetradiowithmosby.presenter.listeners.VisualizerListener;
 
 public class VisualizerModel {
     private Visualizer mVisualizer;
@@ -15,7 +15,6 @@ public class VisualizerModel {
         this.radioModel = radioModel;
         this.visualizerListener = visualizerListener;
     }
-
 
     public void setupVisualizerFxAndUI() {
         if (mVisualizer != null) mVisualizer.release();
