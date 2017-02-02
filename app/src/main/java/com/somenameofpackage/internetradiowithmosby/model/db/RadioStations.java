@@ -3,10 +3,9 @@ package com.somenameofpackage.internetradiowithmosby.model.db;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import com.somenameofpackage.internetradiowithmosby.R;
-import com.somenameofpackage.internetradiowithmosby.model.db.SQLiteHelpDB.StationsDBHelper;
+import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.presenter.listeners.DBChangeListener;
 
 import java.io.ByteArrayOutputStream;
@@ -18,7 +17,7 @@ public class RadioStations {
     private List<DBChangeListener> listeners = new LinkedList<>();
 
     public RadioStations(Context context) {
-        dataBase = new StationsDBHelper(context);
+        dataBase = new StationsRelamDB(context);
         updateListeners();
     }
 
