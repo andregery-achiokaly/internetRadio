@@ -47,7 +47,7 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, RadioPresen
 
     @OnClick(R.id.play_btn)
     public void onPlayClicked() {
-        presenter.buttonPressed(getContext());
+        presenter.buttonPressed();
     }
 
     @Override

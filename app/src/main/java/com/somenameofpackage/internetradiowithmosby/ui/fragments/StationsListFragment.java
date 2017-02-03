@@ -107,7 +107,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
 
     @OnClick(R.id.add_station_btn)
     public void addStation() {
-        ((AddStation) getActivity()).createStationDialog("AddStation");
+        ((AddStation) getActivity()).openDialogCreateStation();
     }
 
     @Override

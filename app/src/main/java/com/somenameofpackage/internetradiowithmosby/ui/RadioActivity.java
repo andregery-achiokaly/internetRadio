@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 
 public class RadioActivity extends AppCompatActivity implements AddStation {
     final private static String INITIAL_DB = "INITIAL_DB";
+    final private static String CREATE_STATION = "CREATE_STATION";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +48,12 @@ public class RadioActivity extends AppCompatActivity implements AddStation {
         }
     }
 
-    public void createStationDialog(String tag) {
+    public void openDialogCreateStation() {
         DialogFragment dialogFragment = new AddStationDialog();
-        dialogFragment.show(getSupportFragmentManager(), tag);
+        dialogFragment.show(getSupportFragmentManager(), CREATE_STATION);
     }
 
-    void createBD() {
+    private void createBD() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         Boolean isCreated = sharedPreferences.getBoolean(INITIAL_DB, false);
         if (!isCreated) {

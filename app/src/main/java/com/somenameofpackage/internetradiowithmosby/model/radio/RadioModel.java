@@ -11,12 +11,15 @@ import java.util.LinkedList;
 
 public class RadioModel implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener {
+    private final static String CRASH = "Radio crashed";
+    private final static String LIST_OF_RADIO_STATIONS_IS_EMPTY = "List of radio stations is empty";
+
     private MediaPlayer mediaPlayer;
-    private LinkedList<RadioListener> listOfRadioListener = new LinkedList<>();
+    private final LinkedList<RadioListener> listOfRadioListener = new LinkedList<>();
     private String currentSource = "";
     private boolean isPlay;
 
-    public void stopPlay() {
+    private void stopPlay() {
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
@@ -25,17 +28,17 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
                 }
             }
         }
-        isPlay = false;
     }
 
-    public void startPlay(String source) {
+    private void startPlay(String source) {
         if (mediaPlayer != null && source != null) {
             if (currentSource.equals(source)) {
                 if (!mediaPlayer.isPlaying()) {
                     mediaPlayer.start();
                 }
             } else {
-                closeMediaPlayer();
+                mediaPlayer.release();
+                mediaPlayer = null;
                 createMediaPlayer(source);
                 currentSource = source;
             }
@@ -43,7 +46,21 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
                 if (r != null) r.onPlay();
             }
         }
-        isPlay = true;
+    }
+
+    public void play(String source){
+        if(isPlay) {
+            stopPlay();
+            isPlay = false;
+        }
+        else {
+            startPlay(source);
+            isPlay = true;
+        }
+    }
+
+    void play(){
+        play(currentSource);
     }
 
     @Override
@@ -60,7 +77,6 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
     }
 
     private void createMediaPlayer(String source) {
-        isPlay = false;
         try {
             if (mediaPlayer == null) mediaPlayer = new MediaPlayer();
             else mediaPlayer.release();
@@ -72,11 +88,11 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
         } catch (IOException e) {
             e.printStackTrace();
             for (RadioListener r : listOfRadioListener)
-                if (r != null) r.onError("RadioModel crash :(");
+                if (r != null) r.onError(CRASH);
         } catch (NullPointerException e){
             currentSource = "";
             for (RadioListener r : listOfRadioListener)
-                if (r != null) r.onError("No radio station");
+                if (r != null) r.onError(LIST_OF_RADIO_STATIONS_IS_EMPTY);
         }
     }
 

@@ -1,10 +1,6 @@
 package com.somenameofpackage.internetradiowithmosby.model.db;
 
 
-import android.graphics.Bitmap;
-
-import java.util.List;
-
 import io.realm.RealmResults;
 
 public interface DataBase {

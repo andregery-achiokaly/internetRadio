@@ -8,8 +8,8 @@ import com.somenameofpackage.internetradiowithmosby.presenter.listeners.Visualiz
 
 public class VisualizerModel {
     private Visualizer mVisualizer;
-    private RadioModel radioModel;
-    private VisualizerListener visualizerListener;
+    private final RadioModel radioModel;
+    private final VisualizerListener visualizerListener;
 
     public VisualizerModel(RadioModel radioModel, VisualizerListener visualizerListener){
         this.radioModel = radioModel;
@@ -22,7 +22,7 @@ public class VisualizerModel {
         mVisualizer.setEnabled(false);
         mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
         mVisualizer.setDataCaptureListener(new AudioWaveDataCaptureListener(),
-                Visualizer.getMaxCaptureRate(), true, false);
+                Visualizer.getMaxCaptureRate()/2, true, false);
         mVisualizer.setEnabled(true);
     }
 

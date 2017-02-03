@@ -30,12 +30,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Alexander_Topilskii\Desktop\InternetRadio3\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jar="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.1"
-        sha1="7fadb286755322aaaf03484e62370b1a2c5e1a75">
-        <dex dex="C:\Users\Alexander_Topilskii\Desktop\InternetRadio3\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_9161aa2214fa9610c8dbac91bc31d3564aee9df8\classes.dex" />
+        sha1="f7481e94752b637a3ebc087cac3aaf3205d7f130">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_8024da8b28d747377e988a8329c712acd6abcd79\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -54,6 +54,15 @@
         revision="25.0.1"
         sha1="d75c9c5577143f3cf3fd63f61526a551f910b56f">
         <dex dex="C:\Users\Alexander_Topilskii\Desktop\InternetRadio3\app\build\intermediates\pre-dexed\debug\mvp-common-2.0.1_428afcf2abcf125a367ef19cead00a6bfcb4298e.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="7fadb286755322aaaf03484e62370b1a2c5e1a75">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_92f53906305d505454a9ff969109214c4a4ea4dd\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -92,24 +101,6 @@
         <dex dex="C:\Users\Alexander_Topilskii\Desktop\InternetRadio3\app\build\intermediates\pre-dexed\debug\classes_fd4780f4b5bd6b582f30a1068f70aaa21aab70f5.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="C:\Users\Alexander_Topilskii\.android\build-cache\db60127fd4a4ccf201a9ecf7c9847fa4510a140f\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="30103d98fa5ed824b54af839c85e2111f9bde8ec">
-        <dex dex="C:\Users\Alexander_Topilskii\Desktop\InternetRadio3\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_283b0c3ec027cebfd3e280acab7f64a077d6500e\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Alexander_Topilskii\Desktop\InternetRadio3\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="ca0fe8374687a8d04d3756f6a6cc3a9fb51273f4">
-        <dex dex="C:\Users\Alexander_Topilskii\Desktop\InternetRadio3\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_937284efdcc25207e43eb5eac972a68a6b1a2c97\classes.dex" />
-    </item>
-    <item
         is-multidex="false"
         jar="C:\Users\Alexander_Topilskii\.gradle\caches\modules-2\files-2.1\com.google.dagger\dagger\2.4\6b290a792253035c9fcc912d6a4d7efb3e850211\dagger-2.4.jar"
         jumboMode="false"
@@ -117,15 +108,6 @@
         revision="25.0.1"
         sha1="6b290a792253035c9fcc912d6a4d7efb3e850211">
         <dex dex="C:\Users\Alexander_Topilskii\Desktop\InternetRadio3\app\build\intermediates\pre-dexed\debug\dagger-2.4_b61fcf388720e61e15f375fbeae82879b5de75ac.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Alexander_Topilskii\.android\build-cache\64b4983d5833f7facaef0c35ce627821c6082024\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="d38084015027549951cbaea5d5f6fb795cc81151">
-        <dex dex="C:\Users\Alexander_Topilskii\Desktop\InternetRadio3\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_b6fc63154ceb342470cf9b96831ef477898029b4\classes.dex" />
     </item>
     <item
         is-multidex="false"

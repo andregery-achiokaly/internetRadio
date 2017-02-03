@@ -12,7 +12,7 @@ import java.io.ByteArrayOutputStream;
 import io.realm.RealmResults;
 
 public class RadioStations {
-    private DataBase dataBase;
+    private final DataBase dataBase;
 
     public RadioStations(Context context) {
         dataBase = new StationsRelamDB(context);
@@ -59,7 +59,8 @@ public class RadioStations {
     }
 
     public void setPlayStation(String source) {
-        dataBase.setPlayStation(source);
+        if (source != null)
+            dataBase.setPlayStation(source);
     }
 
     public void closeBD() {

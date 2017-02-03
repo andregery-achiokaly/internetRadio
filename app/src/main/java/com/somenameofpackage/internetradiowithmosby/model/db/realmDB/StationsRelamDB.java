@@ -5,14 +5,12 @@ import android.content.Context;
 import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStation;
 
-import java.util.List;
-
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 public class StationsRelamDB implements DataBase{
-    private Realm realm;
+    private final Realm realm;
     private static final String nameOfConfiguration = "Configuration1";
 
     public StationsRelamDB(Context context) {

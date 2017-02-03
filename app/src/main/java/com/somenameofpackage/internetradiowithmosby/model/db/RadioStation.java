@@ -15,7 +15,7 @@ public class RadioStation extends RealmObject {
     @Required
     private byte[] image;
 
-    public RadioStation(String name, String source, byte[] image) {
+    RadioStation(String name, String source, byte[] image) {
         this.name = name;
         this.source = source;
         this.image = image;

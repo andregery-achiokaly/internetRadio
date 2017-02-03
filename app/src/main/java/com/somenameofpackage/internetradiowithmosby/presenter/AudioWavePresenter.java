@@ -2,6 +2,7 @@ package com.somenameofpackage.internetradiowithmosby.presenter;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
@@ -18,7 +19,7 @@ import com.somenameofpackage.internetradiowithmosby.ui.views.WaveView;
 public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     private RadioModel radioModel;
     private VisualizerModel visualizerModel;
-    private VisualizerListener visualizerListener = new VisualizerListener() {
+    private final VisualizerListener visualizerListener = new VisualizerListener() {
         @Override
         public void updateVisualizer(byte[] bytes) {
             if (getView() != null) getView().updateVisualizer(bytes);
@@ -26,7 +27,7 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     };
 
 
-    private RadioListener radioListener = new RadioListener() {
+    private final RadioListener radioListener = new RadioListener() {
         @Override
         public void onPlay() {
             visualizerModel.setupVisualizerFxAndUI();
@@ -59,6 +60,6 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
 
             }
         };
-        PlayerUtil.initPlayerService(serviceConnection, context);
+        context.bindService(new Intent(context, RadioService.class), serviceConnection, Context.BIND_AUTO_CREATE);
     }
 }

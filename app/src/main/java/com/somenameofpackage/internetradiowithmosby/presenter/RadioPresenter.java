@@ -2,6 +2,7 @@ package com.somenameofpackage.internetradiowithmosby.presenter;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
@@ -15,18 +16,17 @@ import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
 public class RadioPresenter extends MvpBasePresenter<RadioView> {
     private RadioModel radioModel;
-    private ServiceConnection serviceConnection;
     private RadioListener radioListener;
-    private boolean bound = false;
     private boolean isPlay = false;
-    private RadioStations dataBase;
+    private final RadioStations dataBase;
 
     public RadioPresenter(Context context) {
         dataBase = new RadioStations(context);
         radioListenerInit();
         String source = dataBase.getPlayingStationSource();
-        serviceConnection = new RadioServiceConnection(source);
-        PlayerUtil.initPlayerService(serviceConnection, context);
+        context.bindService(new Intent(context, RadioService.class),
+                    new RadioServiceConnection(source),
+                    Context.BIND_AUTO_CREATE);
     }
 
     private void radioListenerInit() {
@@ -48,50 +48,45 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         };
     }
 
-    public void buttonPressed(Context context){
-        if(isPlay){
+    public void buttonPressed() {
+        if (isPlay) {
             isPlay = false;
-            startPlaying(context);
+            startPlaying();
         } else {
             isPlay = true;
             stopPlaying();
         }
     }
 
-    private void startPlaying(Context context) {
+    private void startPlaying() {
         String source = dataBase.getPlayingStationSource();
         dataBase.setPlayStation(source);
-        if (!bound) {
-            serviceConnection = new RadioServiceConnection(source);
-            PlayerUtil.initPlayerService(serviceConnection, context);
-        }
         if (radioModel != null) {
-            radioModel.startPlay(source);
+            radioModel.play(source);
         }
     }
 
     private void stopPlaying() {
+        String source = dataBase.getPlayingStationSource();
+        dataBase.setPlayStation(source);
         if (radioModel != null) {
-            radioModel.stopPlay();
+            radioModel.play(source);
         }
-        bound = false;
     }
 
     private class RadioServiceConnection implements ServiceConnection {
-        String source;
+        final String source;
 
         RadioServiceConnection(String source) {
             this.source = source;
         }
 
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            bound = true;
             radioModel = ((RadioService.RadioBinder) binder).getModel(radioListener, source);
-            radioModel.startPlay(source);
+            radioModel.play(source);
         }
 
         public void onServiceDisconnected(ComponentName name) {
-            bound = false;
             if (getView() != null)
                 getView().showStatus(Status.Stop);
         }

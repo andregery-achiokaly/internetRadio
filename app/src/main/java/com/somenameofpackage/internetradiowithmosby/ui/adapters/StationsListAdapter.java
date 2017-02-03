@@ -50,9 +50,9 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
     }
 
     class StationViewHolder extends RecyclerView.ViewHolder {
-        TextView stationNameTextView;
-        TextView stationSourceTextView;
-        ImageView stationIconImageView;
+        final TextView stationNameTextView;
+        final TextView stationSourceTextView;
+        final ImageView stationIconImageView;
 
         StationViewHolder(final View itemView) {
             super(itemView);

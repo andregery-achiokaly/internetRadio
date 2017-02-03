@@ -2,6 +2,7 @@ package com.somenameofpackage.internetradiowithmosby.presenter;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.os.IBinder;
@@ -15,13 +16,10 @@ import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.presenter.listeners.RadioListener;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
-import java.util.List;
-
 import io.realm.RealmResults;
 
 public class StationsListPresenter extends MvpBasePresenter<StationsView> {
-    private RadioStations dataBase;
-    private boolean bound = false;
+    private final RadioStations dataBase;
     private RadioModel radioModel;
     private RadioListener radioListener;
 
@@ -29,7 +27,9 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         dataBase = new RadioStations(context);
         radioListenerInit();
         String source = dataBase.getPlayingStationSource();
-        PlayerUtil.initPlayerService(new StationsListServiceConnection(source), context);
+        context.bindService(new Intent(context, RadioService.class),
+                new StationsListServiceConnection(source),
+                Context.BIND_AUTO_CREATE);
     }
 
     public RealmResults<RadioStation> getStations() {
@@ -42,11 +42,8 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
 
     public void startPlay(String source, Context context) {
         dataBase.setPlayStation(source);
-        if (!bound) {
-            PlayerUtil.initPlayerService(new StationsListServiceConnection(source), context);
-        }
         if (radioModel != null) {
-            radioModel.startPlay(source);
+            radioModel.play(source);
             if (getView() != null)
                 getView().showCurrentStation(dataBase.getPlayingStationSource());
         }
@@ -61,20 +58,18 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     }
 
     private class StationsListServiceConnection implements ServiceConnection {
-        String source;
+        final String source;
 
         StationsListServiceConnection(String source) {
             this.source = source;
         }
 
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            bound = true;
             radioModel = ((RadioService.RadioBinder) binder).getModel(radioListener, source);
-            radioModel.startPlay(source);
+            radioModel.play(source);
         }
 
         public void onServiceDisconnected(ComponentName name) {
-            bound = false;
         }
     }
 
