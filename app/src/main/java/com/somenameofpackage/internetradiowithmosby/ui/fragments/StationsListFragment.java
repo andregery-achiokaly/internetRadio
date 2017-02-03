@@ -145,11 +145,6 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
         disableStations();
     }
 
-    @Override
-    public void updateStations() {
-        ((StationsListAdapter) recyclerView.getAdapter()).update();
-    }
-
     private void disableStations() {
         for (int i = 0; i < recyclerView.getChildCount(); i++) {
             recyclerView.getChildAt(i).setBackgroundColor(Color.WHITE);

@@ -12,33 +12,27 @@ import com.somenameofpackage.internetradiowithmosby.model.db.RadioStation;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
-import com.somenameofpackage.internetradiowithmosby.presenter.listeners.DBChangeListener;
 import com.somenameofpackage.internetradiowithmosby.presenter.listeners.RadioListener;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
 import java.util.List;
+
+import io.realm.RealmResults;
 
 public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     private RadioStations dataBase;
     private boolean bound = false;
     private RadioModel radioModel;
     private RadioListener radioListener;
-    private DBChangeListener dbChangeListener = new DBChangeListener() {
-        @Override
-        public void update() {
-            if (getView() != null) getView().updateStations();
-        }
-    };
 
     public StationsListPresenter(Context context) {
         dataBase = new RadioStations(context);
-        dataBase.addListener(dbChangeListener);
         radioListenerInit();
         String source = dataBase.getPlayingStationSource();
         PlayerUtil.initPlayerService(new StationsListServiceConnection(source), context);
     }
 
-    public List<RadioStation> getStations() {
+    public RealmResults<RadioStation> getStations() {
         return dataBase.getStations();
     }
 

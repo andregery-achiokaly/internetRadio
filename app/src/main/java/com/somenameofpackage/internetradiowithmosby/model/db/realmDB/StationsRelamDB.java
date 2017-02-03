@@ -57,9 +57,9 @@ public class StationsRelamDB implements DataBase{
         realm.commitTransaction();
     }
 
-    public List<RadioStation> getStations() {
+    public RealmResults<RadioStation> getStations() {
         realm.beginTransaction();
-        List<RadioStation> radioStations = realm.allObjects(RadioStation.class);
+        RealmResults<RadioStation> radioStations = realm.allObjects(RadioStation.class);
         realm.commitTransaction();
         return radioStations;
     }

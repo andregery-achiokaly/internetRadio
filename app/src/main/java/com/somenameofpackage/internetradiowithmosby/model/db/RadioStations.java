@@ -6,19 +6,16 @@ import android.graphics.BitmapFactory;
 
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
-import com.somenameofpackage.internetradiowithmosby.presenter.listeners.DBChangeListener;
 
 import java.io.ByteArrayOutputStream;
-import java.util.LinkedList;
-import java.util.List;
+
+import io.realm.RealmResults;
 
 public class RadioStations {
     private DataBase dataBase;
-    private List<DBChangeListener> listeners = new LinkedList<>();
 
     public RadioStations(Context context) {
         dataBase = new StationsRelamDB(context);
-        updateListeners();
     }
 
     public void firstInitial(Context context) {
@@ -32,7 +29,7 @@ public class RadioStations {
                         R.mipmap.ic_launcher));
     }
 
-    public List<RadioStation> getStations() {
+    public RealmResults<RadioStation> getStations() {
         return dataBase.getStations();
     }
 
@@ -42,24 +39,19 @@ public class RadioStations {
 
         RadioStation radioStation = new RadioStation(name, source, stream.toByteArray());
         dataBase.addStation(radioStation);
-
-        updateListeners();
     }
 
     public void addStation(String name, String source, byte[] icon) {
         RadioStation radioStation = new RadioStation(name, source, icon);
         dataBase.addStation(radioStation);
-        updateListeners();
     }
 
     public void removeStation(RadioStation radioStation) {
         dataBase.deleteStation(radioStation.getSource());
-        updateListeners();
     }
 
     public void removeStation(String source) {
         dataBase.deleteStation(source);
-        updateListeners();
     }
 
     public String getPlayingStationSource() {
@@ -72,13 +64,5 @@ public class RadioStations {
 
     public void closeBD() {
         dataBase.closeBD();
-    }
-
-    private void updateListeners() {
-        for (DBChangeListener listener : listeners) listener.update();
-    }
-
-    public void addListener(DBChangeListener dbChangeListener) {
-        listeners.add(dbChangeListener);
     }
 }

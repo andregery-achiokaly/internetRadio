@@ -5,10 +5,12 @@ import android.graphics.Bitmap;
 
 import java.util.List;
 
+import io.realm.RealmResults;
+
 public interface DataBase {
     String getPlayingStationSource();
     void addStation(RadioStation radioStation);
-    List<RadioStation> getStations();
+    RealmResults<RadioStation> getStations();
     void setPlayStation(String source);
     void closeBD();
     void clearBD();

@@ -11,22 +11,18 @@ import android.widget.TextView;
 
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStation;
-import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
-
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapter.StationViewHolder> {
-    private final List<RadioStation> radioStations;
+public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapter.StationViewHolder> implements RealmChangeListener{
+    private final RealmResults<RadioStation> radioStations;
     private final LayoutInflater inflater;
 
-    public StationsListAdapter(List<RadioStation> radioStations, Context context) {
+    public StationsListAdapter(RealmResults<RadioStation> radioStations, Context context) {
         inflater = LayoutInflater.from(context);
         this.radioStations = radioStations;
+        radioStations.addChangeListener(this);
     }
 
     @Override
@@ -48,8 +44,9 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
         return radioStations.size();
     }
 
-    public void update() {
-        notifyDataSetChanged();
+    @Override
+    public void onChange() {
+            notifyDataSetChanged();
     }
 
     class StationViewHolder extends RecyclerView.ViewHolder {
