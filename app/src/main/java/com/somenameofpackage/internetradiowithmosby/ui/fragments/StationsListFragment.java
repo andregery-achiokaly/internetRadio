@@ -82,7 +82,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
                                     public void onClick(DialogInterface dialog, int which) {
                                         presenter.deleteStation(source);
                                         recyclerView.removeViewAt(position);
-                                        Toast.makeText(getContext(), "RadioStation: " + name + " was removed!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Station: " + name + " was removed!", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     }

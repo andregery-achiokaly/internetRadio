@@ -10,19 +10,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.somenameofpackage.internetradiowithmosby.R;
-import com.somenameofpackage.internetradiowithmosby.model.db.RadioStation;
+import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapter.StationViewHolder> implements RealmChangeListener{
-    private final RealmResults<RadioStation> radioStations;
+    private final RealmResults<Station> stations;
     private final LayoutInflater inflater;
 
-    public StationsListAdapter(RealmResults<RadioStation> radioStations, Context context) {
+    public StationsListAdapter(RealmResults<Station> stations, Context context) {
         inflater = LayoutInflater.from(context);
-        this.radioStations = radioStations;
-        radioStations.addChangeListener(this);
+        this.stations = stations;
+        stations.addChangeListener(this);
     }
 
     @Override
@@ -33,15 +33,15 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
 
     @Override
     public void onBindViewHolder(final StationViewHolder holder, final int position) {
-        holder.stationNameTextView.setText(radioStations.get(position).getName());
-        holder.stationSourceTextView.setText(radioStations.get(position).getSource());
-        byte[] bytes = radioStations.get(position).getImage();
+        holder.stationNameTextView.setText(stations.get(position).getName());
+        holder.stationSourceTextView.setText(stations.get(position).getSource());
+        byte[] bytes = stations.get(position).getImage();
         holder.stationIconImageView.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
     }
 
     @Override
     public int getItemCount() {
-        return radioStations.size();
+        return stations.size();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
         }
     }
 
-    public RadioStation getStationById(int id) {
-        return radioStations.get(id);
+    public Station getStationById(int id) {
+        return stations.get(id);
     }
 }

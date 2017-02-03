@@ -29,7 +29,7 @@ public class RadioStations {
                         R.mipmap.ic_launcher));
     }
 
-    public RealmResults<RadioStation> getStations() {
+    public RealmResults<Station> getStations() {
         return dataBase.getStations();
     }
 
@@ -37,17 +37,17 @@ public class RadioStations {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         icon.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
-        RadioStation radioStation = new RadioStation(name, source, stream.toByteArray());
-        dataBase.addStation(radioStation);
+        Station station = new Station(name, source, stream.toByteArray());
+        dataBase.addStation(station);
     }
 
     public void addStation(String name, String source, byte[] icon) {
-        RadioStation radioStation = new RadioStation(name, source, icon);
-        dataBase.addStation(radioStation);
+        Station station = new Station(name, source, icon);
+        dataBase.addStation(station);
     }
 
-    public void removeStation(RadioStation radioStation) {
-        dataBase.deleteStation(radioStation.getSource());
+    public void removeStation(Station station) {
+        dataBase.deleteStation(station.getSource());
     }
 
     public void removeStation(String source) {

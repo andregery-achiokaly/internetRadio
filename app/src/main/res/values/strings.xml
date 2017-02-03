@@ -12,5 +12,5 @@
     <string name="something_went_wrong">Something went wrong…</string>
     <string name="cant_play_this_station">Can\'t play this station</string>
     <string name="icon_of_radio_station">Icon of radio station</string>
-    <string name="add_radiostation">add radioStation</string>
+    <string name="add_radiostation">add station</string>
 </resources>

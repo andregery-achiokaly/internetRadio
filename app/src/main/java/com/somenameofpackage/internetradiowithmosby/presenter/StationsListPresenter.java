@@ -9,7 +9,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
-import com.somenameofpackage.internetradiowithmosby.model.db.RadioStation;
+import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
@@ -32,7 +32,7 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
                 Context.BIND_AUTO_CREATE);
     }
 
-    public RealmResults<RadioStation> getStations() {
+    public RealmResults<Station> getStations() {
         return dataBase.getStations();
     }
 

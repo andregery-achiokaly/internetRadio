@@ -5,8 +5,8 @@ import io.realm.RealmResults;
 
 public interface DataBase {
     String getPlayingStationSource();
-    void addStation(RadioStation radioStation);
-    RealmResults<RadioStation> getStations();
+    void addStation(Station station);
+    RealmResults<Station> getStations();
     void setPlayStation(String source);
     void closeBD();
     void clearBD();

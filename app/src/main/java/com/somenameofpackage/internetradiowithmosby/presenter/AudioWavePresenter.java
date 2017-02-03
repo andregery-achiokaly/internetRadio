@@ -19,11 +19,8 @@ import com.somenameofpackage.internetradiowithmosby.ui.views.WaveView;
 public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     private RadioModel radioModel;
     private VisualizerModel visualizerModel;
-    private final VisualizerListener visualizerListener = new VisualizerListener() {
-        @Override
-        public void updateVisualizer(byte[] bytes) {
-            if (getView() != null) getView().updateVisualizer(bytes);
-        }
+    private final VisualizerListener visualizerListener = bytes -> {
+        if (getView() != null) getView().updateVisualizer(bytes);
     };
 
 
