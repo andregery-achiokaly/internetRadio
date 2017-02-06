@@ -14,7 +14,7 @@ import io.realm.RealmResults;
 public class StationsRelamDB implements DataBase {
     private final Realm realm;
     private static final String nameOfConfiguration = "Config2";
-    RealmConfiguration config;
+    private RealmConfiguration config;
 
     public StationsRelamDB(Context context) {
         config = new RealmConfiguration.Builder(context)

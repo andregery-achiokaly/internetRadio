@@ -15,7 +15,9 @@ import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DefaultObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class RadioPresenter extends MvpBasePresenter<RadioView> {
     private RadioModel radioModel;
@@ -109,7 +111,10 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         public void onServiceConnected(ComponentName name, IBinder binder) {
             radioModel = ((RadioService.RadioBinder) binder).getModel(source);
             radioModel.changePlayState(source);
-            radioModel.getRadioModelObservable().subscribe(getRadioModelObserver());
+            radioModel.getRadioModelObservable()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(getRadioModelObserver());
         }
 
         public void onServiceDisconnected(ComponentName name) {

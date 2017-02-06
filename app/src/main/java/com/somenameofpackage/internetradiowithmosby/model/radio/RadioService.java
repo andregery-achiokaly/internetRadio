@@ -18,7 +18,7 @@ import io.reactivex.observers.DefaultObserver;
 public class RadioService extends Service {
     final static public String ACTION = "ACTION";
     final static public String PLAY = "PLAY";
-    Notification notification;
+    private Notification notification;
 
     private final RadioModel radioModel = new RadioModel();
 

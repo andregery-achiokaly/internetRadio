@@ -1,6 +1,5 @@
 package com.somenameofpackage.internetradiowithmosby.model.visualizer;
 
-
 import android.media.audiofx.Visualizer;
 
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
@@ -36,6 +35,7 @@ public class VisualizerModel {
             Byte[] result = new Byte[bytes.length];
             int i = 0;
             for(byte b: bytes) result[i++] = b;
+
             source.onNext(result);
         }
 

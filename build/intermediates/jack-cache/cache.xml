@@ -2,172 +2,172 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Alexander_Topilskii\.gradle\caches\modules-2\files-2.1\org.reactivestreams\reactive-streams\1.0.0\14b8c877d98005ba3941c9257cfe09f6ed0e0d74\reactive-streams-1.0.0.jar"
-        revision="25.0.1"
-        sha1="14b8c877d98005ba3941c9257cfe09f6ed0e0d74">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\reactive-streams-1.0.0-971dfb983243d1b7fb8e567dddc5450c8dfb493d.jar" />
+        jar="C:\Users\Alexander_Topilskii\AppData\Local\Android\Sdk\platforms\android-25\optional\org.apache.http.legacy.jar"
+        revision="25.0.2"
+        sha1="5f0541a4298daa0590b22cfbde43f85e2a675545">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackRuntimeLibraries\debug\jars\8000\40\org.apache.http.legacy-beaddb8d0fe1463e89207e4555788c73e6eb5cf9.jar" />
     </item>
     <item
         jar="C:\Users\Alexander_Topilskii\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.0-beta4\constraint-layout-solver-1.0.0-beta4.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="0a9cb567dc008f570c28531720168f19148da965">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\constraint-layout-solver-1.0.0-beta4-2faecb96b5f52a6cb2738159a1c59ee4fa4f2b41.jar" />
     </item>
     <item
         jar="C:\Users\Alexander_Topilskii\.android\build-cache\3118606f8311f83f1ba0ce7cea16f3ceab4ee7d0\output\jars\classes.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="b266c8faa5af72e579b9da36ef35053ffed6ac64">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-1f6b6067ac9367ea5f8eab1eaade7d7dfb763c98.jar" />
     </item>
     <item
-        jar="C:\Users\Alexander_Topilskii\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\25.1.0\support-annotations-25.1.0.jar"
-        revision="25.0.1"
-        sha1="64cb6b229a8bdfd907bc8dd46839a0053e4c018d">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\support-annotations-25.1.0-a03362e4094fb43a135b8eede9bc714a9f3372fe.jar" />
-    </item>
-    <item
-        jar="C:\Users\Alexander_Topilskii\.android\build-cache\e715c9f0b2930cda46b4cb7e2c8f4a10297a773a\output\jars\classes.jar"
-        revision="25.0.1"
-        sha1="6fb6ac3e8d3b9013819920d9ea11f3803c4c0033">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-69c52d03f82c78e8265ea420b61f2f55ea5eb12f.jar" />
+        jar="C:\Users\Alexander_Topilskii\.android\build-cache\3bff37dae7b03089cc8a3bbbd02957e8aef00d70\output\jars\classes.jar"
+        revision="25.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-31bfffd42e7cf21a274ac68629b23631615d5825.jar" />
     </item>
     <item
         jar="C:\Users\Alexander_Topilskii\.android\build-cache\cfc11644eac9477f6b8678c6b71e5e9f402df413\output\jars\classes.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="0a0ef86b7fa568a52bf6214a0326ca1f1d618da7">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-425ce4897ba7c0fa1f3897502f7ddceb8fe7235b.jar" />
     </item>
     <item
+        jar="C:\Users\Alexander_Topilskii\.android\build-cache\6ac111ab91272c0482659af9561b101b98a2c176\output\jars\classes.jar"
+        revision="25.0.2"
+        sha1="f02263e35e52668dd17b73bf961437e3d562b35f">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-6cb2eb5a0973969a6fcd54131a9d70de9d69af6c.jar" />
+    </item>
+    <item
         jar="C:\Users\Alexander_Topilskii\.android\build-cache\0d6f8c0a08a0e3c25056b966de1700bca103c768\output\jars\classes.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="662d7533b25a666c649c10a16b42edfb95f25a4f">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-ce8645a0b769087047ebc8e4cb31381741378a4e.jar" />
     </item>
     <item
         jar="C:\Users\Alexander_Topilskii\.android\build-cache\d6fe15f5d118c89406f4bedc00ffbd3d24def877\output\jars\classes.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="aee64634871d88a419d59eb743c1258a60f19700">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-9aa3f2e8fa47708c8bca9102a6b93f3f6d4a00b9.jar" />
     </item>
     <item
-        jar="C:\Users\Alexander_Topilskii\.android\build-cache\3bff37dae7b03089cc8a3bbbd02957e8aef00d70\output\jars\classes.jar"
-        revision="25.0.1"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-31bfffd42e7cf21a274ac68629b23631615d5825.jar" />
+        jar="C:\Users\Alexander_Topilskii\.gradle\caches\modules-2\files-2.1\org.reactivestreams\reactive-streams\1.0.0\14b8c877d98005ba3941c9257cfe09f6ed0e0d74\reactive-streams-1.0.0.jar"
+        revision="25.0.2"
+        sha1="14b8c877d98005ba3941c9257cfe09f6ed0e0d74">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\reactive-streams-1.0.0-971dfb983243d1b7fb8e567dddc5450c8dfb493d.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alexander_Topilskii\.android\build-cache\e715c9f0b2930cda46b4cb7e2c8f4a10297a773a\output\jars\classes.jar"
+        revision="25.0.2"
+        sha1="6fb6ac3e8d3b9013819920d9ea11f3803c4c0033">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-69c52d03f82c78e8265ea420b61f2f55ea5eb12f.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alexander_Topilskii\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\25.1.0\support-annotations-25.1.0.jar"
+        revision="25.0.2"
+        sha1="64cb6b229a8bdfd907bc8dd46839a0053e4c018d">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\support-annotations-25.1.0-a03362e4094fb43a135b8eede9bc714a9f3372fe.jar" />
     </item>
     <item
         jar="C:\Users\Alexander_Topilskii\.gradle\caches\modules-2\files-2.1\io.reactivex.rxjava2\rxjava\2.0.1\57f850a6b317e5582f1dbaff10a9e7d7e1fcdcfb\rxjava-2.0.1.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="57f850a6b317e5582f1dbaff10a9e7d7e1fcdcfb">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\rxjava-2.0.1-ff9d9f1ef9c881abdb6551e80790f09194a75ffd.jar" />
     </item>
     <item
-        jar="C:\Users\Alexander_Topilskii\.gradle\caches\modules-2\files-2.1\com.jakewharton\butterknife-annotations\8.4.0\ea392375cf9ff59234a82e7928a204215ccc98cd\butterknife-annotations-8.4.0.jar"
-        revision="25.0.1"
-        sha1="ea392375cf9ff59234a82e7928a204215ccc98cd">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\butterknife-annotations-8.4.0-d97e1cb3b0dc5c5aed9f79e12521f0a8cb721d8e.jar" />
+        jar="C:\Users\Alexander_Topilskii\.gradle\caches\modules-2\files-2.1\com.google.dagger\dagger\2.4\6b290a792253035c9fcc912d6a4d7efb3e850211\dagger-2.4.jar"
+        revision="25.0.2"
+        sha1="6b290a792253035c9fcc912d6a4d7efb3e850211">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\dagger-2.4-b61fcf388720e61e15f375fbeae82879b5de75ac.jar" />
     </item>
     <item
         jar="C:\Users\Alexander_Topilskii\.gradle\caches\modules-2\files-2.1\com.hannesdorfmann.mosby\mvp-common\2.0.1\d75c9c5577143f3cf3fd63f61526a551f910b56f\mvp-common-2.0.1.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="d75c9c5577143f3cf3fd63f61526a551f910b56f">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\mvp-common-2.0.1-428afcf2abcf125a367ef19cead00a6bfcb4298e.jar" />
     </item>
     <item
-        jar="C:\Users\Alexander_Topilskii\.android\build-cache\4c6116d55d0cf4f2cc610773676391cbda869d6a\output\jars\classes.jar"
-        revision="25.0.1"
-        sha1="ca3c7aa31e2726a400a6e552b93cb9f63c9a1e6d">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-a8aeff66e48907523dd6c861f8b57fd5f1b9bd33.jar" />
-    </item>
-    <item
-        jar="C:\Users\Alexander_Topilskii\.gradle\caches\modules-2\files-2.1\io.realm\realm-android\0.87.4\97d167507fcf75bc96d2123af0f3b1b5614ca3b7\realm-android-0.87.4.jar"
-        revision="25.0.1"
-        sha1="97d167507fcf75bc96d2123af0f3b1b5614ca3b7">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\realm-android-0.87.4-7f6e5ac24a3345b5e1ef6a82dda6fadabd29f0f5.jar" />
-    </item>
-    <item
         jar="C:\Users\Alexander_Topilskii\.android\build-cache\bf7516ff143c5308ed94c0aa363f121ab25752b0\output\jars\classes.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="1630658fbc2d222b988603c27b4a4249586fbfe7">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-3216142a98d8b3cdd2ac5d17ae93bf6b5465d400.jar" />
     </item>
     <item
-        jar="C:\Users\Alexander_Topilskii\AppData\Local\Android\Sdk\platforms\android-25\optional\org.apache.http.legacy.jar"
-        revision="25.0.1"
-        sha1="5f0541a4298daa0590b22cfbde43f85e2a675545">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackRuntimeLibraries\debug\jars\8000\40\org.apache.http.legacy-beaddb8d0fe1463e89207e4555788c73e6eb5cf9.jar" />
+        jar="C:\Users\Alexander_Topilskii\.gradle\caches\modules-2\files-2.1\com.jakewharton\butterknife-annotations\8.4.0\ea392375cf9ff59234a82e7928a204215ccc98cd\butterknife-annotations-8.4.0.jar"
+        revision="25.0.2"
+        sha1="ea392375cf9ff59234a82e7928a204215ccc98cd">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\butterknife-annotations-8.4.0-d97e1cb3b0dc5c5aed9f79e12521f0a8cb721d8e.jar" />
     </item>
     <item
-        jar="C:\Users\Alexander_Topilskii\.android\build-cache\2389b100625725da0ea76ea0fb4e6a41e1ea4948\output\jars\classes.jar"
-        revision="25.0.1"
-        sha1="2a53c4f3518116b8c6aee0e477233f0f7da8616f">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-40c7767ccdc92383b1c1c3db3cf38543c7e93da4.jar" />
-    </item>
-    <item
-        jar="C:\Users\Alexander_Topilskii\.android\build-cache\ea876b29d01c1836171eb23294227104a7023d19\output\jars\classes.jar"
-        revision="25.0.1"
-        sha1="a07818a1ecabdb149998823429cce555af4b9cba">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-f66e5e9d01ef664542b2198a60a101a7cf7a92f3.jar" />
+        jar="C:\Users\Alexander_Topilskii\.gradle\caches\modules-2\files-2.1\io.realm\realm-android\0.87.4\97d167507fcf75bc96d2123af0f3b1b5614ca3b7\realm-android-0.87.4.jar"
+        revision="25.0.2"
+        sha1="97d167507fcf75bc96d2123af0f3b1b5614ca3b7">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\realm-android-0.87.4-7f6e5ac24a3345b5e1ef6a82dda6fadabd29f0f5.jar" />
     </item>
     <item
         jar="C:\Users\Alexander_Topilskii\.android\build-cache\c5ad2a6430a6b97725440f28a9703cb38ed04ef5\output\jars\classes.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="8d5f68a8fdd8283ea42b20259ae4adad9cbe5e94">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-3bc9470de4258cca10eb90668de2c6547822b07e.jar" />
     </item>
     <item
         jar="C:\Users\Alexander_Topilskii\.gradle\caches\modules-2\files-2.1\javax.inject\javax.inject\1\6975da39a7040257bd51d21a231b76c915872d38\javax.inject-1.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="6975da39a7040257bd51d21a231b76c915872d38">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\javax.inject-1-85605ac078cf51cab2efc86fe200ac163c90ef0a.jar" />
     </item>
     <item
+        jar="C:\Users\Alexander_Topilskii\.android\build-cache\4c6116d55d0cf4f2cc610773676391cbda869d6a\output\jars\classes.jar"
+        revision="25.0.2"
+        sha1="ca3c7aa31e2726a400a6e552b93cb9f63c9a1e6d">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-a8aeff66e48907523dd6c861f8b57fd5f1b9bd33.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alexander_Topilskii\.android\build-cache\2389b100625725da0ea76ea0fb4e6a41e1ea4948\output\jars\classes.jar"
+        revision="25.0.2"
+        sha1="2a53c4f3518116b8c6aee0e477233f0f7da8616f">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-40c7767ccdc92383b1c1c3db3cf38543c7e93da4.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alexander_Topilskii\.android\build-cache\7d95fb9d3d0a2da54b2f663daec69bd3dc46c667\output\jars\classes.jar"
+        revision="25.0.2"
+        sha1="66898369cdbdcd732d7b0143aa12010cf4814005">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-fd4780f4b5bd6b582f30a1068f70aaa21aab70f5.jar" />
+    </item>
+    <item
         jar="C:\Users\Alexander_Topilskii\.android\build-cache\c06e6d78c8a18c678e5aa7d2392c4d4714592ef1\output\jars\classes.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="4119ea97a7191ff9b8f33b534ea220448f62f491">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-85f48460d65f4b22d48d8085e801961415b79977.jar" />
     </item>
     <item
         jar="C:\Users\Alexander_Topilskii\.android\build-cache\64b4983d5833f7facaef0c35ce627821c6082024\output\jars\classes.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="d38084015027549951cbaea5d5f6fb795cc81151">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-b6fc63154ceb342470cf9b96831ef477898029b4.jar" />
     </item>
     <item
-        jar="C:\Users\Alexander_Topilskii\.android\build-cache\f805eeb78c974bb3e592ccfd21e3a1d56e8897a1\output\jars\classes.jar"
-        revision="25.0.1"
-        sha1="e79aa3d9a16f8c9f16377c0608de70a8f31e5d80">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-3ec473167c23e7872efd1af3dc93e70109851392.jar" />
-    </item>
-    <item
         jar="C:\Users\Alexander_Topilskii\AppData\Local\Android\Sdk\platforms\android-25\android.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="712a0312fe844a21a1b3812fa960c363a1578984">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackRuntimeLibraries\debug\jars\8000\40\android-e99ed4ce0327336aff4659ced728addc97aa45a2.jar" />
     </item>
     <item
-        jar="C:\Users\Alexander_Topilskii\.gradle\caches\modules-2\files-2.1\com.google.dagger\dagger\2.4\6b290a792253035c9fcc912d6a4d7efb3e850211\dagger-2.4.jar"
-        revision="25.0.1"
-        sha1="6b290a792253035c9fcc912d6a4d7efb3e850211">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\dagger-2.4-b61fcf388720e61e15f375fbeae82879b5de75ac.jar" />
+        jar="C:\Users\Alexander_Topilskii\.android\build-cache\f805eeb78c974bb3e592ccfd21e3a1d56e8897a1\output\jars\classes.jar"
+        revision="25.0.2"
+        sha1="e79aa3d9a16f8c9f16377c0608de70a8f31e5d80">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-3ec473167c23e7872efd1af3dc93e70109851392.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alexander_Topilskii\.android\build-cache\ea876b29d01c1836171eb23294227104a7023d19\output\jars\classes.jar"
+        revision="25.0.2"
+        sha1="a07818a1ecabdb149998823429cce555af4b9cba">
+        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-f66e5e9d01ef664542b2198a60a101a7cf7a92f3.jar" />
     </item>
     <item
         jar="C:\Users\Alexander_Topilskii\.android\build-cache\db60127fd4a4ccf201a9ecf7c9847fa4510a140f\output\jars\classes.jar"
-        revision="25.0.1"
+        revision="25.0.2"
         sha1="30103d98fa5ed824b54af839c85e2111f9bde8ec">
         <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-283b0c3ec027cebfd3e280acab7f64a077d6500e.jar" />
-    </item>
-    <item
-        jar="C:\Users\Alexander_Topilskii\.android\build-cache\6ac111ab91272c0482659af9561b101b98a2c176\output\jars\classes.jar"
-        revision="25.0.1"
-        sha1="f02263e35e52668dd17b73bf961437e3d562b35f">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-6cb2eb5a0973969a6fcd54131a9d70de9d69af6c.jar" />
-    </item>
-    <item
-        jar="C:\Users\Alexander_Topilskii\.android\build-cache\7d95fb9d3d0a2da54b2f663daec69bd3dc46c667\output\jars\classes.jar"
-        revision="25.0.1"
-        sha1="66898369cdbdcd732d7b0143aa12010cf4814005">
-        <dex dex="C:\Users\Alexander_Topilskii\AndroidStudioProjects\internetRadio\app\build\intermediates\transforms\preJackPackagedLibraries\debug\jars\8000\1f\classes-fd4780f4b5bd6b582f30a1068f70aaa21aab70f5.jar" />
     </item>
 
 </items>
