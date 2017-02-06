@@ -5,17 +5,19 @@ import android.content.Context;
 import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 public class StationsRelamDB implements DataBase {
     private final Realm realm;
-    private static final String nameOfConfiguration = "Config";
+    private static final String nameOfConfiguration = "Config2";
+    RealmConfiguration config;
 
     public StationsRelamDB(Context context) {
-
-        RealmConfiguration config = new RealmConfiguration.Builder(context)
+        config = new RealmConfiguration.Builder(context)
                 .name(nameOfConfiguration)
                 .schemaVersion(0)
                 .deleteRealmIfMigrationNeeded()
@@ -40,23 +42,26 @@ public class StationsRelamDB implements DataBase {
     }
 
     public void addStation(Station station) {
-        addStation(station.getName(), station.getSource(), station.getImage());
+        addStation(station.getName(), station.getSource());
     }
 
-    private void addStation(String stationName, String stationSource, byte[] icon) {
+    private void addStation(String stationName, String stationSource) {
         realm.beginTransaction();
         Station station = new Station();
-        station.setId_key(realm.where(Station.class).max(Station.getsetId_keyFieldName()).intValue() + 1);
+        int newID = 0;
+        Number number = realm.where(Station.class).max(Station.getsetId_keyFieldName());
+        if (number != null) newID = number.intValue();
+
+        station.setId_key(newID + 1);
         station.setName(stationName);
         station.setSource(stationSource);
         station.setPlay(false);
-        station.setImage(icon);
 
         realm.copyToRealm(station);
         realm.commitTransaction();
     }
 
-    public RealmResults<Station> getStations() {
+    public List<Station> getStations() {
         realm.beginTransaction();
         RealmResults<Station> stations = realm.allObjects(Station.class);
         realm.commitTransaction();
@@ -98,7 +103,6 @@ public class StationsRelamDB implements DataBase {
         }
         realm.commitTransaction();
     }
-
 
     public void deleteStation(String source) {
         realm.beginTransaction();

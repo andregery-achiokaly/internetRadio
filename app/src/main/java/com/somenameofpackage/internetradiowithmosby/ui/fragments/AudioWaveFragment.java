@@ -44,7 +44,7 @@ public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter>
     }
 
     @Override
-    public void updateVisualizer(byte[] bytes){
+    public void updateVisualizer(Byte[] bytes){
         audioWaveView.updateVisualizer(bytes);
     }
 }

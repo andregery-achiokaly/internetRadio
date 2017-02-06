@@ -1,5 +1,6 @@
 package com.somenameofpackage.internetradiowithmosby.model.visualizer;
 
+
 import android.media.audiofx.Visualizer;
 
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
@@ -32,11 +33,6 @@ public class VisualizerModel {
 
     private class AudioWaveDataCaptureListener implements Visualizer.OnDataCaptureListener {
         public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             Byte[] result = new Byte[bytes.length];
             int i = 0;
             for(byte b: bytes) result[i++] = b;

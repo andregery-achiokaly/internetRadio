@@ -14,25 +14,25 @@ import com.somenameofpackage.internetradiowithmosby.presenter.listeners.RadioLis
 import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
+import io.reactivex.Observer;
+import io.reactivex.observers.DefaultObserver;
+
 public class RadioPresenter extends MvpBasePresenter<RadioView> {
     private RadioModel radioModel;
     private RadioListener radioListener;
-    private boolean isPlay = false;
     private final RadioStations dataBase;
+    private boolean isBind = false;
 
     public RadioPresenter(Context context) {
         dataBase = new RadioStations(context);
         radioListenerInit();
-        String source = dataBase.getPlayingStationSource();
-        context.bindService(new Intent(context, RadioService.class),
-                    new RadioServiceConnection(source),
-                    Context.BIND_AUTO_CREATE);
+        dataBase.getPlayingStationSource().subscribe(getBindServiceObserver(context));
     }
 
     private void radioListenerInit() {
         radioListener = new RadioListener() {
             @Override
-            public void onPlay() {
+            public void onPlay(String string) {
                 if (getView() != null) getView().showStatus(Status.Play);
             }
 
@@ -48,30 +48,53 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         };
     }
 
-    public void buttonPressed() {
-        if (isPlay) {
-            isPlay = false;
-            startPlaying();
-        } else {
-            isPlay = true;
-            stopPlaying();
-        }
+    public void changePlayState() {
+        dataBase.getPlayingStationSource().subscribe(getChangePlayStateObserver());
     }
 
-    private void startPlaying() {
-        String source = dataBase.getPlayingStationSource();
-        dataBase.setPlayStation(source);
-        if (radioModel != null) {
-            radioModel.play(source);
-        }
+    private Observer<String> getBindServiceObserver(Context context) {
+        return new DefaultObserver<String>() {
+            @Override
+            public void onNext(String value) {
+                if (!isBind) {
+                    context.bindService(new Intent(context, RadioService.class),
+                            new RadioServiceConnection(value),
+                            Context.BIND_AUTO_CREATE);
+                    isBind = true;
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
     }
 
-    private void stopPlaying() {
-        String source = dataBase.getPlayingStationSource();
-        dataBase.setPlayStation(source);
-        if (radioModel != null) {
-            radioModel.play(source);
-        }
+    private Observer<String> getChangePlayStateObserver() {
+        return new DefaultObserver<String>() {
+            @Override
+            public void onNext(String value) {
+                if (radioModel != null) {
+                    radioModel.changePlayState(value);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
     }
 
     private class RadioServiceConnection implements ServiceConnection {
@@ -83,7 +106,7 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
 
         public void onServiceConnected(ComponentName name, IBinder binder) {
             radioModel = ((RadioService.RadioBinder) binder).getModel(radioListener, source);
-            radioModel.play(source);
+            radioModel.changePlayState(source);
         }
 
         public void onServiceDisconnected(ComponentName name) {

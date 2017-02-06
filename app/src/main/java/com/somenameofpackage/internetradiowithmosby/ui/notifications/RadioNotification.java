@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
@@ -19,6 +20,11 @@ public class RadioNotification {
     private final Notification notification;
 
     public RadioNotification(Context context) {
+        this(context, "pause");
+    }
+
+    public RadioNotification(Context context, String text) {
+        Log.v("gGG", "123");
         Intent playRadioIntent = new Intent(context, RadioService.class);
         playRadioIntent.putExtra(ACTION, PLAY);
 
@@ -30,7 +36,7 @@ public class RadioNotification {
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setContentTitle("Hello")
                         .setContentText("source")
-                        .addAction(R.mipmap.ic_launcher, "pause", playPendingIntent)
+                        .addAction(R.mipmap.ic_launcher, text, playPendingIntent)
                         .setAutoCancel(true);
 
         Intent resultIntent = new Intent(context, RadioActivity.class);

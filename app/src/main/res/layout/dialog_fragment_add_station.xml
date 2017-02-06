@@ -44,16 +44,6 @@
                     android:hint="@string/station_source"/>
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/station_image"
-            android:layout_width="@dimen/iconSize"
-            android:layout_height="@dimen/iconSize"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:scaleType="fitXY"
-            android:contentDescription="@string/icon_of_radio_station"
-            android:background="@mipmap/ic_launcher" />
     </LinearLayout>
 
    <LinearLayout

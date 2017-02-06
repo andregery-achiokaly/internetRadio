@@ -1,6 +1,5 @@
 package com.somenameofpackage.internetradiowithmosby.model.radio;
 
-
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
@@ -17,7 +16,6 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
     private MediaPlayer mediaPlayer;
     private final LinkedList<RadioListener> listOfRadioListener = new LinkedList<>();
     private String currentSource = "";
-    private boolean isPlay;
 
     private void stopPlay() {
         if (mediaPlayer != null) {
@@ -35,6 +33,9 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             if (currentSource.equals(source)) {
                 if (!mediaPlayer.isPlaying()) {
                     mediaPlayer.start();
+                    for (RadioListener r : listOfRadioListener) {
+                        if (r != null) r.onPlay(currentSource);
+                    }
                 }
             } else {
                 mediaPlayer.release();
@@ -42,38 +43,37 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
                 createMediaPlayer(source);
                 currentSource = source;
             }
-            for (RadioListener r : listOfRadioListener) {
-                if (r != null) r.onPlay();
-            }
         }
     }
 
-    public void play(String source){
-        if(isPlay) {
-            stopPlay();
-            isPlay = false;
-        }
-        else {
-            startPlay(source);
-            isPlay = true;
+    public void changePlayState(String source) {
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying() && currentSource.equals(source)) {
+                stopPlay();
+            } else startPlay(source);
         }
     }
 
-    void play(){
-        play(currentSource);
+    void changePlayState() {
+        changePlayState(currentSource);
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
         for (RadioListener r : listOfRadioListener) {
-            if (r != null) r.onError("Error");
+            if (r != null) {
+                r.onPlay(currentSource);
+                r.onError("Error");
+            }
         }
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        if (isPlay) mp.start();
-        for (RadioListener r : listOfRadioListener) if (r != null) r.onPlay();
+        if (mp != null) {
+            if (!mp.isPlaying()) mp.start();
+        }
+        for (RadioListener r : listOfRadioListener) if (r != null) r.onPlay(currentSource);
     }
 
     private void createMediaPlayer(String source) {
@@ -82,14 +82,15 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             else mediaPlayer.release();
             mediaPlayer.setDataSource(source);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.prepareAsync();
+            mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
+            mediaPlayer.start();
         } catch (IOException e) {
             e.printStackTrace();
             for (RadioListener r : listOfRadioListener)
                 if (r != null) r.onError(CRASH);
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             currentSource = "";
             for (RadioListener r : listOfRadioListener)
                 if (r != null) r.onError(LIST_OF_RADIO_STATIONS_IS_EMPTY);

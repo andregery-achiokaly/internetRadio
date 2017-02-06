@@ -13,26 +13,25 @@ import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.model.visualizer.VisualizerModel;
 import com.somenameofpackage.internetradiowithmosby.presenter.listeners.RadioListener;
-import com.somenameofpackage.internetradiowithmosby.presenter.listeners.VisualizerListener;
 import com.somenameofpackage.internetradiowithmosby.ui.views.WaveView;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DefaultObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     private RadioModel radioModel;
     private VisualizerModel visualizerModel;
-    private final VisualizerListener visualizerListener = bytes -> {
-        if (getView() != null) getView().updateVisualizer(bytes);
-    };
-
 
     private final RadioListener radioListener = new RadioListener() {
         @Override
-        public void onPlay() {
+        public void onPlay(String source) {
             visualizerModel.setupVisualizerFxAndUI();
         }
 
         @Override
         public void onPause() {
-
         }
 
         @Override
@@ -49,7 +48,11 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 radioModel = ((RadioService.RadioBinder) iBinder).getModel(radioListener, source);
-                visualizerModel = new VisualizerModel(radioModel, visualizerListener);
+                visualizerModel = new VisualizerModel(radioModel);
+                visualizerModel.getVisualizerObservable()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(getStationsObserver());
             }
 
             @Override
@@ -58,5 +61,24 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
             }
         };
         context.bindService(new Intent(context, RadioService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private Observer<Byte[]> getStationsObserver() {
+        return new DefaultObserver<Byte[]>() {
+            @Override
+            public void onNext(Byte[] value) {
+                if (getView() != null) getView().updateVisualizer(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
     }
 }

@@ -12,7 +12,7 @@ import android.view.View;
 import com.somenameofpackage.internetradiowithmosby.R;
 
 public class AudioWaveView extends View {
-    private byte[] mBytes;
+    private Byte[] mBytes;
     private float[] mPoints;
     private Rect mRect;
     private Paint mForePaint;
@@ -50,7 +50,7 @@ public class AudioWaveView extends View {
         mForePaint.setColor(color);
     }
 
-    public void updateVisualizer(byte[] bytes) {
+    public void updateVisualizer(Byte[] bytes) {
         mBytes = bytes;
         invalidate();
     }

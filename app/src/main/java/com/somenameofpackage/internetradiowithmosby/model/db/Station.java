@@ -14,13 +14,11 @@ public class Station extends RealmObject {
     @Required
 
     private String source;
-    @Required
-    private byte[] image;
 
-    Station(String name, String source, byte[] image) {
+
+    Station(String name, String source) {
         this.name = name;
         this.source = source;
-        this.image = image;
     }
 
     public Station() {
@@ -42,13 +40,6 @@ public class Station extends RealmObject {
         this.source = source;
     }
 
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
 
     public boolean isPlay() {
         return isPlay;
@@ -74,16 +65,15 @@ public class Station extends RealmObject {
         return "name";
     }
 
-    public static String getImageFieldName() {
-        return "image";
-    }
-
     public static String getIsPlayFieldName() {
         return "isPlay";
     }
+
     public static String getsetId_keyFieldName() {
         return "id_key";
     }
 
-    public static String getNameTable(){ return Station.class.getSimpleName();}
+    public static String getNameTable() {
+        return Station.class.getSimpleName();
+    }
 }

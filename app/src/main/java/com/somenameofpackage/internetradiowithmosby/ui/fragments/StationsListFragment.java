@@ -1,7 +1,6 @@
 package com.somenameofpackage.internetradiowithmosby.ui.fragments;
 
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,12 +16,15 @@ import android.widget.Toast;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.somenameofpackage.internetradiowithmosby.R;
+import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.presenter.StationsListPresenter;
 import com.somenameofpackage.internetradiowithmosby.ui.AddStation;
 import com.somenameofpackage.internetradiowithmosby.ui.adapters.StationsListAdapter;
 import com.somenameofpackage.internetradiowithmosby.ui.listeners.RecyclerItemClickListener;
 import com.somenameofpackage.internetradiowithmosby.ui.viewStates.StationsListViewState;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,38 +57,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new StationsListAdapter(presenter.getStations(), getActivity().getApplicationContext()));
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        String source = ((StationsListAdapter) recyclerView.getAdapter())
-                                .getStationById(position)
-                                .getSource();
-                        presenter.startPlay(source, getContext());
-                    }
-
-                    @Override
-                    public void onLongItemClick(View view, final int position) {
-                        final String name = ((StationsListAdapter) recyclerView.getAdapter())
-                                .getStationById(position)
-                                .getName();
-                        final String source = ((StationsListAdapter) recyclerView.getAdapter())
-                                .getStationById(position)
-                                .getSource();
-
-                        showDeleteDialog(name,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        presenter.deleteStation(source);
-                                        recyclerView.removeViewAt(position);
-                                        Toast.makeText(getContext(), "Station: " + name + " was removed!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }
-                }));
+        presenter.getStations();
     }
 
     private void showDeleteDialog(String name, DialogInterface.OnClickListener listener) {
@@ -117,19 +88,16 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
 
         disableStations();
         if (station != null) {
-            recyclerView.post(new Runnable() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < recyclerView.getChildCount(); i++) {
-                        String source = ((StationsListAdapter) recyclerView.getAdapter())
-                                .getStationById(i)
-                                .getSource();
+            recyclerView.post(() -> {
+                for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                    String source = ((StationsListAdapter) recyclerView.getAdapter())
+                            .getStationById(i)
+                            .getSource();
 
-                        if (source.equals(station)) {
-                            recyclerView.getChildAt(i).setBackgroundColor(Color.RED);
-                            recyclerView.scrollToPosition(i);
-                            break;
-                        }
+                    if (source.equals(station)) {
+                        recyclerView.getChildAt(i).setBackgroundColor(Color.RED);
+                        recyclerView.scrollToPosition(i);
+                        break;
                     }
                 }
             });
@@ -139,10 +107,47 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     @Override
     public void disableAllStation() {
         StationsListViewState stationsListViewState = (StationsListViewState) viewState;
-        String disableAllStation = null;
-        stationsListViewState.setCurrentStation(disableAllStation);
+        stationsListViewState.setCurrentStation(null);
 
         disableStations();
+    }
+
+    @Override
+    public void setListStation(List<Station> stations) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new StationsListAdapter(stations, getActivity().getApplicationContext()));
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        String source = ((StationsListAdapter) recyclerView.getAdapter())
+                                .getStationById(position)
+                                .getSource();
+                        presenter.startPlay(source);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, final int position) {
+                        final String name = ((StationsListAdapter) recyclerView.getAdapter())
+                                .getStationById(position)
+                                .getName();
+                        final String source = ((StationsListAdapter) recyclerView.getAdapter())
+                                .getStationById(position)
+                                .getSource();
+
+                        showDeleteDialog(name,
+                                (dialog, which) -> {
+                                    presenter.deleteStation(source);
+                                    recyclerView.removeViewAt(position);
+                                    Toast.makeText(getContext(), "Station: " + name + " was removed!", Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                }));
+    }
+
+    @Override
+    public void onChange() {
+        ((StationsListAdapter) recyclerView.getAdapter()).onChange();
     }
 
     private void disableStations() {
@@ -162,7 +167,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
         disableAllStation();
     }
 
-    public void addStationToBD(String name, String source, Bitmap icon) {
-        presenter.addStation(name, source, icon);
+    public void addStationToBD(String name, String source) {
+        presenter.addStation(name, source);
     }
 }
