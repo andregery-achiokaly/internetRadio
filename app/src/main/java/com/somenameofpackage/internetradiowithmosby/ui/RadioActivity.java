@@ -1,7 +1,6 @@
 package com.somenameofpackage.internetradiowithmosby.ui;
 
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -37,12 +36,12 @@ public class RadioActivity extends AppCompatActivity implements AddStation {
         ButterKnife.bind(this);
     }
 
-    public void addStationToBD(String name, String source, Bitmap bitmap) {
+    public void addStationToBD(String name, String source) {
         StationsListFragment stationsListFragment = (StationsListFragment)
                 getSupportFragmentManager().findFragmentById(R.id.list_container);
 
         if (stationsListFragment != null) {
-            stationsListFragment.addStationToBD(name, source, bitmap);
+            stationsListFragment.addStationToBD(name, source);
         } else {
             Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
         }

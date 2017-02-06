@@ -1,12 +1,12 @@
 package com.somenameofpackage.internetradiowithmosby.model.db;
 
 
-import io.realm.RealmResults;
+import java.util.List;
 
 public interface DataBase {
     String getPlayingStationSource();
     void addStation(Station station);
-    RealmResults<Station> getStations();
+    List<Station> getStations();
     void setPlayStation(String source);
     void closeBD();
     void clearBD();
