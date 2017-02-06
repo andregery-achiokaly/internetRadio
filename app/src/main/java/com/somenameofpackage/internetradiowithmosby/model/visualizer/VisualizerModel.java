@@ -25,7 +25,7 @@ public class VisualizerModel {
         if (mVisualizer != null) mVisualizer.release();
         mVisualizer = new Visualizer(radioModel.getMediaPlayer().getAudioSessionId());
         mVisualizer.setEnabled(false);
-        mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+        mVisualizer.setCaptureSize(16);
         mVisualizer.setDataCaptureListener(new AudioWaveDataCaptureListener(),
                 Visualizer.getMaxCaptureRate() / 2, true, false);
         mVisualizer.setEnabled(true);

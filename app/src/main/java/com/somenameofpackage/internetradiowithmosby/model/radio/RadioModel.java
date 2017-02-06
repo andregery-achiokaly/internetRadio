@@ -3,27 +3,27 @@ package com.somenameofpackage.internetradiowithmosby.model.radio;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
-import com.somenameofpackage.internetradiowithmosby.presenter.listeners.RadioListener;
-
 import java.io.IOException;
-import java.util.LinkedList;
+
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 public class RadioModel implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener {
-    private final static String CRASH = "Radio crashed";
-    private final static String LIST_OF_RADIO_STATIONS_IS_EMPTY = "List of radio stations is empty";
-
     private MediaPlayer mediaPlayer;
-    private final LinkedList<RadioListener> listOfRadioListener = new LinkedList<>();
     private String currentSource = "";
+
+    private PublishSubject<String> subscriber = PublishSubject.create();
+
+    public Subject<String> getRadioModelObservable() {
+        return subscriber;
+    }
 
     private void stopPlay() {
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
-                for (RadioListener r : listOfRadioListener) {
-                    if (r != null) r.onPause();
-                }
+                subscriber.onNext("");
             }
         }
     }
@@ -33,9 +33,8 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             if (currentSource.equals(source)) {
                 if (!mediaPlayer.isPlaying()) {
                     mediaPlayer.start();
-                    for (RadioListener r : listOfRadioListener) {
-                        if (r != null) r.onPlay(currentSource);
-                    }
+                    subscriber.onNext(currentSource);
+
                 }
             } else {
                 mediaPlayer.release();
@@ -60,12 +59,8 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        for (RadioListener r : listOfRadioListener) {
-            if (r != null) {
-                r.onPlay(currentSource);
-                r.onError("Error");
-            }
-        }
+        subscriber.onNext(currentSource);
+        subscriber.onNext("");
     }
 
     @Override
@@ -73,7 +68,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
         if (mp != null) {
             if (!mp.isPlaying()) mp.start();
         }
-        for (RadioListener r : listOfRadioListener) if (r != null) r.onPlay(currentSource);
+        subscriber.onNext(currentSource);
     }
 
     private void createMediaPlayer(String source) {
@@ -88,12 +83,10 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             mediaPlayer.start();
         } catch (IOException e) {
             e.printStackTrace();
-            for (RadioListener r : listOfRadioListener)
-                if (r != null) r.onError(CRASH);
+            subscriber.onError(e);
         } catch (NullPointerException e) {
             currentSource = "";
-            for (RadioListener r : listOfRadioListener)
-                if (r != null) r.onError(LIST_OF_RADIO_STATIONS_IS_EMPTY);
+            subscriber.onError(e);
         }
     }
 
@@ -106,10 +99,6 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
                 e.printStackTrace();
             }
         }
-    }
-
-    void addRadioListener(RadioListener radioListener) {
-        this.listOfRadioListener.add(radioListener);
     }
 
     void setSource(String source) {

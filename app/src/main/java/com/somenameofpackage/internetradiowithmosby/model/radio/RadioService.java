@@ -9,13 +9,15 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.somenameofpackage.internetradiowithmosby.presenter.listeners.RadioListener;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import com.somenameofpackage.internetradiowithmosby.ui.notifications.RadioNotification;
+
+import io.reactivex.Observer;
+import io.reactivex.observers.DefaultObserver;
 
 public class RadioService extends Service {
     final static public String ACTION = "ACTION";
     final static public String PLAY = "PLAY";
-    private final static String CLOSE = "CLOSE";
     Notification notification;
 
     private final RadioModel radioModel = new RadioModel();
@@ -24,37 +26,31 @@ public class RadioService extends Service {
     public void onCreate() {
         super.onCreate();
         notification = new RadioNotification(getBaseContext()).getNotification();
-        startForeground(223, notification);
+        radioModel.getRadioModelObservable().subscribe(getRadioModelObserver());
+        startForeground(RadioNotification.ID, notification);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int indicate = super.onStartCommand(intent, flags, startId);
-        String action = intent.getStringExtra("ACTION");
-        switch (action) {
-            case PLAY:
-                radioModel.changePlayState();
-                break;
-            case CLOSE:
-                radioModel.changePlayState();
-                stopSelf();
-                break;
+        if (intent != null) {
+            String action = intent.getStringExtra(ACTION);
+            if (action.equals(PLAY)) radioModel.changePlayState();
         }
         return indicate;
     }
 
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        NotificationManager mNotificationManager = (NotificationManager) getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(223, new RadioNotification(getBaseContext(), "124").getNotification());
+
         return new RadioBinder();
     }
 
     public class RadioBinder extends Binder {
-        public RadioModel getModel(RadioListener listener, String source) {
+        public RadioModel getModel(String source) {
             radioModel.setSource(source);
-            radioModel.addRadioListener(listener);
             return radioModel;
         }
     }
@@ -63,5 +59,32 @@ public class RadioService extends Service {
     public void onDestroy() {
         super.onDestroy();
         radioModel.closeMediaPlayer();
+    }
+
+    private Observer<String> getRadioModelObserver() {
+        return new DefaultObserver<String>() {
+            @Override
+            public void onNext(String value) {
+                if (!value.equals("")) {
+                    notification = new RadioNotification(getBaseContext(), Status.Stop.toString())
+                            .getNotification();
+                } else {
+                    notification = new RadioNotification(getBaseContext(), Status.Play.toString())
+                            .getNotification();
+                }
+                NotificationManager mNotificationManager = (NotificationManager) getBaseContext()
+                        .getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.notify(RadioNotification.ID, notification);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
     }
 }

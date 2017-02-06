@@ -7,24 +7,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
 
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioActivity;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
 import static com.somenameofpackage.internetradiowithmosby.model.radio.RadioService.ACTION;
 import static com.somenameofpackage.internetradiowithmosby.model.radio.RadioService.PLAY;
 
 public class RadioNotification {
     private final Notification notification;
+    public final static int ID = 123;
 
     public RadioNotification(Context context) {
-        this(context, "pause");
+        this(context, Status.Stop.toString());
     }
 
     public RadioNotification(Context context, String text) {
-        Log.v("gGG", "123");
         Intent playRadioIntent = new Intent(context, RadioService.class);
         playRadioIntent.putExtra(ACTION, PLAY);
 
@@ -34,8 +34,8 @@ public class RadioNotification {
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
-                        .setContentTitle("Hello")
-                        .setContentText("source")
+                        .setContentTitle(context.getString(R.string.notification_title))
+                        .setContentText(context.getString(R.string.notification_text))
                         .addAction(R.mipmap.ic_launcher, text, playPendingIntent)
                         .setAutoCancel(true);
 

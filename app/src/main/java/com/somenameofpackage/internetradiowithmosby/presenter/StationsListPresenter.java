@@ -12,7 +12,6 @@ import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
-import com.somenameofpackage.internetradiowithmosby.presenter.listeners.RadioListener;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
 import java.util.List;
@@ -24,12 +23,10 @@ import io.realm.RealmChangeListener;
 public class StationsListPresenter extends MvpBasePresenter<StationsView> implements RealmChangeListener {
     private final RadioStations dataBase;
     private RadioModel radioModel;
-    private RadioListener radioListener;
     private boolean isBind = false;
 
     public StationsListPresenter(Context context) {
         dataBase = new RadioStations(context);
-        radioListenerInit();
         dataBase.getPlayingStationSource().subscribe(getPlayingStationSourceObserver(context));
     }
 
@@ -66,7 +63,9 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
         return new DefaultObserver<List<Station>>() {
             @Override
             public void onNext(List<Station> value) {
-                if (getView() != null) getView().setListStation(value);
+                if (getView() != null) {
+                    getView().setListStation(value);
+                }
             }
 
             @Override
@@ -100,7 +99,9 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
 
     @Override
     public void onChange() {
-        getView().onChange();
+        if (getView() != null) {
+            getView().onChange();
+        }
     }
 
     private class StationsListServiceConnection implements ServiceConnection {
@@ -111,39 +112,34 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
         }
 
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            radioModel = ((RadioService.RadioBinder) binder).getModel(radioListener, source);
+            radioModel = ((RadioService.RadioBinder) binder).getModel(source);
             radioModel.changePlayState(source);
+            radioModel.getRadioModelObservable().subscribe(getRadioModelObserver());
         }
 
         public void onServiceDisconnected(ComponentName name) {
         }
     }
 
-    private void radioListenerInit() {
-        radioListener = new RadioListener() {
+    private Observer<String> getRadioModelObserver() {
+        return new DefaultObserver<String>() {
             @Override
-            public void onPlay(String source) {
+            public void onNext(String value) {
                 if (getView() != null) {
-                    getView().showCurrentStation(source);
+                    if (value != null) getView().showCurrentStation(value);
+                    else getView().disableAllStation();
                 }
             }
 
             @Override
-            public void onPause() {
-                if (getView() != null)
-                    getView().disableAllStation();
+            public void onError(Throwable e) {
+                Log.e(getClass().getSimpleName(), e.getMessage());
             }
 
             @Override
-            public void onError(String message) {
-                Log.e(getClass().getSimpleName(), message);
+            public void onComplete() {
+
             }
         };
-    }
-
-    @Override
-    public void detachView(boolean retainInstance) {
-
-        super.detachView(retainInstance);
     }
 }

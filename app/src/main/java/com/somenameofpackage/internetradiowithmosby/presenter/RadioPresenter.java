@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
-import com.somenameofpackage.internetradiowithmosby.presenter.listeners.RadioListener;
 import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
@@ -19,31 +19,33 @@ import io.reactivex.observers.DefaultObserver;
 
 public class RadioPresenter extends MvpBasePresenter<RadioView> {
     private RadioModel radioModel;
-    private RadioListener radioListener;
     private final RadioStations dataBase;
     private boolean isBind = false;
 
     public RadioPresenter(Context context) {
         dataBase = new RadioStations(context);
-        radioListenerInit();
         dataBase.getPlayingStationSource().subscribe(getBindServiceObserver(context));
     }
 
-    private void radioListenerInit() {
-        radioListener = new RadioListener() {
+    private Observer<String> getRadioModelObserver() {
+        return new DefaultObserver<String>() {
             @Override
-            public void onPlay(String string) {
-                if (getView() != null) getView().showStatus(Status.Play);
+            public void onNext(String value) {
+                if (getView() != null) {
+                    if (!value.equals("")) getView().showStatus(Status.Play);
+                    else getView().showStatus(Status.Stop);
+                }
             }
 
             @Override
-            public void onPause() {
-                if (getView() != null) getView().showStatus(Status.Stop);
-            }
-
-            @Override
-            public void onError(String message) {
+            public void onError(Throwable e) {
+                Log.e(getClass().getSimpleName(), e.getMessage());
                 if (getView() != null) getView().showStatus(Status.Error);
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         };
     }
@@ -105,8 +107,9 @@ public class RadioPresenter extends MvpBasePresenter<RadioView> {
         }
 
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            radioModel = ((RadioService.RadioBinder) binder).getModel(radioListener, source);
+            radioModel = ((RadioService.RadioBinder) binder).getModel(source);
             radioModel.changePlayState(source);
+            radioModel.getRadioModelObservable().subscribe(getRadioModelObserver());
         }
 
         public void onServiceDisconnected(ComponentName name) {

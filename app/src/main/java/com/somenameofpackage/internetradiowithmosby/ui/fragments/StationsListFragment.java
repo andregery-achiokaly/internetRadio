@@ -57,15 +57,17 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         presenter.getStations();
     }
 
     private void showDeleteDialog(String name, DialogInterface.OnClickListener listener) {
         AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
-        adb.setTitle("Delete");
-        adb.setMessage("Do you want to delete " + name + "?");
-        adb.setPositiveButton("Yes", listener);
-        adb.setNegativeButton("No", null);
+        adb.setTitle(R.string.delete);
+        adb.setMessage(getString(R.string.do_you_want_to_delete) + name + "?");
+        adb.setPositiveButton(R.string.yes, listener);
+        adb.setNegativeButton(R.string.no, null);
         adb.create();
         adb.show();
     }
@@ -170,4 +172,6 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     public void addStationToBD(String name, String source) {
         presenter.addStation(name, source);
     }
+
+
 }
