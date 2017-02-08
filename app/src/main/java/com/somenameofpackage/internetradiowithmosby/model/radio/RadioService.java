@@ -44,7 +44,6 @@ public class RadioService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-
         return new RadioBinder();
     }
 

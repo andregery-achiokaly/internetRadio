@@ -17,9 +17,7 @@ import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 import java.util.List;
 
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DefaultObserver;
-import io.reactivex.schedulers.Schedulers;
 import io.realm.RealmChangeListener;
 
 public class StationsListPresenter extends MvpBasePresenter<StationsView> implements RealmChangeListener {
@@ -58,10 +56,7 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
     }
 
     public void getStations() {
-        dataBase.getStationsObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(getStationsObserver());
+        dataBase.getStationsObservable().subscribe(getStationsObserver());
     }
 
     private Observer<List<Station>> getStationsObserver() {
