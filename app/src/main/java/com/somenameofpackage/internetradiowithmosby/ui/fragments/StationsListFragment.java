@@ -45,6 +45,37 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stations_list, container, false);
         ButterKnife.bind(this, view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        String source = ((StationsListAdapter) recyclerView.getAdapter())
+                                .getStationById(position)
+                                .getSource();
+                        presenter.startPlay(source);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, final int position) {
+                        final String name = ((StationsListAdapter) recyclerView.getAdapter())
+                                .getStationById(position)
+                                .getName();
+                        final String source = ((StationsListAdapter) recyclerView.getAdapter())
+                                .getStationById(position)
+                                .getSource();
+
+                        showDeleteDialog(name,
+                                (dialog, which) -> {
+                                    recyclerView.removeViewAt(position);
+                                    presenter.deleteStation(source);
+                                    Toast.makeText(getContext(), getString(R.string.delete_dialog_start_message)
+                                                    + name
+                                                    + getString(R.string.delete_dialog_end_message),
+                                            Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                }));
         return view;
     }
 
@@ -57,8 +88,6 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
         presenter.getStations();
     }
 
@@ -103,6 +132,8 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
                     }
                 }
             });
+        } else {
+            Toast.makeText(getContext(), getResources().getText(R.string.cant_play_this_station), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -116,35 +147,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
 
     @Override
     public void setListStation(List<Station> stations) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new StationsListAdapter(stations, getActivity().getApplicationContext()));
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        String source = ((StationsListAdapter) recyclerView.getAdapter())
-                                .getStationById(position)
-                                .getSource();
-                        presenter.startPlay(source);
-                    }
-
-                    @Override
-                    public void onLongItemClick(View view, final int position) {
-                        final String name = ((StationsListAdapter) recyclerView.getAdapter())
-                                .getStationById(position)
-                                .getName();
-                        final String source = ((StationsListAdapter) recyclerView.getAdapter())
-                                .getStationById(position)
-                                .getSource();
-
-                        showDeleteDialog(name,
-                                (dialog, which) -> {
-                                    presenter.deleteStation(source);
-                                    recyclerView.removeViewAt(position);
-                                    Toast.makeText(getContext(), "Station: " + name + " was removed!", Toast.LENGTH_SHORT).show();
-                                });
-                    }
-                }));
     }
 
     @Override

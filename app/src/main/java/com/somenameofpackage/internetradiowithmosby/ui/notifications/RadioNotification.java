@@ -21,7 +21,7 @@ public class RadioNotification {
     public final static int ID = 123;
 
     public RadioNotification(Context context) {
-        this(context, Status.Stop.toString());
+        this(context, Status.isStop.toString());
     }
 
     public RadioNotification(Context context, String text) {

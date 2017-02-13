@@ -6,15 +6,12 @@ import io.realm.annotations.Required;
 
 public class Station extends RealmObject {
     private boolean isPlay;
-
     @PrimaryKey
     private int id_key;
     @Required
     private String name;
     @Required
-
     private String source;
-
 
     Station(String name, String source) {
         this.name = name;

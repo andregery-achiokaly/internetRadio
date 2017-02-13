@@ -5,20 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
-import java.util.List;
 
-import io.reactivex.Observer;
-import io.reactivex.observers.DefaultObserver;
 import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
+import rx.functions.Action1;
 
 public class StationsListPresenter extends MvpBasePresenter<StationsView> implements RealmChangeListener {
     private final RadioStations dataBase;
@@ -30,28 +29,15 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
         dataBase.getPlayingStationSource().subscribe(getPlayingStationSourceObserver(context));
     }
 
-    private Observer<String> getPlayingStationSourceObserver(Context context) {
-        return new DefaultObserver<String>() {
-            @Override
-            public void onNext(String value) {
-                if (!isBind) {
-                    context.bindService(new Intent(context, RadioService.class),
-                            new StationsListServiceConnection(value),
-                            Context.BIND_AUTO_CREATE);
-                    isBind = true;
-                }
-                if (getView() != null) getView().showCurrentStation(value);
+    private Action1<String> getPlayingStationSourceObserver(Context context) {
+        return currentStation -> {
+            if (!isBind) {
+                context.bindService(new Intent(context, RadioService.class),
+                        new StationsListServiceConnection(currentStation),
+                        Context.BIND_AUTO_CREATE);
+                isBind = true;
             }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
+            if (getView() != null) getView().showCurrentStation(currentStation);
         };
     }
 
@@ -59,23 +45,10 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
         dataBase.getStationsObservable().subscribe(getStationsObserver());
     }
 
-    private Observer<List<Station>> getStationsObserver() {
-        return new DefaultObserver<List<Station>>() {
-            @Override
-            public void onNext(List<Station> value) {
-                if (getView() != null) {
-                    getView().setListStation(value);
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
+    private Action1<RealmResults<Station>> getStationsObserver() {
+        return stations -> {
+            if (getView() != null) {
+                getView().setListStation(stations);
             }
         };
     }
@@ -118,27 +91,21 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
         }
 
         public void onServiceDisconnected(ComponentName name) {
+            isBind = false;
         }
     }
 
-    private Observer<String> getRadioModelObserver() {
-        return new DefaultObserver<String>() {
-            @Override
-            public void onNext(String value) {
-                if (getView() != null) {
-                    if (value != null) getView().showCurrentStation(value);
-                    else getView().disableAllStation();
+    private Action1<Status> getRadioModelObserver() {
+        return status -> {
+            if (getView() != null) {
+                if (status != Status.isPlay){
+                    getView().disableAllStation();
+                    if(status == Status.Error){
+                        getView().showCurrentStation(null);
+                    }
                 }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(getClass().getSimpleName(), e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-
+                else dataBase.getPlayingStationSource()
+                        .subscribe(s -> getView().showCurrentStation(s));
             }
         };
     }

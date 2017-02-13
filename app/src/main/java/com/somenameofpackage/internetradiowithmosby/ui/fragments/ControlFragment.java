@@ -8,12 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.somenameofpackage.internetradiowithmosby.R;
-import com.somenameofpackage.internetradiowithmosby.presenter.RadioPresenter;
+import com.somenameofpackage.internetradiowithmosby.presenter.ControlPresenter;
 import com.somenameofpackage.internetradiowithmosby.ui.viewStates.ControlViewState;
 import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
 
@@ -21,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ControlFragment extends MvpViewStateFragment<RadioView, RadioPresenter> implements RadioView {
+public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPresenter> implements RadioView {
     @BindView(R.id.play_btn)
     Button playButton;
 
@@ -41,8 +40,8 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, RadioPresen
 
     @NonNull
     @Override
-    public RadioPresenter createPresenter() {
-        return new RadioPresenter(getContext());
+    public ControlPresenter createPresenter() {
+        return new ControlPresenter(getContext());
     }
 
     @OnClick(R.id.play_btn)
@@ -54,15 +53,7 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, RadioPresen
     public void showStatus(Status status) {
         ControlViewState controlViewState = (ControlViewState) viewState;
         controlViewState.setStatus(status);
-        switch (status){
-            case Stop: playButton.setText(Status.Play.name()); break;
-            case Play: playButton.setText(Status.Stop.name()); break;
-            case Error:{
-                playButton.setText(Status.Play.name());
-                Toast.makeText(getContext(), R.string.cant_play_this_station, Toast.LENGTH_SHORT).show();
-                break;
-            }
-        }
+        playButton.setText(status.toString());
     }
 
     @NonNull
@@ -73,6 +64,6 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, RadioPresen
 
     @Override
     public void onNewViewStateInstance() {
-        showStatus(Status.Stop);
+        showStatus(Status.isStop);
     }
 }

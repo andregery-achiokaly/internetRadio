@@ -9,11 +9,11 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import com.somenameofpackage.internetradiowithmosby.ui.notifications.RadioNotification;
 
-import io.reactivex.Observer;
-import io.reactivex.observers.DefaultObserver;
+import rx.functions.Action1;
 
 public class RadioService extends Service {
     final static public String ACTION = "ACTION";
@@ -60,30 +60,13 @@ public class RadioService extends Service {
         radioModel.closeMediaPlayer();
     }
 
-    private Observer<String> getRadioModelObserver() {
-        return new DefaultObserver<String>() {
-            @Override
-            public void onNext(String value) {
-                if (!value.equals("")) {
-                    notification = new RadioNotification(getBaseContext(), Status.Stop.toString())
-                            .getNotification();
-                } else {
-                    notification = new RadioNotification(getBaseContext(), Status.Play.toString())
-                            .getNotification();
-                }
-                NotificationManager mNotificationManager = (NotificationManager) getBaseContext()
-                        .getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotificationManager.notify(RadioNotification.ID, notification);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
+    private Action1<Status> getRadioModelObserver() {
+        return status -> {
+            notification = new RadioNotification(getBaseContext(), status.toString())
+                    .getNotification();
+            NotificationManager mNotificationManager = (NotificationManager) getBaseContext()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(RadioNotification.ID, notification);
         };
     }
 }

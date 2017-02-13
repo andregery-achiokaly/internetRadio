@@ -3,12 +3,14 @@ package com.somenameofpackage.internetradiowithmosby.model.db;
 
 import java.util.List;
 
+import io.realm.RealmResults;
+import rx.Observable;
+
 public interface DataBase {
     String getPlayingStationSource();
     void addStation(Station station);
-    List<Station> getStations();
+    Observable<RealmResults<Station>> getStations();
     void setPlayStation(String source);
     void closeBD();
-    void clearBD();
     void deleteStation(String source);
 }

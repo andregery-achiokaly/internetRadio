@@ -4,15 +4,15 @@ import android.media.audiofx.Visualizer;
 
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.Subject;
+import rx.subjects.PublishSubject;
+import rx.subjects.Subject;
 
 public class VisualizerModel {
     private Visualizer mVisualizer;
     private final RadioModel radioModel;
     private PublishSubject<Byte[]> source = PublishSubject.create();
 
-    public Subject<Byte[]> getVisualizerObservable(){
+    public Subject<Byte[], Byte[]> getVisualizerObservable() {
         return source;
     }
 
@@ -34,7 +34,7 @@ public class VisualizerModel {
         public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
             Byte[] result = new Byte[bytes.length];
             int i = 0;
-            for(byte b: bytes) result[i++] = b;
+            for (byte b : bytes) result[i++] = b;
 
             source.onNext(result);
         }

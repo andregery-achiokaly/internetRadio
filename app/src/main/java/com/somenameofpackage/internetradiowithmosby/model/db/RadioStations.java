@@ -1,14 +1,12 @@
 package com.somenameofpackage.internetradiowithmosby.model.db;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 
-import java.util.List;
-
-import io.reactivex.Observable;
+import io.realm.RealmResults;
+import rx.Observable;
 
 public class RadioStations {
     private final DataBase dataBase;
@@ -25,11 +23,8 @@ public class RadioStations {
                 context.getString(R.string.jam_fm_source));
     }
 
-    public Observable<List<Station>> getStationsObservable() {
-        return Observable.create(emitter -> {
-            emitter.onNext(dataBase.getStations());
-            emitter.onComplete();
-        });
+    public rx.Observable<RealmResults<Station>> getStationsObservable() {
+        return dataBase.getStations();
     }
 
     public void addStation(String name, String source) {
@@ -47,7 +42,7 @@ public class RadioStations {
     public Observable<String> getPlayingStationSource() {
         return Observable.create(emitter -> {
             emitter.onNext(dataBase.getPlayingStationSource());
-            emitter.onComplete();
+            emitter.onCompleted();
         });
     }
 

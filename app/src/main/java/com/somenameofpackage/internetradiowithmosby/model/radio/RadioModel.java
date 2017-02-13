@@ -3,19 +3,22 @@ package com.somenameofpackage.internetradiowithmosby.model.radio;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
+
 import java.io.IOException;
 
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.Subject;
+import rx.subjects.PublishSubject;
+import rx.subjects.Subject;
 
 public class RadioModel implements MediaPlayer.OnPreparedListener,
-        MediaPlayer.OnCompletionListener {
+        MediaPlayer.OnCompletionListener,
+        MediaPlayer.OnErrorListener {
     private MediaPlayer mediaPlayer;
     private String currentSource = "";
 
-    private PublishSubject<String> subscriber = PublishSubject.create();
+    private PublishSubject<Status> subscriber = PublishSubject.create();
 
-    public Subject<String> getRadioModelObservable() {
+    public Subject<Status, Status> getRadioModelObservable() {
         return subscriber;
     }
 
@@ -23,7 +26,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
-                subscriber.onNext("");
+                subscriber.onNext(Status.isStop);
             }
         }
     }
@@ -33,8 +36,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             if (currentSource.equals(source)) {
                 if (!mediaPlayer.isPlaying()) {
                     mediaPlayer.start();
-                    subscriber.onNext(currentSource);
-
+                    subscriber.onNext(Status.isPlay);
                 }
             } else {
                 mediaPlayer.release();
@@ -46,6 +48,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
     }
 
     public void changePlayState(String source) {
+        subscriber.onNext(Status.Wait);
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying() && currentSource.equals(source)) {
                 stopPlay();
@@ -59,8 +62,6 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        subscriber.onNext(currentSource);
-        subscriber.onNext("");
     }
 
     @Override
@@ -68,7 +69,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
         if (mp != null) {
             if (!mp.isPlaying()) mp.start();
         }
-        subscriber.onNext(currentSource);
+        subscriber.onNext(Status.isPlay);
     }
 
     private void createMediaPlayer(String source) {
@@ -80,13 +81,11 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
+            mediaPlayer.setOnErrorListener(this);
             mediaPlayer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-            subscriber.onError(e);
-        } catch (NullPointerException e) {
+        } catch (IOException | NullPointerException e) {
             currentSource = "";
-            subscriber.onError(e);
+            subscriber.onNext(Status.Error);
         }
     }
 
@@ -109,5 +108,11 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
 
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        if (what == 1 || extra == 1) subscriber.onNext(Status.Error);
+        return false;
     }
 }

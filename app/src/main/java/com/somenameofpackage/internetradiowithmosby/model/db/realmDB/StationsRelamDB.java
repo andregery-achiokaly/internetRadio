@@ -5,19 +5,17 @@ import android.content.Context;
 import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 
-import java.util.List;
-
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import rx.Observable;
 
 public class StationsRelamDB implements DataBase {
     private final Realm realm;
     private static final String nameOfConfiguration = "Config2";
-    private RealmConfiguration config;
 
     public StationsRelamDB(Context context) {
-        config = new RealmConfiguration.Builder(context)
+        RealmConfiguration config = new RealmConfiguration.Builder(context)
                 .name(nameOfConfiguration)
                 .schemaVersion(0)
                 .deleteRealmIfMigrationNeeded()
@@ -61,9 +59,9 @@ public class StationsRelamDB implements DataBase {
         realm.commitTransaction();
     }
 
-    public List<Station> getStations() {
+    public Observable<RealmResults<Station>> getStations() {
         realm.beginTransaction();
-        RealmResults<Station> stations = realm.allObjects(Station.class);
+        Observable<RealmResults<Station>> stations = realm.allObjects(Station.class).asObservable();
         realm.commitTransaction();
         return stations;
     }
