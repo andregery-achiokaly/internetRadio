@@ -1,8 +1,6 @@
 package com.somenameofpackage.internetradiowithmosby.model.db;
 
 
-import java.util.List;
-
 import io.realm.RealmResults;
 import rx.Observable;
 

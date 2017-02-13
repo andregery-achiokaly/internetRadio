@@ -161,6 +161,12 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.unbindService(getActivity().getApplicationContext());
+    }
+
     @NonNull
     @Override
     public ViewState createViewState() {
@@ -175,6 +181,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     public void addStationToBD(String name, String source) {
         presenter.addStation(name, source);
     }
+
 
 
 }

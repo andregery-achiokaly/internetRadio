@@ -41,7 +41,7 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPres
     @NonNull
     @Override
     public ControlPresenter createPresenter() {
-        return new ControlPresenter(getContext());
+        return new ControlPresenter(getActivity().getApplicationContext());
     }
 
     @OnClick(R.id.play_btn)
@@ -60,6 +60,12 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPres
     @Override
     public ViewState createViewState() {
         return new ControlViewState();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.unbindService(getActivity().getApplicationContext());
     }
 
     @Override

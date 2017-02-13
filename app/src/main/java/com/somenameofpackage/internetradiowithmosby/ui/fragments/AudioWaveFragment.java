@@ -25,7 +25,7 @@ public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter>
     @NonNull
     @Override
     public AudioWavePresenter createPresenter() {
-        return new AudioWavePresenter(getContext());
+        return new AudioWavePresenter(getActivity().getApplicationContext());
     }
 
     @Override
@@ -41,6 +41,12 @@ public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter>
         getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.unbindService(getActivity().getApplicationContext());
     }
 
     @Override

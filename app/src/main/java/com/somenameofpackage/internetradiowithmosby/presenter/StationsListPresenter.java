@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
@@ -23,8 +24,10 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
     private final RadioStations dataBase;
     private RadioModel radioModel;
     private boolean isBind = false;
+    private ServiceConnection serviceConnection;
 
     public StationsListPresenter(Context context) {
+        serviceConnection = new StationsListServiceConnection();
         dataBase = new RadioStations(context);
         dataBase.getPlayingStationSource().subscribe(getPlayingStationSourceObserver(context));
     }
@@ -32,10 +35,10 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
     private Action1<String> getPlayingStationSourceObserver(Context context) {
         return currentStation -> {
             if (!isBind) {
+                ((StationsListServiceConnection) serviceConnection).setSource(currentStation);
                 context.bindService(new Intent(context, RadioService.class),
-                        new StationsListServiceConnection(currentStation),
+                        serviceConnection,
                         Context.BIND_AUTO_CREATE);
-                isBind = true;
             }
             if (getView() != null) getView().showCurrentStation(currentStation);
         };
@@ -77,14 +80,21 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
         }
     }
 
-    private class StationsListServiceConnection implements ServiceConnection {
-        final String source;
+    public void unbindService(Context context) {
 
-        StationsListServiceConnection(String source) {
+        if (isBind) context.unbindService(serviceConnection);
+        isBind = false;
+    }
+
+    private class StationsListServiceConnection implements ServiceConnection {
+        String source;
+
+        public void setSource(String source) {
             this.source = source;
         }
 
         public void onServiceConnected(ComponentName name, IBinder binder) {
+            isBind = true;
             radioModel = ((RadioService.RadioBinder) binder).getModel(source);
             radioModel.changePlayState(source);
             radioModel.getRadioModelObservable().subscribe(getRadioModelObserver());
@@ -98,13 +108,12 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
     private Action1<Status> getRadioModelObserver() {
         return status -> {
             if (getView() != null) {
-                if (status != Status.isPlay){
+                if (status != Status.isPlay) {
                     getView().disableAllStation();
-                    if(status == Status.Error){
+                    if (status == Status.Error) {
                         getView().showCurrentStation(null);
                     }
-                }
-                else dataBase.getPlayingStationSource()
+                } else dataBase.getPlayingStationSource()
                         .subscribe(s -> getView().showCurrentStation(s));
             }
         };

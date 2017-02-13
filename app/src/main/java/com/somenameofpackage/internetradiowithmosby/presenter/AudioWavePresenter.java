@@ -19,14 +19,17 @@ import rx.functions.Action1;
 public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     private RadioModel radioModel;
     private VisualizerModel visualizerModel;
+    private ServiceConnection serviceConnection;
+    private boolean isBind = false;
 
     public AudioWavePresenter(Context context) {
         StationsRelamDB stationsRelamDB = new StationsRelamDB(context);
         final String source = stationsRelamDB.getPlayingStationSource();
 
-        ServiceConnection serviceConnection = new ServiceConnection() {
+        serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                isBind = true;
                 radioModel = ((RadioService.RadioBinder) iBinder).getModel(source);
                 radioModel.getRadioModelObservable().subscribe(getRadioModelObserver());
                 visualizerModel = new VisualizerModel(radioModel);
@@ -52,5 +55,10 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
         return bytes -> {
             if (getView() != null) getView().updateVisualizer(bytes);
         };
+    }
+
+    public void unbindService(Context context) {
+        if (isBind) context.unbindService(serviceConnection);
+        isBind = false;
     }
 }

@@ -9,7 +9,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import com.somenameofpackage.internetradiowithmosby.ui.notifications.RadioNotification;
 
@@ -33,11 +32,11 @@ public class RadioService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int indicate = super.onStartCommand(intent, flags, startId);
-        if (intent != null) {
-            String action = intent.getStringExtra(ACTION);
-            if (action.equals(PLAY)) radioModel.changePlayState();
-        }
-        return indicate;
+            if (intent != null) {
+                String action = intent.getStringExtra(ACTION);
+                if (action!= null && action.equals(PLAY)) radioModel.changePlayState();
+            }
+        return Service.START_STICKY;
     }
 
 
