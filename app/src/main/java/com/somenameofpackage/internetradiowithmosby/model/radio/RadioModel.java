@@ -10,9 +10,7 @@ import java.io.IOException;
 import rx.subjects.PublishSubject;
 import rx.subjects.ReplaySubject;
 
-public class RadioModel implements MediaPlayer.OnPreparedListener,
-        MediaPlayer.OnCompletionListener,
-        MediaPlayer.OnErrorListener {
+public class RadioModel implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
     private MediaPlayer mediaPlayer;
     private String currentSource = "";
 
@@ -52,8 +50,8 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
         }
     }
 
-    public void changePlayState(String source) {
-        if(source == null) source = currentSource;
+    private void changePlayState(String source) {
+        if (source == null) source = currentSource;
         statusSubscriber.onNext(Status.Wait);
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying() && currentSource.equals(source)) {
@@ -62,10 +60,6 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
         } else {
             createMediaPlayer(source);
         }
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
     }
 
     @Override
@@ -84,7 +78,6 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(this);
-            mediaPlayer.setOnCompletionListener(this);
             mediaPlayer.setOnErrorListener(this);
             mediaPlayer.start();
             radioIdSubscriber.onNext(mediaPlayer.getAudioSessionId());

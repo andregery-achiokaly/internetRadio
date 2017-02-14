@@ -2,13 +2,11 @@ package com.somenameofpackage.internetradiowithmosby.model.visualizer;
 
 import android.media.audiofx.Visualizer;
 
-import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
-
 import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
 
 public class VisualizerModel {
-    private Visualizer mVisualizer;
+    private Visualizer visualizer;
     private PublishSubject<Byte[]> source = PublishSubject.create();
 
     public Subject<Byte[], Byte[]> getVisualizerObservable() {
@@ -17,13 +15,13 @@ public class VisualizerModel {
 
     public void setupVisualizerFxAndUI(int id) {
         if (id != -1) {
-            if (mVisualizer != null) mVisualizer.release();
-            mVisualizer = new Visualizer(id);
-            mVisualizer.setEnabled(false);
-            mVisualizer.setCaptureSize(16);
-            mVisualizer.setDataCaptureListener(new AudioWaveDataCaptureListener(),
+            if (visualizer != null) visualizer.release();
+            visualizer = new Visualizer(id);
+            visualizer.setEnabled(false);
+            visualizer.setCaptureSize(16);
+            visualizer.setDataCaptureListener(new AudioWaveDataCaptureListener(),
                     Visualizer.getMaxCaptureRate() / 2, true, false);
-            mVisualizer.setEnabled(true);
+            visualizer.setEnabled(true);
         }
     }
 

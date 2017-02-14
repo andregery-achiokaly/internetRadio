@@ -34,7 +34,6 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
     private Action1<String> getPlayingStationSourceObserver(Context context) {
         return currentStation -> {
             if (!isBind) {
-                ((StationsListServiceConnection) serviceConnection).setSource(currentStation);
                 context.bindService(new Intent(context, RadioService.class),
                         serviceConnection,
                         Context.BIND_AUTO_CREATE);
@@ -79,19 +78,12 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
         }
     }
 
-    public void unbindService(Context context) {
-
+    public void onPause(Context context) {
         if (isBind) context.unbindService(serviceConnection);
         isBind = false;
     }
 
     private class StationsListServiceConnection implements ServiceConnection {
-        String source;
-
-        public void setSource(String source) {
-            this.source = source;
-        }
-
         public void onServiceConnected(ComponentName name, IBinder binder) {
             isBind = true;
             ((RadioService.RadioBinder) binder).subscribeStatus(getRadioModelObserver());

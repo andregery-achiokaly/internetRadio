@@ -23,6 +23,8 @@ public class RadioService extends Service {
     final static public String ACTION = "ACTION";
     final static public String PLAY = "PLAY";
     private Notification notification;
+    private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
+
     @Inject
     RadioModel radioModel;
 
@@ -33,16 +35,17 @@ public class RadioService extends Service {
 
         notification = new RadioNotification(getBaseContext()).getNotification();
         radioModel.getRadioModelStatusObservable().subscribe(getRadioModelObserver());
+        radioModel.setChangePlaySubject(changePlayStateSubject);
         startForeground(RadioNotification.ID, notification);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-            if (intent != null) {
-                String action = intent.getStringExtra(ACTION);
-                if (action!= null && action.equals(PLAY)) radioModel.changePlayState(null);
-            }
+        if (intent != null) {
+            String action = intent.getStringExtra(ACTION);
+            if (action != null && action.equals(PLAY)) changePlayStateSubject.onNext(null);
+        }
         return Service.START_STICKY;
     }
 
@@ -54,19 +57,15 @@ public class RadioService extends Service {
     }
 
     public class RadioBinder extends Binder {
-        public RadioModel getModel() {
-            return radioModel;
-        }
-
-        public void subscribeStatus(Subscriber<Status> subscriber){
+        public void subscribeStatus(Subscriber<Status> subscriber) {
             radioModel.getRadioModelStatusObservable().subscribe(subscriber);
         }
 
-        public void subscribeStatus(Action1<Status> subscriber){
+        public void subscribeStatus(Action1<Status> subscriber) {
             radioModel.getRadioModelStatusObservable().subscribe(subscriber);
         }
 
-        public void subscribePlayerId(Action1<Integer> subscriber){
+        public void subscribePlayerId(Action1<Integer> subscriber) {
             radioModel.getRadioIdObservable().subscribe(subscriber);
         }
 

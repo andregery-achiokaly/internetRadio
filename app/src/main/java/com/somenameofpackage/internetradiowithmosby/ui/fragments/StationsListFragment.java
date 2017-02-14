@@ -164,7 +164,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     @Override
     public void onPause() {
         super.onPause();
-        presenter.unbindService(getActivity().getApplicationContext());
+        presenter.onPause(getActivity().getApplicationContext());
     }
 
     @NonNull

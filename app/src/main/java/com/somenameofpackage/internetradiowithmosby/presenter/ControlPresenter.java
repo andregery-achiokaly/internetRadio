@@ -22,6 +22,7 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
     private final RadioStations dataBase;
     private boolean isBind = false;
     private ServiceConnection serviceConnection;
+    private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
 
     public ControlPresenter(Context context) {
         serviceConnection = new RadioServiceConnection();
@@ -33,13 +34,9 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
         dataBase.getPlayingStationSource().subscribe(getChangePlayStateObserver());
     }
 
-    private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
-
     private Action1<String> getBindServiceObserver(Context context) {
         return value -> {
             if (!isBind) {
-                context.startService(new Intent(context, RadioService.class));
-                ((RadioServiceConnection) serviceConnection).setSource(value);
                 context.bindService(new Intent(context, RadioService.class),
                         serviceConnection,
                         Context.BIND_AUTO_CREATE);
@@ -48,9 +45,7 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
     }
 
     private Action1<String> getChangePlayStateObserver() {
-        return newStationSource -> {
-            changePlayStateSubject.onNext(newStationSource);
-        };
+        return newStationSource -> changePlayStateSubject.onNext(newStationSource);
     }
 
     public void onPause(Context context) {
@@ -59,12 +54,6 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
     }
 
     private class RadioServiceConnection implements ServiceConnection {
-        String source;
-
-        public void setSource(String source) {
-            this.source = source;
-        }
-
         public void onServiceConnected(ComponentName name, IBinder binder) {
             isBind = true;
             ((RadioService.RadioBinder) binder).setChangeStateObservable(changePlayStateSubject);
