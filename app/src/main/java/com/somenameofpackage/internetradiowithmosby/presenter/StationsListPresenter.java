@@ -10,9 +10,12 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
+import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
+
+import javax.inject.Inject;
 
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -20,14 +23,16 @@ import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 public class StationsListPresenter extends MvpBasePresenter<StationsView> implements RealmChangeListener {
-    private final RadioStations dataBase;
+    @Inject
+    RadioStations dataBase;
     private boolean isBind = false;
     private ServiceConnection serviceConnection;
     private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
 
     public StationsListPresenter(Context context) {
         serviceConnection = new StationsListServiceConnection();
-        dataBase = new RadioStations(context);
+        RadioApplication.getComponent().injectsStationsListPresenter(this);
+        dataBase.initDB(context);
         dataBase.getPlayingStationSource().subscribe(getPlayingStationSourceObserver(context));
     }
 

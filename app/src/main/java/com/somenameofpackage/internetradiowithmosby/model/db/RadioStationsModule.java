@@ -4,9 +4,9 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class RadioStationModule {
+public class RadioStationsModule {
     @Provides
-    RadioStations provideRadioStations() {
+    RadioStations provideVisualizerModel() {
         return new RadioStations();
     }
 }

@@ -10,23 +10,26 @@ import android.support.annotation.NonNull;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
+import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
+import javax.inject.Inject;
 
-import rx.Subscriber;
 import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 public class ControlPresenter extends MvpBasePresenter<RadioView> {
-    private final RadioStations dataBase;
+    @Inject
+    RadioStations dataBase;
     private boolean isBind = false;
     private ServiceConnection serviceConnection;
     private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
 
     public ControlPresenter(Context context) {
         serviceConnection = new RadioServiceConnection();
-        dataBase = new RadioStations(context);
+        RadioApplication.getComponent().injectsControlPresenter(this);
+        dataBase.initDB(context);
         dataBase.getPlayingStationSource().subscribe(getBindServiceObserver(context));
     }
 
@@ -50,7 +53,6 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
 
     public void onPause(Context context) {
         if (isBind) context.unbindService(serviceConnection);
-        isBind = false;
     }
 
     private class RadioServiceConnection implements ServiceConnection {
@@ -61,30 +63,15 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
         }
 
         public void onServiceDisconnected(ComponentName name) {
-            if (getView() != null)
-                getView().showStatus(Status.isStop);
+            if (getView() != null) getView().showStatus(Status.isStop);
+            isBind = false;
         }
     }
 
     @NonNull
-    private Subscriber<Status> getStatusSubscriber() {
-        return new Subscriber<Status>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if (getView() != null) getView().showStatus(Status.Error);
-            }
-
-            @Override
-            public void onNext(Status status) {
-                if (getView() != null) {
-                    getView().showStatus(status);
-                }
-            }
+    private Action1<Status> getStatusSubscriber() {
+        return status -> {
+            if (getView() != null) getView().showStatus(status);
         };
     }
 }

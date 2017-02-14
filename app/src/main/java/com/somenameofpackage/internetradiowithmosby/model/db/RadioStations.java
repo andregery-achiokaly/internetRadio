@@ -9,9 +9,12 @@ import io.realm.RealmResults;
 import rx.Observable;
 
 public class RadioStations {
-    private final DataBase dataBase;
+    private DataBase dataBase;
 
-    public RadioStations(Context context) {
+    public RadioStations() {
+    }
+
+    public void initDB(Context context) {
         dataBase = new StationsRelamDB(context);
     }
 

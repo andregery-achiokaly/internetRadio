@@ -24,7 +24,6 @@ public class RadioService extends Service {
     final static public String PLAY = "PLAY";
     private Notification notification;
     private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
-
     @Inject
     RadioModel radioModel;
 

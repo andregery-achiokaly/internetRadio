@@ -8,13 +8,10 @@ import android.widget.Toast;
 
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
-import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.AudioWaveFragment;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.ControlFragment;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.dialogs.AddStationDialog;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.StationsListFragment;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
@@ -59,7 +56,9 @@ public class RadioActivity extends AppCompatActivity implements AddStation {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         Boolean isCreated = sharedPreferences.getBoolean(INITIAL_DB, false);
         if (!isCreated) {
-            new RadioStations(getApplicationContext()).firstInitial(getApplicationContext());
+            RadioStations radioStations = new RadioStations();
+            radioStations.initDB(getApplicationContext());
+            radioStations.firstInitial(getApplicationContext());
             sharedPreferences = getPreferences(MODE_PRIVATE);
             SharedPreferences.Editor ed = sharedPreferences.edit();
             ed.putBoolean(INITIAL_DB, true);
