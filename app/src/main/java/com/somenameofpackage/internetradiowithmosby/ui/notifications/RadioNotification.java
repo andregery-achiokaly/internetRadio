@@ -17,6 +17,7 @@ import static com.somenameofpackage.internetradiowithmosby.model.radio.RadioServ
 import static com.somenameofpackage.internetradiowithmosby.model.radio.RadioService.PLAY;
 
 public class RadioNotification {
+    private static final int PENDING_INTENT_CODE = 755;
     private final Notification notification;
     public final static int ID = 123;
 
@@ -28,7 +29,7 @@ public class RadioNotification {
         Intent playRadioIntent = new Intent(context, RadioService.class);
         playRadioIntent.putExtra(ACTION, PLAY);
 
-        PendingIntent playPendingIntent = PendingIntent.getService(context, 22, playRadioIntent, 0);
+        PendingIntent playPendingIntent = PendingIntent.getService(context, PENDING_INTENT_CODE, playRadioIntent, 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)

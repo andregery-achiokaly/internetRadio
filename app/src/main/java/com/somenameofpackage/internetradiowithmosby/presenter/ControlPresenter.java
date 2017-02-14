@@ -39,7 +39,6 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
                 context.bindService(new Intent(context, RadioService.class),
                         serviceConnection,
                         Context.BIND_AUTO_CREATE);
-                isBind = true;
             }
         };
     }
