@@ -8,16 +8,19 @@ import android.widget.Toast;
 
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
+import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.AudioWaveFragment;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.ControlFragment;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.dialogs.AddStationDialog;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.StationsListFragment;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 
 public class RadioActivity extends AppCompatActivity implements AddStation {
-    final private static String INITIAL_DB = "IS_INITIAL_DB";
     final private static String CREATE_STATION = "CREATE_STATION";
+    final private static String INITIAL_DB = "IS_INITIAL_DB";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -65,7 +65,7 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPres
     @Override
     public void onPause() {
         super.onPause();
-        presenter.unbindService(getActivity().getApplicationContext());
+        presenter.onPause(getActivity().getApplicationContext());
     }
 
     @Override

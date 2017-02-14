@@ -9,25 +9,22 @@ import rx.subjects.Subject;
 
 public class VisualizerModel {
     private Visualizer mVisualizer;
-    private final RadioModel radioModel;
     private PublishSubject<Byte[]> source = PublishSubject.create();
 
     public Subject<Byte[], Byte[]> getVisualizerObservable() {
         return source;
     }
 
-    public VisualizerModel(RadioModel radioModel) {
-        this.radioModel = radioModel;
-    }
-
-    public void setupVisualizerFxAndUI() {
-        if (mVisualizer != null) mVisualizer.release();
-        mVisualizer = new Visualizer(radioModel.getMediaPlayer().getAudioSessionId());
-        mVisualizer.setEnabled(false);
-        mVisualizer.setCaptureSize(16);
-        mVisualizer.setDataCaptureListener(new AudioWaveDataCaptureListener(),
-                Visualizer.getMaxCaptureRate() / 2, true, false);
-        mVisualizer.setEnabled(true);
+    public void setupVisualizerFxAndUI(int id) {
+        if (id != -1) {
+            if (mVisualizer != null) mVisualizer.release();
+            mVisualizer = new Visualizer(id);
+            mVisualizer.setEnabled(false);
+            mVisualizer.setCaptureSize(16);
+            mVisualizer.setDataCaptureListener(new AudioWaveDataCaptureListener(),
+                    Visualizer.getMaxCaptureRate() / 2, true, false);
+            mVisualizer.setEnabled(true);
+        }
     }
 
     private class AudioWaveDataCaptureListener implements Visualizer.OnDataCaptureListener {

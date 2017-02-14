@@ -46,7 +46,7 @@ public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter>
     @Override
     public void onPause() {
         super.onPause();
-        presenter.unbindService(getActivity().getApplicationContext());
+        presenter.onPause(getActivity().getApplicationContext());
     }
 
     @Override

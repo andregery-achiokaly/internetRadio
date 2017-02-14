@@ -5,18 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
-import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
+
+import rx.Subscriber;
 import rx.functions.Action1;
+import rx.subjects.PublishSubject;
 
 public class ControlPresenter extends MvpBasePresenter<RadioView> {
-    private RadioModel radioModel;
     private final RadioStations dataBase;
     private boolean isBind = false;
     private ServiceConnection serviceConnection;
@@ -30,6 +32,8 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
     public void changePlayState() {
         dataBase.getPlayingStationSource().subscribe(getChangePlayStateObserver());
     }
+
+    private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
 
     private Action1<String> getBindServiceObserver(Context context) {
         return value -> {
@@ -45,15 +49,12 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
     }
 
     private Action1<String> getChangePlayStateObserver() {
-        return value -> {
-            if (radioModel != null) {
-                if (getView() != null) getView().showStatus(Status.Wait);
-                radioModel.changePlayState(value);
-            }
+        return newStationSource -> {
+            changePlayStateSubject.onNext(newStationSource);
         };
     }
 
-    public void unbindService(Context context) {
+    public void onPause(Context context) {
         if (isBind) context.unbindService(serviceConnection);
         isBind = false;
     }
@@ -67,22 +68,35 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
 
         public void onServiceConnected(ComponentName name, IBinder binder) {
             isBind = true;
-            radioModel = ((RadioService.RadioBinder) binder).getModel(source);
-            radioModel.changePlayState(source);
-            radioModel.getRadioModelObservable()
-                    .subscribe(status -> {
-                        if (getView() != null) {
-                            getView().showStatus(status);
-                        }
-                    }, e -> {
-                        if (getView() != null) getView().showStatus(Status.Error);
-                    }, () -> {
-                    });
+            ((RadioService.RadioBinder) binder).setChangeStateObservable(changePlayStateSubject);
+            ((RadioService.RadioBinder) binder).subscribeStatus(getStatusSubscriber());
         }
 
         public void onServiceDisconnected(ComponentName name) {
             if (getView() != null)
                 getView().showStatus(Status.isStop);
         }
+    }
+
+    @NonNull
+    private Subscriber<Status> getStatusSubscriber() {
+        return new Subscriber<Status>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (getView() != null) getView().showStatus(Status.Error);
+            }
+
+            @Override
+            public void onNext(Status status) {
+                if (getView() != null) {
+                    getView().showStatus(status);
+                }
+            }
+        };
     }
 }
