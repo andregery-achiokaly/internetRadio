@@ -13,12 +13,12 @@ public class Station extends RealmObject {
     @Required
     private String source;
 
-    Station(String name, String source) {
-        this.name = name;
-        this.source = source;
+    public Station() {
     }
 
-    public Station() {
+    public Station(String name, String source) {
+        this.name = name;
+        this.source = source;
     }
 
     public String getName() {
@@ -36,7 +36,6 @@ public class Station extends RealmObject {
     public void setSource(String source) {
         this.source = source;
     }
-
 
     public boolean isPlay() {
         return isPlay;

@@ -31,6 +31,7 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
     public void onBindViewHolder(final StationViewHolder holder, final int position) {
         holder.stationNameTextView.setText(stations.get(position).getName());
         holder.stationSourceTextView.setText(stations.get(position).getSource());
+        holder.id = stations.get(position).getId_key();
     }
 
     @Override
@@ -46,6 +47,7 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
     class StationViewHolder extends RecyclerView.ViewHolder {
         final TextView stationNameTextView;
         final TextView stationSourceTextView;
+        int id;
 
         StationViewHolder(final View itemView) {
             super(itemView);

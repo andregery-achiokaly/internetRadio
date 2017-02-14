@@ -7,13 +7,12 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
-import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
-
 
 import javax.inject.Inject;
 
@@ -23,8 +22,8 @@ import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 public class StationsListPresenter extends MvpBasePresenter<StationsView> implements RealmChangeListener {
-    @Inject
-    RadioStations dataBase;
+   @Inject
+    DataBase dataBase;
     private boolean isBind = false;
     private ServiceConnection serviceConnection;
     private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
@@ -32,23 +31,23 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
     public StationsListPresenter(Context context) {
         serviceConnection = new StationsListServiceConnection();
         RadioApplication.getComponent().injectsStationsListPresenter(this);
-        dataBase.initDB(context);
+        dataBase.init(context);
         dataBase.getPlayingStationSource().subscribe(getPlayingStationSourceObserver(context));
     }
 
-    private Action1<String> getPlayingStationSourceObserver(Context context) {
+    private Action1<Station> getPlayingStationSourceObserver(Context context) {
         return currentStation -> {
             if (!isBind) {
                 context.bindService(new Intent(context, RadioService.class),
                         serviceConnection,
                         Context.BIND_AUTO_CREATE);
             }
-            if (getView() != null) getView().showCurrentStation(currentStation);
+            if (getView() != null && currentStation != null) getView().showCurrentStation(currentStation.getSource());
         };
     }
 
     public void getStations() {
-        dataBase.getStationsObservable().subscribe(getStationsObserver());
+        dataBase.getStations().subscribe(getStationsObserver());
     }
 
     private Action1<RealmResults<Station>> getStationsObserver() {
@@ -69,11 +68,11 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
     }
 
     public void addStation(String name, String source) {
-        dataBase.addStation(name, source);
+        dataBase.addStation(new Station(name, source));
     }
 
     public void deleteStation(String source) {
-        dataBase.removeStation(source);
+        dataBase.deleteStation(source);
     }
 
     @Override
@@ -108,8 +107,13 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
                     if (status == Status.Error) {
                         getView().showCurrentStation(null);
                     }
-                } else dataBase.getPlayingStationSource()
-                        .subscribe(s -> getView().showCurrentStation(s));
+                } else {
+                    dataBase.getPlayingStationSource()
+                            .subscribe(s -> {
+                                if (s == null) getView().showCurrentStation(null);
+                                else getView().showCurrentStation(s.getSource());
+                            });
+                }
             }
         };
     }

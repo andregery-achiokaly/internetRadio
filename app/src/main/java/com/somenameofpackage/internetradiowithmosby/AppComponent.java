@@ -1,7 +1,7 @@
 package com.somenameofpackage.internetradiowithmosby;
 
 
-import com.somenameofpackage.internetradiowithmosby.model.db.RadioStationsModule;
+import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.DataBaseModule;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModule;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.model.visualizer.VisualizerModule;
@@ -11,7 +11,7 @@ import com.somenameofpackage.internetradiowithmosby.presenter.StationsListPresen
 
 import dagger.Component;
 
-@Component(modules = {RadioModule.class, VisualizerModule.class, RadioStationsModule.class})
+@Component(modules = {RadioModule.class, VisualizerModule.class, DataBaseModule.class})
 public interface AppComponent {
     void injectsRadioService(RadioService radioService);
     void injectsAudioWavePresenter(AudioWavePresenter audioWavePresenter);

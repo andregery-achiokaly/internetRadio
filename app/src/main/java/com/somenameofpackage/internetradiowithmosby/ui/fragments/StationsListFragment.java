@@ -67,7 +67,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
 
                         showDeleteDialog(name,
                                 (dialog, which) -> {
-                                    recyclerView.removeViewAt(position);
+//                                    recyclerView.removeViewAt(position);
                                     presenter.deleteStation(source);
                                     Toast.makeText(getContext(), getString(R.string.delete_dialog_start_message)
                                                     + name
@@ -181,7 +181,4 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     public void addStationToBD(String name, String source) {
         presenter.addStation(name, source);
     }
-
-
-
 }

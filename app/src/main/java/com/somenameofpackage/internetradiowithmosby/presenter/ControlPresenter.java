@@ -8,7 +8,8 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
-import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
+import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
+import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
@@ -21,7 +22,7 @@ import rx.subjects.PublishSubject;
 
 public class ControlPresenter extends MvpBasePresenter<RadioView> {
     @Inject
-    RadioStations dataBase;
+    DataBase dataBase;
     private boolean isBind = false;
     private ServiceConnection serviceConnection;
     private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
@@ -29,26 +30,27 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
     public ControlPresenter(Context context) {
         serviceConnection = new RadioServiceConnection();
         RadioApplication.getComponent().injectsControlPresenter(this);
-        dataBase.initDB(context);
-        dataBase.getPlayingStationSource().subscribe(getBindServiceObserver(context));
+        dataBase.init(context);
+        bindToRadioService(context);
+    }
+
+    private void bindToRadioService(Context context) {
+        if (!isBind) {
+            context.bindService(new Intent(context, RadioService.class),
+                    serviceConnection,
+                    Context.BIND_AUTO_CREATE);
+        }
     }
 
     public void changePlayState() {
         dataBase.getPlayingStationSource().subscribe(getChangePlayStateObserver());
     }
 
-    private Action1<String> getBindServiceObserver(Context context) {
-        return value -> {
-            if (!isBind) {
-                context.bindService(new Intent(context, RadioService.class),
-                        serviceConnection,
-                        Context.BIND_AUTO_CREATE);
-            }
+    private Action1<Station> getChangePlayStateObserver() {
+        return newStationSource -> {
+            if (newStationSource != null) changePlayStateSubject.onNext(newStationSource.getSource());
+            else changePlayStateSubject.onNext(null);
         };
-    }
-
-    private Action1<String> getChangePlayStateObserver() {
-        return newStationSource -> changePlayStateSubject.onNext(newStationSource);
     }
 
     public void onPause(Context context) {
