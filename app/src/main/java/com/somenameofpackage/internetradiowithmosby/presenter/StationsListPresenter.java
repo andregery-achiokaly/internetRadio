@@ -9,7 +9,6 @@ import android.os.IBinder;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
-import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
@@ -18,12 +17,13 @@ import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import rx.functions.Action1;
+import rx.subjects.PublishSubject;
 
 public class StationsListPresenter extends MvpBasePresenter<StationsView> implements RealmChangeListener {
     private final RadioStations dataBase;
-    private RadioModel radioModel;
     private boolean isBind = false;
     private ServiceConnection serviceConnection;
+    private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
 
     public StationsListPresenter(Context context) {
         serviceConnection = new StationsListServiceConnection();
@@ -59,9 +59,9 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
         dataBase.closeBD();
     }
 
-    public void startPlay(String source) {
+    public void changePlayState(String source) {
         dataBase.setPlayStation(source);
-        if (radioModel != null) radioModel.changePlayState(source);
+        changePlayStateSubject.onNext(source);
     }
 
     public void addStation(String name, String source) {
@@ -94,9 +94,8 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
 
         public void onServiceConnected(ComponentName name, IBinder binder) {
             isBind = true;
-            radioModel = ((RadioService.RadioBinder) binder).getModel(source);
-            radioModel.changePlayState(source);
-            radioModel.getRadioModelObservable().subscribe(getRadioModelObserver());
+            ((RadioService.RadioBinder) binder).subscribeStatus(getRadioModelObserver());
+            ((RadioService.RadioBinder) binder).setChangeStateObservable(changePlayStateSubject);
         }
 
         public void onServiceDisconnected(ComponentName name) {

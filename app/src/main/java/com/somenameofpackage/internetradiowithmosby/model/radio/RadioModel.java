@@ -8,7 +8,7 @@ import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import java.io.IOException;
 
 import rx.subjects.PublishSubject;
-import rx.subjects.Subject;
+import rx.subjects.ReplaySubject;
 
 public class RadioModel implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener,
@@ -16,17 +16,22 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
     private MediaPlayer mediaPlayer;
     private String currentSource = "";
 
-    private PublishSubject<Status> subscriber = PublishSubject.create();
+    private PublishSubject<Status> statusSubscriber = PublishSubject.create();
+    private ReplaySubject<Integer> radioIdSubscriber = ReplaySubject.createWithSize(1);
 
-    public Subject<Status, Status> getRadioModelObservable() {
-        return subscriber;
+    PublishSubject<Status> getRadioModelStatusObservable() {
+        return statusSubscriber;
+    }
+
+    ReplaySubject<Integer> getRadioIdObservable() {
+        return radioIdSubscriber;
     }
 
     private void stopPlay() {
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
-                subscriber.onNext(Status.isStop);
+                statusSubscriber.onNext(Status.isStop);
             }
         }
     }
@@ -36,7 +41,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             if (currentSource.equals(source)) {
                 if (!mediaPlayer.isPlaying()) {
                     mediaPlayer.start();
-                    subscriber.onNext(Status.isPlay);
+                    statusSubscriber.onNext(Status.isPlay);
                 }
             } else {
                 mediaPlayer.release();
@@ -48,16 +53,15 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
     }
 
     public void changePlayState(String source) {
-        subscriber.onNext(Status.Wait);
+        if(source == null) source = currentSource;
+        statusSubscriber.onNext(Status.Wait);
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying() && currentSource.equals(source)) {
                 stopPlay();
             } else startPlay(source);
+        } else {
+            createMediaPlayer(source);
         }
-    }
-
-    void changePlayState() {
-        changePlayState(currentSource);
     }
 
     @Override
@@ -69,7 +73,7 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
         if (mp != null) {
             if (!mp.isPlaying()) mp.start();
         }
-        subscriber.onNext(Status.isPlay);
+        statusSubscriber.onNext(Status.isPlay);
     }
 
     private void createMediaPlayer(String source) {
@@ -83,9 +87,10 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
             mediaPlayer.setOnCompletionListener(this);
             mediaPlayer.setOnErrorListener(this);
             mediaPlayer.start();
+            radioIdSubscriber.onNext(mediaPlayer.getAudioSessionId());
         } catch (IOException | NullPointerException e) {
             currentSource = "";
-            subscriber.onNext(Status.Error);
+            statusSubscriber.onNext(Status.Error);
         }
     }
 
@@ -106,13 +111,13 @@ public class RadioModel implements MediaPlayer.OnPreparedListener,
         }
     }
 
-    public MediaPlayer getMediaPlayer() {
-        return mediaPlayer;
-    }
-
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        if (what == 1 || extra == 1) subscriber.onNext(Status.Error);
+        if (what == 1 || extra == 1) statusSubscriber.onNext(Status.Error);
         return false;
+    }
+
+    void setChangePlaySubject(PublishSubject<String> changeStateSubject) {
+        changeStateSubject.subscribe(this::changePlayState);
     }
 }

@@ -53,7 +53,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
                         String source = ((StationsListAdapter) recyclerView.getAdapter())
                                 .getStationById(position)
                                 .getSource();
-                        presenter.startPlay(source);
+                        presenter.changePlayState(source);
                     }
 
                     @Override
