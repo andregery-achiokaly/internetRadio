@@ -9,7 +9,7 @@ import java.util.List;
 public interface StationsView extends MvpView {
     void showCurrentStation(String source);
     void disableAllStation();
-    void setListStation(List<Station> value);
+    void setListStations(List<Station> value);
 
     void onChange();
 }

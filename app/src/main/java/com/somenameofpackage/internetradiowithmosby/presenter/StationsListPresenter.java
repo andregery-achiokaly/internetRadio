@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
@@ -51,7 +50,7 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
     private Action1<RealmResults<Station>> getStationsObserver() {
         return stations -> {
             if (getView() != null) {
-                getView().setListStation(stations);
+                getView().setListStations(stations);
             }
         };
     }

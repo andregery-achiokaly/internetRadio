@@ -12,7 +12,7 @@ import rx.Observable;
 
 public class StationsRelamDB implements DataBase {
     private final Realm realm;
-    private static final String nameOfConfiguration = "Config2";
+    private static final String nameOfConfiguration = "Config";
 
     public StationsRelamDB(Context context) {
         RealmConfiguration config = new RealmConfiguration.Builder(context)

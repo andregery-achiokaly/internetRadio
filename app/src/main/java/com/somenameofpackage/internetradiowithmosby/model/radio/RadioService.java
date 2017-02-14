@@ -31,7 +31,7 @@ public class RadioService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int indicate = super.onStartCommand(intent, flags, startId);
+        super.onStartCommand(intent, flags, startId);
             if (intent != null) {
                 String action = intent.getStringExtra(ACTION);
                 if (action!= null && action.equals(PLAY)) radioModel.changePlayState();

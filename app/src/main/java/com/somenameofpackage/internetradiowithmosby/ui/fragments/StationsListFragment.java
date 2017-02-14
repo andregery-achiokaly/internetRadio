@@ -146,7 +146,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     }
 
     @Override
-    public void setListStation(List<Station> stations) {
+    public void setListStations(List<Station> stations) {
         recyclerView.setAdapter(new StationsListAdapter(stations, getActivity().getApplicationContext()));
     }
 

@@ -16,7 +16,7 @@ import com.somenameofpackage.internetradiowithmosby.ui.fragments.StationsListFra
 import butterknife.ButterKnife;
 
 public class RadioActivity extends AppCompatActivity implements AddStation {
-    final private static String INITIAL_DB = "INITIAL_DB";
+    final private static String INITIAL_DB = "IS_INITIAL_DB";
     final private static String CREATE_STATION = "CREATE_STATION";
 
     @Override
