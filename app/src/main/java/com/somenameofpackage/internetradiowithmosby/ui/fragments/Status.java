@@ -6,7 +6,7 @@ public enum Status {
 
     private final String status;
 
-    private Status(String s) {
+    Status(String s) {
         status = s;
     }
 
