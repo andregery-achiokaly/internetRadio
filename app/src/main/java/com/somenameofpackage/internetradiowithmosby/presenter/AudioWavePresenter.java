@@ -21,44 +21,66 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
     private VisualizerModel visualizerModel;
     private ServiceConnection serviceConnection;
     private boolean isBind = false;
+    private boolean canSow = false;
 
     public AudioWavePresenter(Context context) {
         StationsRelamDB stationsRelamDB = new StationsRelamDB(context);
         final String source = stationsRelamDB.getPlayingStationSource();
 
+        serviceConnectionInit(source);
+        context.bindService(new Intent(context, RadioService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private void serviceConnectionInit(final String source) {
         serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 isBind = true;
                 radioModel = ((RadioService.RadioBinder) iBinder).getModel(source);
                 radioModel.getRadioModelObservable().subscribe(getRadioModelObserver());
-                visualizerModel = new VisualizerModel(radioModel);
-                visualizerModel.getVisualizerObservable()
-                        .subscribe(getStationsObserver());
+                if (visualizerModel == null && canSow) {
+                    vizualizerInit();
+                }
             }
 
             @Override
             public void onServiceDisconnected(ComponentName componentName) {
-
+                isBind = false;
             }
         };
-        context.bindService(new Intent(context, RadioService.class), serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     private Action1<Status> getRadioModelObserver() {
         return status -> {
-            if (status == Status.isPlay) visualizerModel.setupVisualizerFxAndUI();
+            if (status == Status.isPlay && canSow && visualizerModel != null) {
+                visualizerModel.setupVisualizerFxAndUI();
+            }
         };
     }
 
     private Action1<Byte[]> getStationsObserver() {
         return bytes -> {
-            if (getView() != null) getView().updateVisualizer(bytes);
+            if (getView() != null && canSow) {
+                getView().updateVisualizer(bytes);
+            }
         };
     }
 
-    public void unbindService(Context context) {
+    public void onPause(Context context) {
         if (isBind) context.unbindService(serviceConnection);
         isBind = false;
+    }
+
+    public void setCanShow(boolean canSow) {
+        this.canSow = canSow;
+        if (canSow && radioModel != null) {
+            vizualizerInit();
+        }
+    }
+
+    private void vizualizerInit() {
+        visualizerModel = new VisualizerModel(radioModel);
+        visualizerModel.getVisualizerObservable().subscribe(getStationsObserver());
+        visualizerModel.setupVisualizerFxAndUI();
     }
 }

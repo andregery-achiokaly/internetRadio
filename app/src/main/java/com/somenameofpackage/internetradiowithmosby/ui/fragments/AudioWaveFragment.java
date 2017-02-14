@@ -1,10 +1,14 @@
 package com.somenameofpackage.internetradiowithmosby.ui.fragments;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +22,8 @@ import com.somenameofpackage.internetradiowithmosby.ui.views.WaveView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter> implements WaveView{
+public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter> implements WaveView {
+    public static final int WAVE_VIEW_RECORD_AUDIO_PERMISSION = 4115;
     @BindView(R.id.audioWave)
     AudioWaveView audioWaveView;
 
@@ -44,13 +49,42 @@ public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter>
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        presenter.unbindService(getActivity().getApplicationContext());
+    public void onResume() {
+        super.onResume();
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.RECORD_AUDIO)) {
+                presenter.setCanShow(false);
+            } else {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        WAVE_VIEW_RECORD_AUDIO_PERMISSION);
+                presenter.setCanShow(false);
+            }
+        } else {
+            presenter.setCanShow(true);
+        }
     }
 
     @Override
-    public void updateVisualizer(Byte[] bytes){
+    public void onPause() {
+        super.onPause();
+        presenter.onPause(getActivity().getApplicationContext());
+    }
+
+    @Override
+    public void updateVisualizer(Byte[] bytes) {
         audioWaveView.updateVisualizer(bytes);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == WAVE_VIEW_RECORD_AUDIO_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                presenter.setCanShow(true);
+            } else {
+                presenter.setCanShow(false);
+            }
+        }
     }
 }
