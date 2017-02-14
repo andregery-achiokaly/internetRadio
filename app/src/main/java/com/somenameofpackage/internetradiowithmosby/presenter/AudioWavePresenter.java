@@ -7,13 +7,16 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.model.visualizer.VisualizerModel;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import com.somenameofpackage.internetradiowithmosby.ui.views.WaveView;
 
 import rx.functions.Action1;
 
 public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
+    private RadioModel radioModel;
     private VisualizerModel visualizerModel;
     private ServiceConnection serviceConnection;
     private boolean isBind = false;
@@ -40,7 +43,7 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
         };
     }
 
-    public void onPause(Context context) {
+    public void unbindService(Context context) {
         if (isBind) context.unbindService(serviceConnection);
         isBind = false;
     }
