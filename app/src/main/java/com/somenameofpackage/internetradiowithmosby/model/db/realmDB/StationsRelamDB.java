@@ -51,14 +51,12 @@ public class StationsRelamDB implements DataBase {
     }
 
     public Observable<Station> getPlayingStationSource() {
-        realm.beginTransaction();
         Station station = realm
                 .where(Station.class)
                 .equalTo(Station.getIsPlayFieldName(), true)
                 .findFirst();
 
         if (station == null) station = realm.where(Station.class).findFirst();
-        realm.commitTransaction();
         return station.asObservable();
     }
 
@@ -70,7 +68,7 @@ public class StationsRelamDB implements DataBase {
         realm.beginTransaction();
         Station station = new Station();
         int newID = 0;
-        Number number = realm.where(Station.class).max(Station.getsetId_keyFieldName());
+        Number number = realm.where(Station.class).max(Station.getId_keyFieldName());
         if (number != null) newID = number.intValue();
 
         station.setId_key(newID + 1);
@@ -83,10 +81,7 @@ public class StationsRelamDB implements DataBase {
     }
 
     public Observable<RealmResults<Station>> getStations() {
-        realm.beginTransaction();
-        Observable<RealmResults<Station>> stations = realm.allObjects(Station.class).asObservable();
-        realm.commitTransaction();
-        return stations;
+        return realm.allObjects(Station.class).asObservable();
     }
 
     public void setPlayStation(String source) {

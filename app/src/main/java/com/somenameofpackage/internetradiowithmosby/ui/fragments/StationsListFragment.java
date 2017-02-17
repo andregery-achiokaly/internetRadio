@@ -34,6 +34,14 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
+    public static StationsListFragment newInstance() {
+        StationsListFragment fragment = new StationsListFragment();
+        return fragment;
+    }
+
+    public StationsListFragment() {
+    }
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

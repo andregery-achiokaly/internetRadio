@@ -24,6 +24,13 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPres
     @BindView(R.id.play_btn)
     Button playButton;
 
+    public static ControlFragment newInstance() {
+        return new ControlFragment();
+    }
+
+    public ControlFragment() {
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

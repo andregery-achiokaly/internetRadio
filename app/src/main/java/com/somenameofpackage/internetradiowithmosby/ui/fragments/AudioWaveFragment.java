@@ -27,6 +27,14 @@ public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter>
     @BindView(R.id.audioWave)
     AudioWaveView audioWaveView;
 
+    public static AudioWaveFragment newInstance() {
+        AudioWaveFragment fragment = new AudioWaveFragment();
+        return fragment;
+    }
+
+    public AudioWaveFragment() {
+    }
+
     @NonNull
     @Override
     public AudioWavePresenter createPresenter() {

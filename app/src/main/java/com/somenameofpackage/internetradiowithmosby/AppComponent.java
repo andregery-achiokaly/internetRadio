@@ -9,8 +9,11 @@ import com.somenameofpackage.internetradiowithmosby.presenter.AudioWavePresenter
 import com.somenameofpackage.internetradiowithmosby.presenter.ControlPresenter;
 import com.somenameofpackage.internetradiowithmosby.presenter.StationsListPresenter;
 
+import javax.inject.Singleton;
+
 import dagger.Component;
 
+@Singleton
 @Component(modules = {RadioModule.class, VisualizerModule.class, DataBaseModule.class})
 public interface AppComponent {
     void injectsRadioService(RadioService radioService);

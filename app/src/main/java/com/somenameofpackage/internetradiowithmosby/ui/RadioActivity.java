@@ -23,9 +23,9 @@ public class RadioActivity extends AppCompatActivity implements AddStation {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_radio_layout, new ControlFragment())
-                    .replace(R.id.fragment_audio_wave_layout, new AudioWaveFragment())
-                    .replace(R.id.list_container, new StationsListFragment())
+                    .replace(R.id.fragment_radio_layout, ControlFragment.newInstance())
+                    .replace(R.id.fragment_audio_wave_layout, AudioWaveFragment.newInstance())
+                    .replace(R.id.list_container, StationsListFragment.newInstance())
                     .commit();
         }
         ButterKnife.bind(this);

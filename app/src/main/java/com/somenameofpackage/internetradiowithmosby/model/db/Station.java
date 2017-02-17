@@ -65,7 +65,7 @@ public class Station extends RealmObject {
         return "isPlay";
     }
 
-    public static String getsetId_keyFieldName() {
+    public static String getId_keyFieldName() {
         return "id_key";
     }
 
