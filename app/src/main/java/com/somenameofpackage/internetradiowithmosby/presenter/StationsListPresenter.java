@@ -16,46 +16,32 @@ import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
 import javax.inject.Inject;
 
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
-public class StationsListPresenter extends MvpBasePresenter<StationsView> implements RealmChangeListener {
-   @Inject
+public class StationsListPresenter extends MvpBasePresenter<StationsView> {
+    @Inject
     DataBase dataBase;
     private boolean isBind = false;
-    private ServiceConnection serviceConnection;
+    private ServiceConnection servCon;
     private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
 
     public StationsListPresenter(Context context) {
-        serviceConnection = new StationsListServiceConnection();
         RadioApplication.getComponent().injectsStationsListPresenter(this);
-        dataBase.init(context);
-        dataBase.getPlayingStationSource().subscribe(getPlayingStationSourceObserver(context));
-    }
+        servCon = new StationsListServiceConnection();
+        if (!isBind) context.bindService(new Intent(context, RadioService.class), servCon, Context.BIND_AUTO_CREATE);
 
-    private Action1<Station> getPlayingStationSourceObserver(Context context) {
-        return currentStation -> {
-            if (!isBind) {
-                context.bindService(new Intent(context, RadioService.class),
-                        serviceConnection,
-                        Context.BIND_AUTO_CREATE);
-            }
-            if (getView() != null && currentStation != null) getView().showCurrentStation(currentStation.getSource());
-        };
+        dataBase.init(context);
+        dataBase.getPlayingStationSource()
+                .filter(s -> getView() != null && s.isLoaded() && s.isValid())
+                .subscribe(s -> getView().showCurrentStation(s.getSource()));
     }
 
     public void getStations() {
-        dataBase.getStations().subscribe(getStationsObserver());
-    }
-
-    private Action1<RealmResults<Station>> getStationsObserver() {
-        return stations -> {
-            if (getView() != null) {
-                getView().setListStations(stations);
-            }
-        };
+        dataBase.getStations()
+                .filter(stations -> stations.isLoaded() && stations.isValid())
+                .filter(stations -> getView() != null)
+                .subscribe(stations -> getView().setListStations(stations));
     }
 
     public void closeBD() {
@@ -75,16 +61,8 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
         dataBase.deleteStation(source);
     }
 
-    @Override
-    public void onChange() {
-        if (getView() != null) {
-            getView().onChange();
-        }
-    }
-
     public void onPause(Context context) {
-        if (isBind) context.unbindService(serviceConnection);
-        isBind = false;
+        if (isBind) context.unbindService(servCon);
     }
 
     private class StationsListServiceConnection implements ServiceConnection {
@@ -109,10 +87,8 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> implem
                     }
                 } else {
                     dataBase.getPlayingStationSource()
-                            .subscribe(s -> {
-                                if (s == null) getView().showCurrentStation(null);
-                                else getView().showCurrentStation(s.getSource());
-                            });
+                            .filter(station -> station.isLoaded() && station.isValid())
+                            .subscribe(station -> getView().showCurrentStation(station.getSource()));
                 }
             }
         };

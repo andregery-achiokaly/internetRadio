@@ -48,7 +48,7 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
 
     private Action1<Station> getChangePlayStateObserver() {
         return newStationSource -> {
-            if (newStationSource != null) changePlayStateSubject.onNext(newStationSource.getSource());
+            if (newStationSource.isLoaded() && newStationSource.isValid()) changePlayStateSubject.onNext(newStationSource.getSource());
             else changePlayStateSubject.onNext(null);
         };
     }

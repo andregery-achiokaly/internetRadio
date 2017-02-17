@@ -19,27 +19,24 @@ import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.presenter.StationsListPresenter;
 import com.somenameofpackage.internetradiowithmosby.ui.AddStation;
-import com.somenameofpackage.internetradiowithmosby.ui.adapters.StationsListAdapter;
-import com.somenameofpackage.internetradiowithmosby.ui.listeners.RecyclerItemClickListener;
+import com.somenameofpackage.internetradiowithmosby.ui.adapters.StationsRecyclerViewAdapter;
 import com.somenameofpackage.internetradiowithmosby.ui.viewStates.StationsListViewState;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.OrderedRealmCollection;
 
-public class StationsListFragment extends MvpViewStateFragment<StationsView, StationsListPresenter> implements StationsView {
+public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsView, StationsListPresenter> implements StationsView {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    public static StationsListFragment newInstance() {
-        StationsListFragment fragment = new StationsListFragment();
-        return fragment;
+    public static StationsRecyclerViewFragment newInstance() {
+        return new StationsRecyclerViewFragment();
     }
 
-    public StationsListFragment() {
+    public StationsRecyclerViewFragment() {
     }
 
     @Override
@@ -54,36 +51,7 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
         View view = inflater.inflate(R.layout.fragment_stations_list, container, false);
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        String source = ((StationsListAdapter) recyclerView.getAdapter())
-                                .getStationById(position)
-                                .getSource();
-                        presenter.changePlayState(source);
-                    }
 
-                    @Override
-                    public void onLongItemClick(View view, final int position) {
-                        final String name = ((StationsListAdapter) recyclerView.getAdapter())
-                                .getStationById(position)
-                                .getName();
-                        final String source = ((StationsListAdapter) recyclerView.getAdapter())
-                                .getStationById(position)
-                                .getSource();
-
-                        showDeleteDialog(name,
-                                (dialog, which) -> {
-//                                    recyclerView.removeViewAt(position);
-                                    presenter.deleteStation(source);
-                                    Toast.makeText(getContext(), getString(R.string.delete_dialog_start_message)
-                                                    + name
-                                                    + getString(R.string.delete_dialog_end_message),
-                                            Toast.LENGTH_SHORT).show();
-                                });
-                    }
-                }));
         return view;
     }
 
@@ -99,14 +67,26 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
         presenter.getStations();
     }
 
-    private void showDeleteDialog(String name, DialogInterface.OnClickListener listener) {
+    public void showDeleteDialog(String source) {
+        DialogInterface.OnClickListener listener = (dialog, which) -> {
+            presenter.deleteStation(source);
+            Toast.makeText(getContext(), getString(R.string.delete_dialog_start_message)
+                            + source
+                            + getString(R.string.delete_dialog_end_message),
+                    Toast.LENGTH_SHORT).show();
+        };
+
         AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
         adb.setTitle(R.string.delete);
-        adb.setMessage(getString(R.string.do_you_want_to_delete) + name + "?");
+        adb.setMessage(getString(R.string.do_you_want_to_delete) + source + "?");
         adb.setPositiveButton(R.string.yes, listener);
         adb.setNegativeButton(R.string.no, null);
         adb.create();
         adb.show();
+    }
+
+    public void changePlayStation(String source){
+        presenter.changePlayState(source);
     }
 
     @Override
@@ -124,25 +104,6 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     public void showCurrentStation(final String station) {
         StationsListViewState stationsListViewState = (StationsListViewState) viewState;
         stationsListViewState.setCurrentStation(station);
-
-        disableStations();
-        if (station != null) {
-            recyclerView.post(() -> {
-                for (int i = 0; i < recyclerView.getChildCount(); i++) {
-                    String source = ((StationsListAdapter) recyclerView.getAdapter())
-                            .getStationById(i)
-                            .getSource();
-
-                    if (source.equals(station)) {
-                        recyclerView.getChildAt(i).setBackgroundColor(Color.RED);
-                        recyclerView.scrollToPosition(i);
-                        break;
-                    }
-                }
-            });
-        } else {
-            Toast.makeText(getContext(), getResources().getText(R.string.cant_play_this_station), Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -154,13 +115,8 @@ public class StationsListFragment extends MvpViewStateFragment<StationsView, Sta
     }
 
     @Override
-    public void setListStations(List<Station> stations) {
-        recyclerView.setAdapter(new StationsListAdapter(stations, getActivity().getApplicationContext()));
-    }
-
-    @Override
-    public void onChange() {
-        ((StationsListAdapter) recyclerView.getAdapter()).onChange();
+    public void setListStations(OrderedRealmCollection<Station> value) {
+        recyclerView.setAdapter(new StationsRecyclerViewAdapter(this, value));
     }
 
     private void disableStations() {
