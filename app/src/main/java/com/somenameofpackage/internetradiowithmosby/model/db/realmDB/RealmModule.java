@@ -9,7 +9,7 @@ import io.realm.RealmConfiguration;
 
 @Module
 public class RealmModule {
-    Application application;
+    private Application application;
 
     private void initRealm() {
         Realm.init(application);
