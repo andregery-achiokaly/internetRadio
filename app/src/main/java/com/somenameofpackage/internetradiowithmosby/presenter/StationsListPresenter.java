@@ -24,14 +24,14 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     DataBase dataBase;
     private boolean isBind = false;
     private ServiceConnection servCon;
-    private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
+    private PublishSubject<String> changePlayStateSabject;
 
     public StationsListPresenter(Context context) {
         RadioApplication.getComponent().injectsStationsListPresenter(this);
         servCon = new StationsListServiceConnection();
         if (!isBind) context.bindService(new Intent(context, RadioService.class), servCon, Context.BIND_AUTO_CREATE);
 
-        dataBase.init(context);
+        dataBase.setDefaultValues(context);
         dataBase.getPlayingStationSource()
                 .filter(s -> getView() != null && s.isLoaded() && s.isValid())
                 .subscribe(s -> getView().showCurrentStation(s.getSource()));
@@ -48,11 +48,6 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         dataBase.closeBD();
     }
 
-    public void changePlayState(String source) {
-        dataBase.setPlayStation(source);
-        changePlayStateSubject.onNext(source);
-    }
-
     public void addStation(String name, String source) {
         dataBase.addStation(new Station(name, source));
     }
@@ -65,11 +60,15 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         if (isBind) context.unbindService(servCon);
     }
 
+    public void setChangePlayStateSubject(PublishSubject<String> changePlayStateSabject) {
+        this.changePlayStateSabject = changePlayStateSabject;
+    }
+
     private class StationsListServiceConnection implements ServiceConnection {
         public void onServiceConnected(ComponentName name, IBinder binder) {
             isBind = true;
             ((RadioService.RadioBinder) binder).subscribeStatus(getRadioModelObserver());
-            ((RadioService.RadioBinder) binder).setChangeStateObservable(changePlayStateSubject);
+            ((RadioService.RadioBinder) binder).setChangeStateObservable(changePlayStateSabject);
         }
 
         public void onServiceDisconnected(ComponentName name) {
@@ -80,12 +79,8 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     private Action1<Status> getRadioModelObserver() {
         return status -> {
             if (getView() != null) {
-                if (status != Status.isPlay) {
-                    getView().disableAllStation();
-                    if (status == Status.Error) {
-                        getView().showCurrentStation(null);
-                    }
-                } else {
+                if (status == Status.Error) getView().showCurrentStation(null);
+                if (status == Status.isPlay) {
                     dataBase.getPlayingStationSource()
                             .filter(station -> station.isLoaded() && station.isValid())
                             .subscribe(station -> getView().showCurrentStation(station.getSource()));

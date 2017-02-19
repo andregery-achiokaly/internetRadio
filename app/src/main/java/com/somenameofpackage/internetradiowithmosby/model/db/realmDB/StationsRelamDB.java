@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
+import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
+
+import javax.inject.Inject;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -13,17 +16,17 @@ import rx.Observable;
 
 import static android.content.Context.MODE_PRIVATE;
 
-class StationsRelamDB implements DataBase {
-    private Realm realm;
+public class StationsRelamDB implements DataBase {
+    @Inject
+    Realm realm;
     final private static String INITIAL_DB = "DB_IS_INITIAL";
     final private static String REALM_DB_PREFERENCES = "REALM_DB_PREFERENCES";
 
-    public void init(Context context) {
-        realm = Realm.getDefaultInstance();
-        setDefaultValues(context);
+    public StationsRelamDB() {
+        RadioApplication.getComponent().injectsStationsRelamDB(this);
     }
 
-    private void setDefaultValues(Context context) {
+    public void setDefaultValues(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(REALM_DB_PREFERENCES, MODE_PRIVATE);
         Boolean isCreated = sharedPreferences.getBoolean(INITIAL_DB, false);
         if (!isCreated) {
@@ -44,7 +47,7 @@ class StationsRelamDB implements DataBase {
 
     public Observable<Station> getPlayingStationSource() {
         Station station = realm.where(Station.class)
-                .equalTo(Station.getIsPlayFieldName(), true)
+                .equalTo(Station.STATION_IS_PLAY, true)
                 .findFirstAsync();
 
         if (station == null) station = realm.where(Station.class).findFirstAsync();
@@ -59,7 +62,7 @@ class StationsRelamDB implements DataBase {
         realm.executeTransactionAsync(realm1 -> {
             Station station = new Station();
             int newID = 0;
-            Number number = realm1.where(Station.class).max(Station.getId_keyFieldName());
+            Number number = realm1.where(Station.class).max(Station.STATION_ID_KEY);
             if (number != null) newID = number.intValue();
 
             station.setId_key(newID + 1);
@@ -76,18 +79,18 @@ class StationsRelamDB implements DataBase {
     }
 
     public void setPlayStation(String source) {
-        setAllPlayStationOff();
-
+        if (source == null) return;
         realm.executeTransactionAsync(realm1 -> {
-            if (source == null) return;
-            Station station = realm1
-                    .where(Station.class)
-                    .equalTo(Station.getSourceFieldName(), source)
-                    .findFirst();
+            realm1.where(Station.class)
+                    .equalTo(Station.STATION_IS_PLAY, true)
+                    .findFirst()
+                    .setPlay(false);
 
-            if (station != null) {
-                station.setPlay(true);
-            }
+            realm1
+                    .where(Station.class)
+                    .equalTo(Station.STATION_SOURCE, source)
+                    .findFirst()
+                    .setPlay(true);
         });
     }
 
@@ -101,19 +104,8 @@ class StationsRelamDB implements DataBase {
         });
     }
 
-    private void setAllPlayStationOff() {
-        realm.executeTransactionAsync(realm1 -> {
-            RealmResults<Station> stations = realm1.where(Station.class).findAll();
-            if (!stations.isEmpty()) {
-                for (int i = stations.size() - 1; i >= 0; i--) {
-                    stations.get(i).setPlay(false);
-                }
-            }
-        });
-    }
-
     public void deleteStation(String source) {
-        realm.executeTransactionAsync(realm1 -> realm1.where(Station.class).equalTo(Station.getSourceFieldName(), source)
+        realm.executeTransactionAsync(realm1 -> realm1.where(Station.class).equalTo(Station.STATION_SOURCE, source)
                 .findAll()
                 .deleteAllFromRealm());
     }

@@ -27,10 +27,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.OrderedRealmCollection;
+import rx.subjects.PublishSubject;
 
 public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsView, StationsListPresenter> implements StationsView {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    private PublishSubject<String> changePlayStateSabject = PublishSubject.create();
+
 
     public static StationsRecyclerViewFragment newInstance() {
         return new StationsRecyclerViewFragment();
@@ -51,7 +54,6 @@ public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsV
         View view = inflater.inflate(R.layout.fragment_stations_list, container, false);
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         return view;
     }
 
@@ -64,17 +66,12 @@ public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsV
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        presenter.setChangePlayStateSubject(changePlayStateSabject);
         presenter.getStations();
     }
 
     public void showDeleteDialog(String source) {
-        DialogInterface.OnClickListener listener = (dialog, which) -> {
-            presenter.deleteStation(source);
-            Toast.makeText(getContext(), getString(R.string.delete_dialog_start_message)
-                            + source
-                            + getString(R.string.delete_dialog_end_message),
-                    Toast.LENGTH_SHORT).show();
-        };
+        DialogInterface.OnClickListener listener = getOnYesClickListener(source);
 
         AlertDialog.Builder adb = new AlertDialog.Builder(getContext());
         adb.setTitle(R.string.delete);
@@ -85,14 +82,15 @@ public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsV
         adb.show();
     }
 
-    public void changePlayStation(String source){
-        presenter.changePlayState(source);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.closeBD();
+    @NonNull
+    private DialogInterface.OnClickListener getOnYesClickListener(String source) {
+        return (dialog, which) -> {
+            presenter.deleteStation(source);
+            Toast.makeText(getContext(), getString(R.string.delete_dialog_start_message)
+                            + source
+                            + getString(R.string.delete_dialog_end_message),
+                    Toast.LENGTH_SHORT).show();
+        };
     }
 
     @OnClick(R.id.add_station_btn)
@@ -107,22 +105,8 @@ public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsV
     }
 
     @Override
-    public void disableAllStation() {
-        StationsListViewState stationsListViewState = (StationsListViewState) viewState;
-        stationsListViewState.setCurrentStation(null);
-
-        disableStations();
-    }
-
-    @Override
     public void setListStations(OrderedRealmCollection<Station> value) {
-        recyclerView.setAdapter(new StationsRecyclerViewAdapter(this, value));
-    }
-
-    private void disableStations() {
-        for (int i = 0; i < recyclerView.getChildCount(); i++) {
-            recyclerView.getChildAt(i).setBackgroundColor(Color.WHITE);
-        }
+        recyclerView.setAdapter(new StationsRecyclerViewAdapter(this, value, changePlayStateSabject));
     }
 
     @Override
@@ -139,10 +123,16 @@ public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsV
 
     @Override
     public void onNewViewStateInstance() {
-        disableAllStation();
     }
 
     public void addStationToBD(String name, String source) {
         presenter.addStation(name, source);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        recyclerView.setAdapter(null);
+        presenter.closeBD();
     }
 }

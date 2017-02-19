@@ -13,13 +13,17 @@ import com.somenameofpackage.internetradiowithmosby.ui.fragments.StationsRecycle
 
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
+import rx.subjects.PublishSubject;
 
 public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Station, StationsRecyclerViewAdapter.StationViewHolder> {
-    StationsRecyclerViewFragment fragment;
+    private StationsRecyclerViewFragment fragment;
+    private PublishSubject<String> changePlayStateSabject;
 
-    public StationsRecyclerViewAdapter(StationsRecyclerViewFragment fragment, OrderedRealmCollection<Station> data) {
+
+    public StationsRecyclerViewAdapter(StationsRecyclerViewFragment fragment, OrderedRealmCollection<Station> data, PublishSubject<String> changePlayStateSabject) {
         super(fragment.getContext(), data, true);
         this.fragment = fragment;
+        this.changePlayStateSabject = changePlayStateSabject;
     }
 
     @Override
@@ -28,17 +32,28 @@ public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Statio
         return new StationViewHolder(itemView);
     }
 
+    private int globalPosition = 0;
+
     @Override
     public void onBindViewHolder(StationViewHolder holder, int position) {
         Station station = getData().get(position);
+
         holder.stationNameTextView.setText(station.getName());
         holder.stationSourceTextView.setText(station.getSource());
         holder.station = station;
+        holder.position = holder.getAdapterPosition();
+
+        if (position == globalPosition) {
+            holder.stationNameTextView.setTextColor(Color.RED);
+        } else {
+            holder.stationNameTextView.setTextColor(Color.BLACK);
+        }
     }
 
     class StationViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
         final TextView stationNameTextView;
         final TextView stationSourceTextView;
+        int position;
 
         public Station station;
 
@@ -58,8 +73,11 @@ public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Statio
 
         @Override
         public void onClick(View v) {
-            fragment.changePlayStation(station.getSource());
-            v.setBackgroundColor(Color.RED);
+            globalPosition = getAdapterPosition();
+            changePlayStateSabject.onNext(station.getSource());
+            notifyDataSetChanged();
         }
     }
+
+
 }

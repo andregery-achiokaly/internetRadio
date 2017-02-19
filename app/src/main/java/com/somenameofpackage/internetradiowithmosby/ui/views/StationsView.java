@@ -8,6 +8,5 @@ import io.realm.OrderedRealmCollection;
 
 public interface StationsView extends MvpView {
     void showCurrentStation(String source);
-    void disableAllStation();
     void setListStations(OrderedRealmCollection<Station> value);
 }

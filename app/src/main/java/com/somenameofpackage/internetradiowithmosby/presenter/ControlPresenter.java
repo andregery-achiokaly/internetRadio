@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
-import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
@@ -30,27 +29,19 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
     public ControlPresenter(Context context) {
         serviceConnection = new RadioServiceConnection();
         RadioApplication.getComponent().injectsControlPresenter(this);
-        dataBase.init(context);
+        dataBase.setDefaultValues(context);
         bindToRadioService(context);
     }
 
     private void bindToRadioService(Context context) {
-        if (!isBind) {
-            context.bindService(new Intent(context, RadioService.class),
-                    serviceConnection,
-                    Context.BIND_AUTO_CREATE);
-        }
+        if (!isBind)
+            context.bindService(new Intent(context, RadioService.class), serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     public void changePlayState() {
-        dataBase.getPlayingStationSource().subscribe(getChangePlayStateObserver());
-    }
-
-    private Action1<Station> getChangePlayStateObserver() {
-        return newStationSource -> {
-            if (newStationSource.isLoaded() && newStationSource.isValid()) changePlayStateSubject.onNext(newStationSource.getSource());
-            else changePlayStateSubject.onNext(null);
-        };
+        dataBase.getPlayingStationSource()
+                .filter(station -> station.isLoaded() && station.isValid())
+                .subscribe(station -> changePlayStateSubject.onNext(null));
     }
 
     public void onPause(Context context) {
