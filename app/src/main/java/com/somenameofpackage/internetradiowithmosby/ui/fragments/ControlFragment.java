@@ -4,11 +4,11 @@ package com.somenameofpackage.internetradiowithmosby.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
@@ -23,7 +23,7 @@ import butterknife.OnClick;
 
 public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPresenter> implements RadioView {
     @BindView(R.id.play_btn)
-    Button playButton;
+    ImageButton playButton;
 
     public static ControlFragment newInstance() {
         return new ControlFragment();
@@ -43,6 +43,7 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPres
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_radio, container, false);
         ButterKnife.bind(this, view);
+        playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_play_arrow_black_24dp));
         return view;
     }
 
@@ -61,8 +62,20 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPres
     public void showStatus(Status status) {
         ControlViewState controlViewState = (ControlViewState) viewState;
         controlViewState.setStatus(status);
-        Log.v("GGG", "controlFr: " + status.toString());
-        playButton.setText(status.toString());
+        switch (status){
+            case isPlay:
+                playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_pause_black_24dp));
+                break;
+            case isStop:
+                playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_play_arrow_black_24dp));
+                break;
+            case Error:
+                playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_error_black_24dp));
+                break;
+            case Wait:
+                playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_query_builder_black_24dp));
+                break;
+        }
     }
 
     @NonNull

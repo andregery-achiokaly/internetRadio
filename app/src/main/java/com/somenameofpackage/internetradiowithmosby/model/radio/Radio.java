@@ -27,40 +27,36 @@ public class Radio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErro
     }
 
     private void initPlayer(String source) {
-        currentSource = source;
-        mediaPlayer = new MediaPlayer();
-
         try {
+            currentSource = source;
+            mediaPlayer = new MediaPlayer();
             mediaPlayer.setDataSource(source);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setOnPreparedListener(this);
+            mediaPlayer.setOnErrorListener(this);
+            mediaPlayer.prepareAsync();
+            statusObserver.onNext(Status.isPlay);
+            radioIdObserver.onNext(mediaPlayer.getAudioSessionId());
         } catch (IOException | NullPointerException e) {
-            currentSource = "";
+            e.printStackTrace();
             closeMediaPlayer();
             statusObserver.onNext(Status.Error);
         }
-
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setOnPreparedListener(this);
-        mediaPlayer.setOnErrorListener(this);
-        mediaPlayer.prepareAsync();
-        statusObserver.onNext(Status.isPlay);
-        radioIdObserver.onNext(mediaPlayer.getAudioSessionId());
     }
 
     private void changeSource(String source) {
-        currentSource = source;
-        mediaPlayer.stop();
-        mediaPlayer.reset();
-
         try {
+            currentSource = source;
+            mediaPlayer.stop();
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(source);
+            mediaPlayer.prepareAsync();
+            statusObserver.onNext(Status.isPlay);
         } catch (IOException e) {
             e.printStackTrace();
             closeMediaPlayer();
             statusObserver.onNext(Status.Error);
         }
-
-        mediaPlayer.prepareAsync();
-        statusObserver.onNext(Status.isPlay);
     }
 
     void setChangePlaySubject(PublishSubject<Station> changeStateSubject) {
@@ -102,6 +98,7 @@ public class Radio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErro
     }
 
     void closeMediaPlayer() {
+        currentSource = "";
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();

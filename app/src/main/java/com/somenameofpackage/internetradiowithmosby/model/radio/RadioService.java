@@ -38,8 +38,10 @@ public class RadioService extends Service {
         RadioApplication.getComponent().injectsRadioService(this);
 
         notification = new RadioNotification(getBaseContext()).getNotification();
+
         radio.getRadioModelStatusObservable().subscribe(radioStatusSubscriber);
         radio.setChangePlaySubject(changePlayStateSubject);
+
         startForeground(RadioNotification.ID, notification);
     }
 
@@ -56,7 +58,6 @@ public class RadioService extends Service {
         }
         return Service.START_STICKY;
     }
-
 
     @Nullable
     @Override
