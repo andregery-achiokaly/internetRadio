@@ -3,6 +3,9 @@ package com.somenameofpackage.internetradiowithmosby.ui;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.somenameofpackage.internetradiowithmosby.R;
@@ -29,6 +32,25 @@ public class RadioActivity extends AppCompatActivity implements AddStation {
                     .commit();
         }
         ButterKnife.bind(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add_station_menu_btn:
+                Toast.makeText(getApplicationContext(), "GO", Toast.LENGTH_SHORT).show();
+                openDialogCreateStation();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void addStationToBD(String name, String source) {

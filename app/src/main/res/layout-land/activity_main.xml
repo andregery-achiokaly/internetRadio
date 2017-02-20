@@ -12,26 +12,6 @@
     tools:context=".ui.RadioActivity"
     android:baselineAligned="false">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="1"
-        android:baselineAligned="false">
-        <FrameLayout
-            android:id="@+id/fragment_radio_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minWidth="100dp"
-            android:layout_weight="3"/>
-
-        <FrameLayout
-            android:id="@+id/fragment_audio_wave_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-    </LinearLayout>
-
     <FrameLayout
         android:id="@+id/list_container"
         android:layout_width="match_parent"
@@ -39,6 +19,26 @@
         android:paddingTop="10dp"
         android:layout_weight="1"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:baselineAligned="false">
+
+        <FrameLayout
+            android:id="@+id/fragment_audio_wave_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <FrameLayout
+            android:id="@+id/fragment_radio_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:minWidth="100dp"
+            android:layout_weight="3"/>
+    </LinearLayout>
 </LinearLayout>
 
 

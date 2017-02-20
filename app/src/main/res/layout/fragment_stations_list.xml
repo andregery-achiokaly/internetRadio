@@ -17,11 +17,4 @@
             android:layout_height="match_parent"
             android:scrollbars="vertical"/>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/add_station_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_radiostation"
-        android:layout_weight="1"/>
 </LinearLayout>

@@ -40,7 +40,6 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
     }
 
 
-    //Todo: error handle
     public void changePlayState() {
         if (getView() != null) getView().showStatus(Status.Wait);
         dataBase.getPlayingStationSource()
@@ -61,7 +60,7 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
                         changePlayStateSubject.onNext(station);
                     }
                 });
-}
+    }
 
     public void onPause(Context context) {
         if (isBind) context.unbindService(serviceConnection);
@@ -79,7 +78,7 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
         public void onServiceDisconnected(ComponentName name) {
             if (getView() != null) getView().showStatus(Status.isStop);
             isBind = false;
-            if(!statusSubscriber.isUnsubscribed()) statusSubscriber.unsubscribe();
+            if (!statusSubscriber.isUnsubscribed()) statusSubscriber.unsubscribe();
         }
     }
 

@@ -17,16 +17,13 @@ import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.presenter.StationsListPresenter;
-import com.somenameofpackage.internetradiowithmosby.ui.AddStation;
 import com.somenameofpackage.internetradiowithmosby.ui.adapters.StationsRecyclerViewAdapter;
 import com.somenameofpackage.internetradiowithmosby.ui.viewStates.StationsListViewState;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.realm.OrderedRealmCollection;
-import rx.subjects.PublishSubject;
 
 public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsView, StationsListPresenter> implements StationsView {
     @BindView(R.id.recycler_view)
@@ -88,11 +85,6 @@ public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsV
                             + getString(R.string.delete_dialog_end_message),
                     Toast.LENGTH_SHORT).show();
         };
-    }
-
-    @OnClick(R.id.add_station_btn)
-    public void addStation() {
-        ((AddStation) getActivity()).openDialogCreateStation();
     }
 
     @Override
