@@ -1,7 +1,7 @@
 package com.somenameofpackage.internetradiowithmosby;
 
 
-import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.DataBaseModule;
+import com.somenameofpackage.internetradiowithmosby.model.db.DataBaseModule;
 import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.RealmModule;
 import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModule;
@@ -12,7 +12,6 @@ import com.somenameofpackage.internetradiowithmosby.presenter.ControlPresenter;
 import com.somenameofpackage.internetradiowithmosby.presenter.StationsListPresenter;
 
 import javax.inject.Singleton;
-
 import dagger.Component;
 
 @Singleton

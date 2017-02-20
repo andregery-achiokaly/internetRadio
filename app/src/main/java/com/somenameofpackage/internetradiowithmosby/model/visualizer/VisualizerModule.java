@@ -6,7 +6,7 @@ import dagger.Provides;
 @Module
 public class VisualizerModule {
     @Provides
-    VisualizerModel provideVisualizerModel() {
-        return new VisualizerModel();
+    RadioVisualizer provideVisualizerModel() {
+        return new RadioVisualizer();
     }
 }

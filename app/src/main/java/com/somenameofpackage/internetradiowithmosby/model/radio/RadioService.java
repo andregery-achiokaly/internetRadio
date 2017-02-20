@@ -9,6 +9,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
+import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import com.somenameofpackage.internetradiowithmosby.ui.notifications.RadioNotification;
@@ -16,16 +18,19 @@ import com.somenameofpackage.internetradiowithmosby.ui.notifications.RadioNotifi
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 public class RadioService extends Service {
     final static public String ACTION = "ACTION";
     final static public String PLAY = "PLAY";
     private Notification notification;
-    private PublishSubject<String> changePlayStateSubject = PublishSubject.create();
+    private PublishSubject<Station> changePlayStateSubject = PublishSubject.create();
+    private Subscriber<Status> radioStatusSubscriber = getRadioModelObserver();
+
     @Inject
-    RadioModel radioModel;
+    Radio radio;
+    @Inject
+    DataBase dataBase;
 
     @Override
     public void onCreate() {
@@ -33,8 +38,8 @@ public class RadioService extends Service {
         RadioApplication.getComponent().injectsRadioService(this);
 
         notification = new RadioNotification(getBaseContext()).getNotification();
-        radioModel.getRadioModelStatusObservable().subscribe(getRadioModelObserver());
-        radioModel.setChangePlaySubject(changePlayStateSubject);
+        radio.getRadioModelStatusObservable().subscribe(radioStatusSubscriber);
+        radio.setChangePlaySubject(changePlayStateSubject);
         startForeground(RadioNotification.ID, notification);
     }
 
@@ -43,7 +48,11 @@ public class RadioService extends Service {
         super.onStartCommand(intent, flags, startId);
         if (intent != null) {
             String action = intent.getStringExtra(ACTION);
-            if (action != null && action.equals(PLAY)) changePlayStateSubject.onNext(null);
+            if (action != null && action.equals(PLAY)) {
+                dataBase.getPlayingStationSource()
+                        .filter(station -> station.isLoaded() && station.isValid())
+                        .subscribe(station -> changePlayStateSubject.onNext(station));
+            }
         }
         return Service.START_STICKY;
     }
@@ -57,35 +66,49 @@ public class RadioService extends Service {
 
     public class RadioBinder extends Binder {
         public void subscribeStatus(Subscriber<Status> subscriber) {
-            radioModel.getRadioModelStatusObservable().subscribe(subscriber);
+            radio.getRadioModelStatusObservable().subscribe(subscriber);
         }
 
-        public void subscribeStatus(Action1<Status> subscriber) {
-            radioModel.getRadioModelStatusObservable().subscribe(subscriber);
+        public void subscribePlayerId(Subscriber<Integer> subscriber) {
+            radio.getRadioIdObservable().subscribe(subscriber);
         }
 
-        public void subscribePlayerId(Action1<Integer> subscriber) {
-            radioModel.getRadioIdObservable().subscribe(subscriber);
-        }
-
-        public void setChangeStateObservable(PublishSubject<String> changeStateSubject) {
-            radioModel.setChangePlaySubject(changeStateSubject);
+        public void setChangeStateObservable(PublishSubject<Station> changeStateSubject) {
+            radio.setChangePlaySubject(changeStateSubject);
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        radioModel.closeMediaPlayer();
+        if (!radioStatusSubscriber.isUnsubscribed()) radioStatusSubscriber.unsubscribe();
+        radio.closeMediaPlayer();
     }
 
-    private Action1<Status> getRadioModelObserver() {
-        return status -> {
-            notification = new RadioNotification(getBaseContext(), status.toString())
-                    .getNotification();
-            NotificationManager mNotificationManager = (NotificationManager) getBaseContext()
-                    .getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(RadioNotification.ID, notification);
+    private Subscriber<Status> getRadioModelObserver() {
+        return new Subscriber<Status>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                notification = new RadioNotification(getBaseContext(), Status.Error.toString())
+                        .getNotification();
+                NotificationManager mNotificationManager = (NotificationManager) getBaseContext()
+                        .getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.notify(RadioNotification.ID, notification);
+            }
+
+            @Override
+            public void onNext(Status status) {
+                notification = new RadioNotification(getBaseContext(), status.toString())
+                        .getNotification();
+                NotificationManager mNotificationManager = (NotificationManager) getBaseContext()
+                        .getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.notify(RadioNotification.ID, notification);
+            }
         };
     }
 }

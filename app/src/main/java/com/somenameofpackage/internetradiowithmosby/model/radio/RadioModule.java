@@ -1,12 +1,15 @@
 package com.somenameofpackage.internetradiowithmosby.model.radio;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
 @Module
+@Singleton
 public class RadioModule {
     @Provides
-    RadioModel provideRadioModel() {
-        return new RadioModel();
+    Radio provideRadioModel() {
+        return new Radio();
     }
 }

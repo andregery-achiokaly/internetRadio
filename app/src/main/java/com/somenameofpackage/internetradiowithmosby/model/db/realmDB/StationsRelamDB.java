@@ -58,6 +58,22 @@ public class StationsRelamDB implements DataBase {
         addStation(station.getName(), station.getSource());
     }
 
+    @Override
+    public void setPlayingStationSource(Station station) {
+        if (station == null) return;
+        realm.executeTransactionAsync(realm1 -> {
+            realm1.where(Station.class)
+                    .equalTo(Station.STATION_IS_PLAY, true)
+                    .findFirst()
+                    .setPlay(false);
+
+            realm1.where(Station.class)
+                    .equalTo(Station.STATION_ID_KEY, station.getId_key())
+                    .findFirst()
+                    .setPlay(true);
+        });
+    }
+
     private void addStation(String stationName, String stationSource) {
         realm.executeTransactionAsync(realm1 -> {
             Station station = new Station();
@@ -78,30 +94,12 @@ public class StationsRelamDB implements DataBase {
         return realm.where(Station.class).findAllAsync().asObservable();
     }
 
-    public void setPlayStation(String source) {
-        if (source == null) return;
-        realm.executeTransactionAsync(realm1 -> {
-            realm1.where(Station.class)
-                    .equalTo(Station.STATION_IS_PLAY, true)
-                    .findFirst()
-                    .setPlay(false);
-
-            realm1
-                    .where(Station.class)
-                    .equalTo(Station.STATION_SOURCE, source)
-                    .findFirst()
-                    .setPlay(true);
-        });
-    }
-
     public void closeBD() {
         realm.close();
     }
 
     public void clearBD() {
-        realm.executeTransactionAsync(realm1 -> {
-            realm1.deleteAll();
-        });
+        realm.executeTransactionAsync(realm1 -> realm1.deleteAll());
     }
 
     public void deleteStation(String source) {

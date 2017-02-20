@@ -16,7 +16,7 @@ import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
 import javax.inject.Inject;
 
-import rx.functions.Action1;
+import rx.Subscriber;
 import rx.subjects.PublishSubject;
 
 public class StationsListPresenter extends MvpBasePresenter<StationsView> {
@@ -24,7 +24,7 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     DataBase dataBase;
     private boolean isBind = false;
     private ServiceConnection servCon;
-    private PublishSubject<String> changePlayStateSabject;
+    private PublishSubject<Station> changePlayStateSubject;
 
     public StationsListPresenter(Context context) {
         RadioApplication.getComponent().injectsStationsListPresenter(this);
@@ -60,15 +60,16 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         if (isBind) context.unbindService(servCon);
     }
 
-    public void setChangePlayStateSubject(PublishSubject<String> changePlayStateSabject) {
-        this.changePlayStateSabject = changePlayStateSabject;
+    public void setChangePlayStateSubject(PublishSubject<Station> changePlayStateSabject) {
+        this.changePlayStateSubject = changePlayStateSabject;
+        changePlayStateSabject.doOnNext(s -> dataBase.setPlayingStationSource(s));
     }
 
     private class StationsListServiceConnection implements ServiceConnection {
         public void onServiceConnected(ComponentName name, IBinder binder) {
             isBind = true;
             ((RadioService.RadioBinder) binder).subscribeStatus(getRadioModelObserver());
-            ((RadioService.RadioBinder) binder).setChangeStateObservable(changePlayStateSabject);
+            ((RadioService.RadioBinder) binder).setChangeStateObservable(changePlayStateSubject);
         }
 
         public void onServiceDisconnected(ComponentName name) {
@@ -76,11 +77,21 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         }
     }
 
-    private Action1<Status> getRadioModelObserver() {
-        return status -> {
-            if (getView() != null) {
-                if (status == Status.Error) getView().showCurrentStation(null);
-                if (status == Status.isPlay) {
+    private Subscriber<Status> getRadioModelObserver() {
+        return new Subscriber<Status>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Status status) {
+                if (getView() != null && status == Status.isPlay) {
                     dataBase.getPlayingStationSource()
                             .filter(station -> station.isLoaded() && station.isValid())
                             .subscribe(station -> getView().showCurrentStation(station.getSource()));

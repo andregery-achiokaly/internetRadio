@@ -17,13 +17,12 @@ import rx.subjects.PublishSubject;
 
 public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Station, StationsRecyclerViewAdapter.StationViewHolder> {
     private StationsRecyclerViewFragment fragment;
-    private PublishSubject<String> changePlayStateSabject;
+    private PublishSubject<Station> changePlayStateSubject = PublishSubject.create();
 
-
-    public StationsRecyclerViewAdapter(StationsRecyclerViewFragment fragment, OrderedRealmCollection<Station> data, PublishSubject<String> changePlayStateSabject) {
+    public StationsRecyclerViewAdapter(StationsRecyclerViewFragment fragment, OrderedRealmCollection<Station> data) {
         super(fragment.getContext(), data, true);
         this.fragment = fragment;
-        this.changePlayStateSabject = changePlayStateSabject;
+        this.fragment.getPresenter().setChangePlayStateSubject(changePlayStateSubject);
     }
 
     @Override
@@ -41,7 +40,6 @@ public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Statio
         holder.stationNameTextView.setText(station.getName());
         holder.stationSourceTextView.setText(station.getSource());
         holder.station = station;
-        holder.position = holder.getAdapterPosition();
 
         if (position == globalPosition) {
             holder.stationNameTextView.setTextColor(Color.RED);
@@ -53,8 +51,6 @@ public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Statio
     class StationViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
         final TextView stationNameTextView;
         final TextView stationSourceTextView;
-        int position;
-
         public Station station;
 
         StationViewHolder(View view) {
@@ -74,10 +70,8 @@ public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Statio
         @Override
         public void onClick(View v) {
             globalPosition = getAdapterPosition();
-            changePlayStateSabject.onNext(station.getSource());
+            changePlayStateSubject.onNext(station);
             notifyDataSetChanged();
         }
     }
-
-
 }

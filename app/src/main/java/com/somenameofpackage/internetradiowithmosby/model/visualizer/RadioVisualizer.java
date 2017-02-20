@@ -5,7 +5,7 @@ import android.media.audiofx.Visualizer;
 import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
 
-public class VisualizerModel {
+public class RadioVisualizer {
     private Visualizer visualizer;
     private PublishSubject<Byte[]> source = PublishSubject.create();
 
@@ -23,6 +23,11 @@ public class VisualizerModel {
                     Visualizer.getMaxCaptureRate() / 2, true, false);
             visualizer.setEnabled(true);
         }
+    }
+
+    public void stop() {
+        visualizer.setEnabled(false);
+        visualizer.release();
     }
 
     private class AudioWaveDataCaptureListener implements Visualizer.OnDataCaptureListener {

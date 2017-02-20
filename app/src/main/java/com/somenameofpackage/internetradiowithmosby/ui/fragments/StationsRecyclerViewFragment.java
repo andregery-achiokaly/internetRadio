@@ -1,7 +1,6 @@
 package com.somenameofpackage.internetradiowithmosby.ui.fragments;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,7 +31,6 @@ import rx.subjects.PublishSubject;
 public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsView, StationsListPresenter> implements StationsView {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    private PublishSubject<String> changePlayStateSabject = PublishSubject.create();
 
 
     public static StationsRecyclerViewFragment newInstance() {
@@ -66,7 +64,6 @@ public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsV
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.setChangePlayStateSubject(changePlayStateSabject);
         presenter.getStations();
     }
 
@@ -106,7 +103,7 @@ public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsV
 
     @Override
     public void setListStations(OrderedRealmCollection<Station> value) {
-        recyclerView.setAdapter(new StationsRecyclerViewAdapter(this, value, changePlayStateSabject));
+        recyclerView.setAdapter(new StationsRecyclerViewAdapter(this, value));
     }
 
     @Override
