@@ -45,7 +45,6 @@ public class RadioActivity extends AppCompatActivity implements AddStation {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_station_menu_btn:
-                Toast.makeText(getApplicationContext(), "GO", Toast.LENGTH_SHORT).show();
                 openDialogCreateStation();
                 return true;
             default:
