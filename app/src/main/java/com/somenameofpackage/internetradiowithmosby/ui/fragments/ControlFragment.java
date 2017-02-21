@@ -1,6 +1,5 @@
 package com.somenameofpackage.internetradiowithmosby.ui.fragments;
 
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -71,9 +70,6 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPres
                 break;
             case Error:
                 playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_error_black_24dp));
-                break;
-            case Wait:
-                playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_query_builder_black_24dp));
                 break;
         }
     }

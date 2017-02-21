@@ -28,6 +28,7 @@ import io.realm.OrderedRealmCollection;
 public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsView, StationsListPresenter> implements StationsView {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    private int currentStationId;
 
 
     public static StationsRecyclerViewFragment newInstance() {
@@ -123,5 +124,13 @@ public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsV
         super.onDestroy();
         recyclerView.setAdapter(null);
         presenter.closeBD();
+    }
+
+    public void setCurrentStationId(int currentStationId) {
+        this.currentStationId = currentStationId;
+    }
+
+    public int getCurrentStationId() {
+        return currentStationId;
     }
 }

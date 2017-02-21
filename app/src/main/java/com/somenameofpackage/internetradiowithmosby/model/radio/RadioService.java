@@ -10,7 +10,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
-import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import com.somenameofpackage.internetradiowithmosby.ui.notifications.RadioNotification;
@@ -18,13 +17,14 @@ import com.somenameofpackage.internetradiowithmosby.ui.notifications.RadioNotifi
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.subjects.PublishSubject;
+import rx.subjects.BehaviorSubject;
+import rx.subjects.Subject;
 
 public class RadioService extends Service {
     final static public String ACTION = "ACTION";
     final static public String PLAY = "PLAY";
     private Notification notification;
-    private PublishSubject<Station> changePlayStateSubject = PublishSubject.create();
+    private BehaviorSubject<String> changePlayStateSubject = BehaviorSubject.create();
     private Subscriber<Status> radioStatusSubscriber = getRadioModelObserver();
 
     @Inject
@@ -51,9 +51,8 @@ public class RadioService extends Service {
         if (intent != null) {
             String action = intent.getStringExtra(ACTION);
             if (action != null && action.equals(PLAY)) {
-                dataBase.getPlayingStationSource()
-                        .filter(station -> station.isLoaded() && station.isValid())
-                        .subscribe(station -> changePlayStateSubject.onNext(station));
+                dataBase.getCurrentStation()
+                        .subscribe(station -> changePlayStateSubject.onNext(station.getSource()));
             }
         }
         return Service.START_STICKY;
@@ -74,7 +73,7 @@ public class RadioService extends Service {
             radio.getRadioIdObservable().subscribe(subscriber);
         }
 
-        public void setChangeStateObservable(PublishSubject<Station> changeStateSubject) {
+        public void setChangeStateObservable(Subject<String, String> changeStateSubject) {
             radio.setChangePlaySubject(changeStateSubject);
         }
     }

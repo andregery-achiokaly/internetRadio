@@ -3,7 +3,6 @@ package com.somenameofpackage.internetradiowithmosby.model.radio;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
-import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
 import java.io.IOException;
@@ -11,6 +10,7 @@ import java.io.IOException;
 import rx.Subscriber;
 import rx.subjects.PublishSubject;
 import rx.subjects.ReplaySubject;
+import rx.subjects.Subject;
 
 public class Radio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
     private MediaPlayer mediaPlayer;
@@ -59,10 +59,9 @@ public class Radio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErro
         }
     }
 
-    void setChangePlaySubject(PublishSubject<Station> changeStateSubject) {
+    void setChangePlaySubject(Subject<String, String> changeStateSubject) {
         changeStateSubject
-                .filter(station -> station.isLoaded() && station.isValid())
-                .subscribe(new Subscriber<Station>() {
+                .subscribe(new Subscriber<String>() {
                                @Override
                                public void onCompleted() {
                                }
@@ -73,22 +72,19 @@ public class Radio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErro
                                }
 
                                @Override
-                               public void onNext(Station station) {
-                                   String source = station.getSource();
-                                   statusObserver.onNext(Status.Wait);
-
+                               public void onNext(String source) {
                                    if (mediaPlayer == null) {
                                        initPlayer(source);
                                    } else {
-                                       if (!station.getSource().equals(currentSource)) {
+                                       if (!source.equals(currentSource)) {
                                            changeSource(source);
                                        } else {
                                            if (mediaPlayer.isPlaying()) {
-                                               statusObserver.onNext(Status.isStop);
                                                mediaPlayer.pause();
+                                               statusObserver.onNext(Status.isStop);
                                            } else {
-                                               statusObserver.onNext(Status.isPlay);
                                                mediaPlayer.start();
+                                               statusObserver.onNext(Status.isPlay);
                                            }
                                        }
                                    }
@@ -110,7 +106,6 @@ public class Radio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErro
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
-        statusObserver.onNext(Status.isPlay);
     }
 
     @Override

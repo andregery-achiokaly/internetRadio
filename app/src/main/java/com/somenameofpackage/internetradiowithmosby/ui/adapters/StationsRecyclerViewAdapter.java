@@ -13,16 +13,13 @@ import com.somenameofpackage.internetradiowithmosby.ui.fragments.StationsRecycle
 
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
-import rx.subjects.PublishSubject;
 
 public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Station, StationsRecyclerViewAdapter.StationViewHolder> {
     private StationsRecyclerViewFragment fragment;
-    private PublishSubject<Station> changePlayStateSubject = PublishSubject.create();
 
     public StationsRecyclerViewAdapter(StationsRecyclerViewFragment fragment, OrderedRealmCollection<Station> data) {
         super(fragment.getContext(), data, true);
         this.fragment = fragment;
-        this.fragment.getPresenter().setChangePlayStateSubject(changePlayStateSubject);
     }
 
     @Override
@@ -30,8 +27,6 @@ public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Statio
         View itemView = inflater.inflate(R.layout.item_station, parent, false);
         return new StationViewHolder(itemView);
     }
-
-    private int globalPosition = 0;
 
     @Override
     public void onBindViewHolder(StationViewHolder holder, int position) {
@@ -41,7 +36,7 @@ public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Statio
         holder.stationSourceTextView.setText(station.getSource());
         holder.station = station;
 
-        if (position == globalPosition) {
+        if (station.getId_key() == fragment.getCurrentStationId()) {
             holder.stationNameTextView.setTextColor(Color.RED);
         } else {
             holder.stationNameTextView.setTextColor(Color.BLACK);
@@ -69,8 +64,8 @@ public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Statio
 
         @Override
         public void onClick(View v) {
-            globalPosition = getAdapterPosition();
-            changePlayStateSubject.onNext(station);
+            fragment.getPresenter().stationClick(station);
+            fragment.setCurrentStationId(station.getId_key());
             notifyDataSetChanged();
         }
     }

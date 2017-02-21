@@ -11,8 +11,11 @@ import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import javax.inject.Inject;
 
 import io.realm.Realm;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -45,13 +48,10 @@ public class StationsRelamDB implements DataBase {
                 context.getString(R.string.jam_fm_source));
     }
 
-    public Observable<Station> getPlayingStationSource() {
-        Station station = realm.where(Station.class)
+    public Observable<Station> getCurrentStation() {
+        return realm.where(Station.class)
                 .equalTo(Station.STATION_IS_PLAY, true)
-                .findFirstAsync();
-
-        if (station == null) station = realm.where(Station.class).findFirstAsync();
-        return station.asObservable();
+                .findFirstAsync().asObservable().filter(s -> s.isValid()).take(1).map(realmObject -> (Station) realmObject);
     }
 
     public void addStation(Station station) {
@@ -61,6 +61,7 @@ public class StationsRelamDB implements DataBase {
     @Override
     public void setPlayingStationSource(Station station) {
         if (station == null) return;
+        int id = station.getId_key();
         realm.executeTransactionAsync(realm1 -> {
             realm1.where(Station.class)
                     .equalTo(Station.STATION_IS_PLAY, true)
@@ -68,7 +69,7 @@ public class StationsRelamDB implements DataBase {
                     .setPlay(false);
 
             realm1.where(Station.class)
-                    .equalTo(Station.STATION_ID_KEY, station.getId_key())
+                    .equalTo(Station.STATION_ID_KEY, id)
                     .findFirst()
                     .setPlay(true);
         });

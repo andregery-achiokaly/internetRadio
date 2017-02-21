@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
@@ -17,14 +18,14 @@ import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 import javax.inject.Inject;
 
 import rx.Subscriber;
-import rx.subjects.PublishSubject;
+import rx.subjects.BehaviorSubject;
 
 public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     @Inject
     DataBase dataBase;
     private boolean isBind = false;
     private ServiceConnection servCon;
-    private PublishSubject<Station> changePlayStateSubject;
+    private BehaviorSubject<String> changePlayStateSubject = BehaviorSubject.create();
 
     public StationsListPresenter(Context context) {
         RadioApplication.getComponent().injectsStationsListPresenter(this);
@@ -32,9 +33,6 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         if (!isBind) context.bindService(new Intent(context, RadioService.class), servCon, Context.BIND_AUTO_CREATE);
 
         dataBase.setDefaultValues(context);
-        dataBase.getPlayingStationSource()
-                .filter(s -> getView() != null && s.isLoaded() && s.isValid())
-                .subscribe(s -> getView().showCurrentStation(s.getSource()));
     }
 
     public void getStations() {
@@ -60,9 +58,10 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         if (isBind) context.unbindService(servCon);
     }
 
-    public void setChangePlayStateSubject(PublishSubject<Station> changePlayStateSabject) {
-        this.changePlayStateSubject = changePlayStateSabject;
-        changePlayStateSabject.doOnNext(s -> dataBase.setPlayingStationSource(s));
+    public void stationClick(Station station) {
+        Log.v("GGG", "Set: " + station.getSource());
+        dataBase.setPlayingStationSource(station);
+        changePlayStateSubject.onNext(station.getSource());
     }
 
     private class StationsListServiceConnection implements ServiceConnection {
@@ -92,8 +91,7 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
             @Override
             public void onNext(Status status) {
                 if (getView() != null && status == Status.isPlay) {
-                    dataBase.getPlayingStationSource()
-                            .filter(station -> station.isLoaded() && station.isValid())
+                    dataBase.getCurrentStation()
                             .subscribe(station -> getView().showCurrentStation(station.getSource()));
                 }
             }
