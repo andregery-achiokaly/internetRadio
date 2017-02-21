@@ -9,6 +9,7 @@ import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.model.visualizer.VisualizerModule;
 import com.somenameofpackage.internetradiowithmosby.presenter.AudioWavePresenter;
 import com.somenameofpackage.internetradiowithmosby.presenter.ControlPresenter;
+import com.somenameofpackage.internetradiowithmosby.presenter.RadioActivityPresenter;
 import com.somenameofpackage.internetradiowithmosby.presenter.StationsListPresenter;
 
 import javax.inject.Singleton;
@@ -22,4 +23,5 @@ public interface AppComponent {
     void injectsControlPresenter(ControlPresenter controlPresenter);
     void injectsStationsListPresenter(StationsListPresenter stationsListPresenter);
     void injectsStationsRelamDB(StationsRelamDB stationsRelamDB);
+    void injectsRadioActivityPresenter(RadioActivityPresenter radioActivityPresenter);
 }

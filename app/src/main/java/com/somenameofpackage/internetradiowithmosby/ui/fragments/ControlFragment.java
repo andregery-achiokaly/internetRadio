@@ -14,13 +14,13 @@ import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.presenter.ControlPresenter;
 import com.somenameofpackage.internetradiowithmosby.ui.viewStates.ControlViewState;
-import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
+import com.somenameofpackage.internetradiowithmosby.ui.views.ControlView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPresenter> implements RadioView {
+public class ControlFragment extends MvpViewStateFragment<ControlView, ControlPresenter> implements ControlView {
     @BindView(R.id.play_btn)
     ImageButton playButton;
 
@@ -61,7 +61,7 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPres
     public void showStatus(Status status) {
         ControlViewState controlViewState = (ControlViewState) viewState;
         controlViewState.setStatus(status);
-        switch (status){
+        switch (status) {
             case isPlay:
                 playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_pause_black_24dp));
                 break;

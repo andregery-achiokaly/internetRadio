@@ -12,24 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
-import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
+import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.presenter.StationsListPresenter;
 import com.somenameofpackage.internetradiowithmosby.ui.adapters.StationsRecyclerViewAdapter;
-import com.somenameofpackage.internetradiowithmosby.ui.viewStates.StationsListViewState;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.OrderedRealmCollection;
 
-public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsView, StationsListPresenter> implements StationsView {
+public class StationsRecyclerViewFragment extends MvpFragment<StationsView, StationsListPresenter> implements StationsView {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    private int currentStationId;
-
 
     public static StationsRecyclerViewFragment newInstance() {
         return new StationsRecyclerViewFragment();
@@ -89,12 +85,6 @@ public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsV
     }
 
     @Override
-    public void showCurrentStation(final String station) {
-        StationsListViewState stationsListViewState = (StationsListViewState) viewState;
-        stationsListViewState.setCurrentStation(station);
-    }
-
-    @Override
     public void setListStations(OrderedRealmCollection<Station> value) {
         recyclerView.setAdapter(new StationsRecyclerViewAdapter(this, value));
     }
@@ -105,32 +95,10 @@ public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsV
         presenter.onPause(getActivity().getApplicationContext());
     }
 
-    @NonNull
-    @Override
-    public ViewState createViewState() {
-        return new StationsListViewState();
-    }
-
-    @Override
-    public void onNewViewStateInstance() {
-    }
-
-    public void addStationToBD(String name, String source) {
-        presenter.addStation(name, source);
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         recyclerView.setAdapter(null);
         presenter.closeBD();
-    }
-
-    public void setCurrentStationId(int currentStationId) {
-        this.currentStationId = currentStationId;
-    }
-
-    public int getCurrentStationId() {
-        return currentStationId;
     }
 }

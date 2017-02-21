@@ -36,7 +36,7 @@ public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Statio
         holder.stationSourceTextView.setText(station.getSource());
         holder.station = station;
 
-        if (station.getId_key() == fragment.getCurrentStationId()) {
+        if (station.isPlay()) {
             holder.stationNameTextView.setTextColor(Color.RED);
         } else {
             holder.stationNameTextView.setTextColor(Color.BLACK);
@@ -65,7 +65,6 @@ public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Statio
         @Override
         public void onClick(View v) {
             fragment.getPresenter().stationClick(station);
-            fragment.setCurrentStationId(station.getId_key());
             notifyDataSetChanged();
         }
     }

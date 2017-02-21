@@ -6,13 +6,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
-import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
+import com.somenameofpackage.internetradiowithmosby.ui.views.ControlView;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
 import javax.inject.Inject;
@@ -20,7 +19,7 @@ import javax.inject.Inject;
 import rx.Subscriber;
 import rx.subjects.BehaviorSubject;
 
-public class ControlPresenter extends MvpBasePresenter<RadioView> {
+public class ControlPresenter extends MvpBasePresenter<ControlView> {
     @Inject
     DataBase dataBase;
     private boolean isBind = false;
@@ -50,7 +49,10 @@ public class ControlPresenter extends MvpBasePresenter<RadioView> {
     }
 
     public void onPause(Context context) {
-        if (isBind) context.unbindService(serviceConnection);
+        if (isBind) {
+            context.unbindService(serviceConnection);
+            isBind = false;
+        }
     }
 
     private class RadioServiceConnection implements ServiceConnection {

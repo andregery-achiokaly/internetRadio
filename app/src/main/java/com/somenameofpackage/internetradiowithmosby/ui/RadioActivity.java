@@ -1,6 +1,7 @@
 package com.somenameofpackage.internetradiowithmosby.ui;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -8,15 +9,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
+import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.somenameofpackage.internetradiowithmosby.R;
+import com.somenameofpackage.internetradiowithmosby.presenter.RadioActivityPresenter;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.AudioWaveFragment;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.ControlFragment;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.StationsRecyclerViewFragment;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.dialogs.AddStationDialog;
+import com.somenameofpackage.internetradiowithmosby.ui.views.RadioActivityView;
 
 import butterknife.ButterKnife;
 
-public class RadioActivity extends AppCompatActivity implements AddStation {
+public class RadioActivity extends MvpActivity<RadioActivityView, RadioActivityPresenter> implements RadioActivityView, AddStation {
     final private static String CREATE_STATION = "CREATE_STATION";
 
     @Override
@@ -32,6 +37,12 @@ public class RadioActivity extends AppCompatActivity implements AddStation {
                     .commit();
         }
         ButterKnife.bind(this);
+    }
+
+    @NonNull
+    @Override
+    public RadioActivityPresenter createPresenter() {
+        return new RadioActivityPresenter();
     }
 
     @Override
@@ -53,14 +64,7 @@ public class RadioActivity extends AppCompatActivity implements AddStation {
     }
 
     public void addStationToBD(String name, String source) {
-        StationsRecyclerViewFragment stationsListFragment = (StationsRecyclerViewFragment)
-                getSupportFragmentManager().findFragmentById(R.id.list_container);
-
-        if (stationsListFragment != null) {
-            stationsListFragment.addStationToBD(name, source);
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-        }
+           presenter.addStationToBD(name, source);
     }
 
     public void openDialogCreateStation() {
