@@ -3,14 +3,11 @@ package com.somenameofpackage.internetradiowithmosby.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
-import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.presenter.RadioActivityPresenter;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.AudioWaveFragment;
@@ -20,6 +17,7 @@ import com.somenameofpackage.internetradiowithmosby.ui.fragments.dialogs.AddStat
 import com.somenameofpackage.internetradiowithmosby.ui.views.RadioActivityView;
 
 import butterknife.ButterKnife;
+import fresh.Test;
 
 public class RadioActivity extends MvpActivity<RadioActivityView, RadioActivityPresenter> implements RadioActivityView, AddStation {
     final private static String CREATE_STATION = "CREATE_STATION";
@@ -28,6 +26,8 @@ public class RadioActivity extends MvpActivity<RadioActivityView, RadioActivityP
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Test t = new Test();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

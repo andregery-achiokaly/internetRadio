@@ -1,6 +1,5 @@
 package com.somenameofpackage.internetradiowithmosby.presenter;
 
-
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;

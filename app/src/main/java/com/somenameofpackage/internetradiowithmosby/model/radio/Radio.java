@@ -2,6 +2,8 @@ package com.somenameofpackage.internetradiowithmosby.model.radio;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Handler;
+import android.util.Log;
 
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
@@ -17,6 +19,8 @@ public class Radio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErro
     private String currentSource = "";
     private PublishSubject<Status> statusObserver = PublishSubject.create();
     private ReplaySubject<Integer> radioIdObserver = ReplaySubject.createWithSize(1);
+    private Handler radioCloseHandler = new Handler();
+    private Runnable radioCloseRunnable = this::closeMediaPlayer;
 
     PublishSubject<Status> getRadioModelStatusObservable() {
         return statusObserver;
@@ -39,6 +43,7 @@ public class Radio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErro
             radioIdObserver.onNext(mediaPlayer.getAudioSessionId());
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
+            currentSource = "";
             closeMediaPlayer();
             statusObserver.onNext(Status.Error);
         }
@@ -54,6 +59,7 @@ public class Radio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErro
             statusObserver.onNext(Status.isPlay);
         } catch (IOException e) {
             e.printStackTrace();
+            currentSource = "";
             closeMediaPlayer();
             statusObserver.onNext(Status.Error);
         }
@@ -81,8 +87,12 @@ public class Radio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErro
                                        } else {
                                            if (mediaPlayer.isPlaying()) {
                                                mediaPlayer.pause();
+                                               // Wait 1 min. If user doesn't run player again - player will be closed.
+                                               // If we don't close player - player will spend traffic
+                                               radioCloseHandler.postDelayed(radioCloseRunnable, 60 * 1000);
                                                statusObserver.onNext(Status.isStop);
                                            } else {
+                                               radioCloseHandler.removeCallbacks(radioCloseRunnable);
                                                mediaPlayer.start();
                                                statusObserver.onNext(Status.isPlay);
                                            }
@@ -94,7 +104,6 @@ public class Radio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErro
     }
 
     void closeMediaPlayer() {
-        currentSource = "";
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();

@@ -11,11 +11,8 @@ import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import javax.inject.Inject;
 
 import io.realm.Realm;
-import io.realm.RealmObject;
 import io.realm.RealmResults;
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -51,7 +48,10 @@ public class StationsRelamDB implements DataBase {
     public Observable<Station> getCurrentStation() {
         return realm.where(Station.class)
                 .equalTo(Station.STATION_IS_PLAY, true)
-                .findFirstAsync().asObservable().filter(s -> s.isValid()).take(1).map(realmObject -> (Station) realmObject);
+                .findFirstAsync().asObservable().filter(s -> s.isValid()).take(1).map(realmObject -> {
+                    if (realmObject != null) return (Station) realmObject;
+                    else return realm.where(Station.class).findFirstAsync();
+                });
     }
 
     public void addStation(Station station) {
@@ -63,15 +63,15 @@ public class StationsRelamDB implements DataBase {
         if (station == null) return;
         int id = station.getId_key();
         realm.executeTransactionAsync(realm1 -> {
-            realm1.where(Station.class)
+            Station s1 = realm1.where(Station.class)
                     .equalTo(Station.STATION_IS_PLAY, true)
-                    .findFirst()
-                    .setPlay(false);
+                    .findFirst();
+            if (s1 != null) s1.setPlay(false);
 
-            realm1.where(Station.class)
+            Station s2 = realm1.where(Station.class)
                     .equalTo(Station.STATION_ID_KEY, id)
-                    .findFirst()
-                    .setPlay(true);
+                    .findFirst();
+            if (s2 != null) s2.setPlay(true);
         });
     }
 

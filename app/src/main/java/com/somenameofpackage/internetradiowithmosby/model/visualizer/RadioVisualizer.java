@@ -7,9 +7,9 @@ import rx.subjects.Subject;
 
 public class RadioVisualizer {
     private Visualizer visualizer;
-    private PublishSubject<Byte[]> source = PublishSubject.create();
+    private PublishSubject<byte[]> source = PublishSubject.create();
 
-    public Subject<Byte[], Byte[]> getVisualizerObservable() {
+    public Subject<byte[], byte[]> getVisualizerObservable() {
         return source;
     }
 
@@ -32,11 +32,7 @@ public class RadioVisualizer {
 
     private class AudioWaveDataCaptureListener implements Visualizer.OnDataCaptureListener {
         public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-            Byte[] result = new Byte[bytes.length];
-            int i = 0;
-            for (byte b : bytes) result[i++] = b;
-
-            source.onNext(result);
+            source.onNext(bytes);
         }
 
         @Override

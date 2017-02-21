@@ -25,7 +25,6 @@ public class ControlPresenter extends MvpBasePresenter<ControlView> {
     private boolean isBind = false;
     private ServiceConnection serviceConnection;
     private BehaviorSubject<String> changePlayStateSubject = BehaviorSubject.create();
-    private String currentStation = "";
 
     public ControlPresenter(Context context) {
         serviceConnection = new RadioServiceConnection();
@@ -42,10 +41,7 @@ public class ControlPresenter extends MvpBasePresenter<ControlView> {
 
     public void changePlayState() {
         dataBase.getCurrentStation()
-                .subscribe(station -> {
-                    currentStation = station.getSource();
-                    changePlayStateSubject.onNext(currentStation);
-                });
+                .subscribe(station -> changePlayStateSubject.onNext(station.getSource()));
     }
 
     public void onPause(Context context) {

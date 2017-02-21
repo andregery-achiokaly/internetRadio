@@ -4,5 +4,5 @@ package com.somenameofpackage.internetradiowithmosby.ui.views;
 import com.hannesdorfmann.mosby.mvp.MvpView;
 
 public interface WaveView extends MvpView {
-    void updateVisualizer(Byte[] bytes);
+    void updateVisualizer(byte[] bytes);
 }

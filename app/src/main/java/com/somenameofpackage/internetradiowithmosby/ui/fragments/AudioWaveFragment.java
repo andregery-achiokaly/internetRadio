@@ -1,6 +1,5 @@
 package com.somenameofpackage.internetradiowithmosby.ui.fragments;
 
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
@@ -80,7 +79,7 @@ public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter>
     }
 
     @Override
-    public void updateVisualizer(Byte[] bytes) {
+    public void updateVisualizer(byte[] bytes) {
         audioWaveView.updateVisualizer(bytes);
     }
 

@@ -44,12 +44,12 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
 
             @Override
             public void onNext(Integer integer) {
-                radioVisualizer.setupVisualizerFxAndUI(integer);
+                if (canSow) radioVisualizer.setupVisualizerFxAndUI(integer);
             }
         };
     }
 
-    private Action1<Byte[]> getStationsObserver() {
+    private Action1<byte[]> getStationsObserver() {
         return bytes -> {
             if (getView() != null && canSow) {
                 getView().updateVisualizer(bytes);
