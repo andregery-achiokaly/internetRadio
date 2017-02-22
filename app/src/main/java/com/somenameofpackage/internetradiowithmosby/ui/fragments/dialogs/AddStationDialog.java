@@ -11,7 +11,6 @@ import android.widget.Toast;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.ui.AddStation;
 
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -25,7 +24,7 @@ public class AddStationDialog extends DialogFragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getDialog().setTitle("Add station");
+        getDialog().setTitle(R.string.add_station_dialog_title);
         View view = inflater.inflate(R.layout.dialog_fragment_add_station, null);
         ButterKnife.bind(this, view);
         return view;

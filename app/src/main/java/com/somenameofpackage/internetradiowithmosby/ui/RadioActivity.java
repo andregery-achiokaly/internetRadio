@@ -1,66 +1,71 @@
 package com.somenameofpackage.internetradiowithmosby.ui;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.somenameofpackage.internetradiowithmosby.R;
-import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
+import com.somenameofpackage.internetradiowithmosby.presenter.RadioActivityPresenter;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.AudioWaveFragment;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.ControlFragment;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.StationsRecyclerViewFragment;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.dialogs.AddStationDialog;
-import com.somenameofpackage.internetradiowithmosby.ui.fragments.StationsListFragment;
+import com.somenameofpackage.internetradiowithmosby.ui.views.RadioActivityView;
 
 import butterknife.ButterKnife;
 
-public class RadioActivity extends AppCompatActivity implements AddStation {
-    final private static String INITIAL_DB = "IS_INITIAL_DB";
+public class RadioActivity extends MvpActivity<RadioActivityView, RadioActivityPresenter> implements RadioActivityView, AddStation {
     final private static String CREATE_STATION = "CREATE_STATION";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        createBD();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_radio_layout, new ControlFragment())
-                    .replace(R.id.fragment_audio_wave_layout, new AudioWaveFragment())
-                    .replace(R.id.list_container, new StationsListFragment())
+                    .replace(R.id.fragment_radio_layout, ControlFragment.newInstance())
+                    .replace(R.id.fragment_audio_wave_layout, AudioWaveFragment.newInstance())
+                    .replace(R.id.list_container, StationsRecyclerViewFragment.newInstance())
                     .commit();
         }
-
         ButterKnife.bind(this);
     }
 
-    public void addStationToBD(String name, String source) {
-        StationsListFragment stationsListFragment = (StationsListFragment)
-                getSupportFragmentManager().findFragmentById(R.id.list_container);
+    @NonNull
+    @Override
+    public RadioActivityPresenter createPresenter() {
+        return new RadioActivityPresenter();
+    }
 
-        if (stationsListFragment != null) {
-            stationsListFragment.addStationToBD(name, source);
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add_station_menu_btn:
+                openDialogCreateStation();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void addStationToBD(String name, String source) {
+           presenter.addStationToBD(name, source);
     }
 
     public void openDialogCreateStation() {
         DialogFragment dialogFragment = new AddStationDialog();
         dialogFragment.show(getSupportFragmentManager(), CREATE_STATION);
-    }
-
-    private void createBD() {
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        Boolean isCreated = sharedPreferences.getBoolean(INITIAL_DB, false);
-        if (!isCreated) {
-            new RadioStations(getApplicationContext()).firstInitial(getApplicationContext());
-            sharedPreferences = getPreferences(MODE_PRIVATE);
-            SharedPreferences.Editor ed = sharedPreferences.edit();
-            ed.putBoolean(INITIAL_DB, true);
-            ed.apply();
-        }
     }
 }

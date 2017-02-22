@@ -5,83 +5,85 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
-import com.somenameofpackage.internetradiowithmosby.model.db.RadioStations;
-import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
+import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
-import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
+import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
+import com.somenameofpackage.internetradiowithmosby.ui.views.ControlView;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 
-import rx.functions.Action1;
+import javax.inject.Inject;
 
-public class ControlPresenter extends MvpBasePresenter<RadioView> {
-    private RadioModel radioModel;
-    private final RadioStations dataBase;
+import rx.Subscriber;
+import rx.subjects.BehaviorSubject;
+
+public class ControlPresenter extends MvpBasePresenter<ControlView> {
+    @Inject
+    StationsRelamDB dataBase;
     private boolean isBind = false;
     private ServiceConnection serviceConnection;
+    private BehaviorSubject<String> changePlayStateSubject = BehaviorSubject.create();
 
     public ControlPresenter(Context context) {
         serviceConnection = new RadioServiceConnection();
-        dataBase = new RadioStations(context);
-        dataBase.getPlayingStationSource().subscribe(getBindServiceObserver(context));
+        RadioApplication.getComponent().injectsControlPresenter(this);
+        dataBase.setDefaultValues(context);
+        bindToRadioService(context);
     }
+
+    private void bindToRadioService(Context context) {
+        if (!isBind)
+            context.bindService(new Intent(context, RadioService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
 
     public void changePlayState() {
-        dataBase.getPlayingStationSource().subscribe(getChangePlayStateObserver());
+        dataBase.getCurrentStation()
+                .subscribe(station -> changePlayStateSubject.onNext(station.getSource()));
     }
 
-    private Action1<String> getBindServiceObserver(Context context) {
-        return value -> {
-            if (!isBind) {
-                context.startService(new Intent(context, RadioService.class));
-                ((RadioServiceConnection) serviceConnection).setSource(value);
-                context.bindService(new Intent(context, RadioService.class),
-                        serviceConnection,
-                        Context.BIND_AUTO_CREATE);
-            }
-        };
-    }
-
-    private Action1<String> getChangePlayStateObserver() {
-        return value -> {
-            if (radioModel != null) {
-                if (getView() != null) getView().showStatus(Status.Wait);
-                radioModel.changePlayState(value);
-            }
-        };
-    }
-
-    public void unbindService(Context context) {
-        if (isBind) context.unbindService(serviceConnection);
-        isBind = false;
+    public void onPause(Context context) {
+        if (isBind) {
+            context.unbindService(serviceConnection);
+            isBind = false;
+        }
     }
 
     private class RadioServiceConnection implements ServiceConnection {
-        String source;
-
-        public void setSource(String source) {
-            this.source = source;
-        }
+        Subscriber<Status> statusSubscriber = getStatusSubscriber();
 
         public void onServiceConnected(ComponentName name, IBinder binder) {
             isBind = true;
-            radioModel = ((RadioService.RadioBinder) binder).getModel(source);
-            radioModel.changePlayState(source);
-            radioModel.getRadioModelObservable()
-                    .subscribe(status -> {
-                        if (getView() != null) {
-                            getView().showStatus(status);
-                        }
-                    }, e -> {
-                        if (getView() != null) getView().showStatus(Status.Error);
-                    }, () -> {
-                    });
+            ((RadioService.RadioBinder) binder).setChangeStateObservable(changePlayStateSubject);
+            ((RadioService.RadioBinder) binder).subscribeStatus(statusSubscriber);
         }
 
         public void onServiceDisconnected(ComponentName name) {
-            if (getView() != null)
-                getView().showStatus(Status.isStop);
+            if (getView() != null) getView().showStatus(Status.isStop);
+            isBind = false;
+            if (!statusSubscriber.isUnsubscribed()) statusSubscriber.unsubscribe();
         }
+    }
+
+    @NonNull
+    private Subscriber<Status> getStatusSubscriber() {
+        return new Subscriber<Status>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (getView() != null) getView().showStatus(Status.Error);
+            }
+
+            @Override
+            public void onNext(Status status) {
+                if (getView() != null) getView().showStatus(status);
+            }
+        };
     }
 }

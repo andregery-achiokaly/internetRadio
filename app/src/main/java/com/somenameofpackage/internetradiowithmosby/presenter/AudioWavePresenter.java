@@ -7,58 +7,49 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
-import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModel;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
-import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
-import com.somenameofpackage.internetradiowithmosby.model.visualizer.VisualizerModel;
-import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
+import com.somenameofpackage.internetradiowithmosby.model.visualizer.RadioVisualizer;
+import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.views.WaveView;
 
+import javax.inject.Inject;
+
+import rx.Subscriber;
 import rx.functions.Action1;
 
 public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
-    private RadioModel radioModel;
-    private VisualizerModel visualizerModel;
+    @Inject
+    RadioVisualizer radioVisualizer;
     private ServiceConnection serviceConnection;
     private boolean isBind = false;
     private boolean canSow = false;
 
     public AudioWavePresenter(Context context) {
-        StationsRelamDB stationsRelamDB = new StationsRelamDB(context);
-        final String source = stationsRelamDB.getPlayingStationSource();
-
-        serviceConnectionInit(source);
+        RadioApplication.getComponent().injectsAudioWavePresenter(this);
+        serviceConnection = new AudioWaveServiceConnection();
         context.bindService(new Intent(context, RadioService.class), serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private void serviceConnectionInit(final String source) {
-        serviceConnection = new ServiceConnection() {
+    private Subscriber<Integer> getRadioModelObserver() {
+        return new Subscriber<Integer>() {
             @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                isBind = true;
-                radioModel = ((RadioService.RadioBinder) iBinder).getModel(source);
-                radioModel.getRadioModelObservable().subscribe(getRadioModelObserver());
-                if (visualizerModel == null && canSow) {
-                    vizualizerInit();
-                }
+            public void onCompleted() {
+
             }
 
             @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-                isBind = false;
+            public void onError(Throwable e) {
+                radioVisualizer.stop();
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                if (canSow) radioVisualizer.setupVisualizerFxAndUI(integer);
             }
         };
     }
 
-    private Action1<Status> getRadioModelObserver() {
-        return status -> {
-            if (status == Status.isPlay && canSow && visualizerModel != null) {
-                visualizerModel.setupVisualizerFxAndUI();
-            }
-        };
-    }
-
-    private Action1<Byte[]> getStationsObserver() {
+    private Action1<byte[]> getStationsObserver() {
         return bytes -> {
             if (getView() != null && canSow) {
                 getView().updateVisualizer(bytes);
@@ -73,14 +64,30 @@ public class AudioWavePresenter extends MvpBasePresenter<WaveView> {
 
     public void setCanShow(boolean canSow) {
         this.canSow = canSow;
-        if (canSow && radioModel != null) {
-            vizualizerInit();
+        visualiserInit();
+    }
+
+    private void visualiserInit() {
+        if (canSow) {
+            radioVisualizer.getVisualizerObservable().subscribe(getStationsObserver());
         }
     }
 
-    private void vizualizerInit() {
-        visualizerModel = new VisualizerModel(radioModel);
-        visualizerModel.getVisualizerObservable().subscribe(getStationsObserver());
-        visualizerModel.setupVisualizerFxAndUI();
+    private class AudioWaveServiceConnection implements ServiceConnection {
+        Subscriber<Integer> playerIdSubscriber = getRadioModelObserver();
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            isBind = true;
+            ((RadioService.RadioBinder) iBinder).subscribePlayerId(playerIdSubscriber);
+            visualiserInit();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            if (playerIdSubscriber.isUnsubscribed()) playerIdSubscriber.unsubscribe();
+            radioVisualizer.stop();
+            isBind = false;
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.somenameofpackage.internetradiowithmosby.ui.fragments;
 
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
@@ -26,6 +25,14 @@ public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter>
     public static final int WAVE_VIEW_RECORD_AUDIO_PERMISSION = 4115;
     @BindView(R.id.audioWave)
     AudioWaveView audioWaveView;
+
+    public static AudioWaveFragment newInstance() {
+        AudioWaveFragment fragment = new AudioWaveFragment();
+        return fragment;
+    }
+
+    public AudioWaveFragment() {
+    }
 
     @NonNull
     @Override
@@ -72,7 +79,7 @@ public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter>
     }
 
     @Override
-    public void updateVisualizer(Byte[] bytes) {
+    public void updateVisualizer(byte[] bytes) {
         audioWaveView.updateVisualizer(bytes);
     }
 

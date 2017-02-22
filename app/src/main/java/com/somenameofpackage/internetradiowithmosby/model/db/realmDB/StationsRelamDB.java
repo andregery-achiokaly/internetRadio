@@ -1,83 +1,96 @@
 package com.somenameofpackage.internetradiowithmosby.model.db.realmDB;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
-import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
+import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
+import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
+
+import javax.inject.Inject;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import rx.Observable;
 
-public class StationsRelamDB implements DataBase {
-    private final Realm realm;
-    private static final String nameOfConfiguration = "Config";
+import static android.content.Context.MODE_PRIVATE;
 
-    public StationsRelamDB(Context context) {
-        RealmConfiguration config = new RealmConfiguration.Builder(context)
-                .name(nameOfConfiguration)
-                .schemaVersion(0)
-                .deleteRealmIfMigrationNeeded()
-                .build();
+public class StationsRelamDB {
+    @Inject
+    Realm realm;
+    final private static String INITIAL_DB = "DB_IS_INITIAL";
+    final private static String REALM_DB_PREFERENCES = "REALM_DB_PREFERENCES";
 
-        realm = Realm.getInstance(config);
+    public StationsRelamDB() {
+        RadioApplication.getComponent().injectsStationsRelamDB(this);
     }
 
-    public String getPlayingStationSource() {
-        realm.beginTransaction();
-        Station station = realm
-                .where(Station.class)
-                .equalTo(Station.getIsPlayFieldName(), true)
-                .findFirst();
-
-        if (station == null) {
-            station = realm.where(Station.class).findFirst();
+    public void setDefaultValues(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(REALM_DB_PREFERENCES, MODE_PRIVATE);
+        Boolean isCreated = sharedPreferences.getBoolean(INITIAL_DB, false);
+        if (!isCreated) {
+            firstInitial(context);
+            SharedPreferences.Editor ed = sharedPreferences.edit();
+            ed.putBoolean(INITIAL_DB, true);
+            ed.apply();
         }
-        realm.commitTransaction();
-        if (station == null) return null;
-        return station.getSource();
+    }
+
+    private void firstInitial(Context context) {
+        addStation(context.getString(R.string.best_fm_name),
+                context.getString(R.string.best_fm_source));
+
+        addStation(context.getString(R.string.jam_fm_name),
+                context.getString(R.string.jam_fm_source));
+    }
+
+    public Observable<Station> getCurrentStation() {
+        return realm.where(Station.class)
+                .equalTo(Station.STATION_IS_PLAY, true)
+                .findFirstAsync().asObservable().filter(s -> s.isValid()).take(1).map(realmObject -> {
+                    if (realmObject != null) return (Station) realmObject;
+                    else return realm.where(Station.class).findFirstAsync();
+                });
     }
 
     public void addStation(Station station) {
         addStation(station.getName(), station.getSource());
     }
 
+    public void setPlayingStationSource(Station station) {
+        if (station == null) return;
+        int id = station.getId_key();
+        realm.executeTransactionAsync(realm1 -> {
+            Station s1 = realm1.where(Station.class)
+                    .equalTo(Station.STATION_IS_PLAY, true)
+                    .findFirst();
+            if (s1 != null) s1.setPlay(false);
+
+            Station s2 = realm1.where(Station.class)
+                    .equalTo(Station.STATION_ID_KEY, id)
+                    .findFirst();
+            if (s2 != null) s2.setPlay(true);
+        });
+    }
+
     private void addStation(String stationName, String stationSource) {
-        realm.beginTransaction();
-        Station station = new Station();
-        int newID = 0;
-        Number number = realm.where(Station.class).max(Station.getsetId_keyFieldName());
-        if (number != null) newID = number.intValue();
+        realm.executeTransactionAsync(realm1 -> {
+            Station station = new Station();
+            int newID = 0;
+            Number number = realm1.where(Station.class).max(Station.STATION_ID_KEY);
+            if (number != null) newID = number.intValue();
 
-        station.setId_key(newID + 1);
-        station.setName(stationName);
-        station.setSource(stationSource);
-        station.setPlay(false);
+            station.setId_key(newID + 1);
+            station.setName(stationName);
+            station.setSource(stationSource);
+            station.setPlay(false);
 
-        realm.copyToRealm(station);
-        realm.commitTransaction();
+            realm1.copyToRealm(station);
+        });
     }
 
     public Observable<RealmResults<Station>> getStations() {
-        realm.beginTransaction();
-        Observable<RealmResults<Station>> stations = realm.allObjects(Station.class).asObservable();
-        realm.commitTransaction();
-        return stations;
-    }
-
-    public void setPlayStation(String source) {
-        setAllPlayStationOff();
-        realm.beginTransaction();
-        Station station = realm
-                .where(Station.class)
-                .equalTo(Station.getSourceFieldName(), source)
-                .findFirst();
-
-        if (station != null) {
-            station.setPlay(true);
-        }
-        realm.commitTransaction();
+        return realm.where(Station.class).findAllAsync().asObservable();
     }
 
     public void closeBD() {
@@ -85,26 +98,12 @@ public class StationsRelamDB implements DataBase {
     }
 
     public void clearBD() {
-        realm.beginTransaction();
-        realm.clear(Station.class);
-        realm.commitTransaction();
-    }
-
-    private void setAllPlayStationOff() {
-        realm.beginTransaction();
-
-        RealmResults<Station> stations = realm.where(Station.class).findAll();
-        if (!stations.isEmpty()) {
-            for (int i = stations.size() - 1; i >= 0; i--) {
-                stations.get(i).setPlay(false);
-            }
-        }
-        realm.commitTransaction();
+        realm.executeTransactionAsync(realm1 -> realm1.deleteAll());
     }
 
     public void deleteStation(String source) {
-        realm.beginTransaction();
-        realm.where(Station.class).equalTo(Station.getSourceFieldName(), source).findFirst().removeFromRealm();
-        realm.commitTransaction();
+        realm.executeTransactionAsync(realm1 -> realm1.where(Station.class).equalTo(Station.STATION_SOURCE, source)
+                .findAll()
+                .deleteAllFromRealm());
     }
 }

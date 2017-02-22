@@ -1,28 +1,35 @@
 package com.somenameofpackage.internetradiowithmosby.ui.fragments;
 
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.presenter.ControlPresenter;
 import com.somenameofpackage.internetradiowithmosby.ui.viewStates.ControlViewState;
-import com.somenameofpackage.internetradiowithmosby.ui.views.RadioView;
+import com.somenameofpackage.internetradiowithmosby.ui.views.ControlView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPresenter> implements RadioView {
+public class ControlFragment extends MvpViewStateFragment<ControlView, ControlPresenter> implements ControlView {
     @BindView(R.id.play_btn)
-    Button playButton;
+    ImageButton playButton;
+
+    public static ControlFragment newInstance() {
+        return new ControlFragment();
+    }
+
+    public ControlFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,7 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPres
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_radio, container, false);
         ButterKnife.bind(this, view);
+        playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_play_arrow_black_24dp));
         return view;
     }
 
@@ -53,7 +61,17 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPres
     public void showStatus(Status status) {
         ControlViewState controlViewState = (ControlViewState) viewState;
         controlViewState.setStatus(status);
-        playButton.setText(status.toString());
+        switch (status) {
+            case isPlay:
+                playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_pause_black_24dp));
+                break;
+            case isStop:
+                playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_play_arrow_black_24dp));
+                break;
+            case Error:
+                playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_error_black_24dp));
+                break;
+        }
     }
 
     @NonNull
@@ -65,7 +83,7 @@ public class ControlFragment extends MvpViewStateFragment<RadioView, ControlPres
     @Override
     public void onPause() {
         super.onPause();
-        presenter.unbindService(getActivity().getApplicationContext());
+        presenter.onPause(getActivity().getApplicationContext());
     }
 
     @Override

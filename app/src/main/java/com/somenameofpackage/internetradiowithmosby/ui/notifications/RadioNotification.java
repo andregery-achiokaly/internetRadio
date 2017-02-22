@@ -33,11 +33,11 @@ public class RadioNotification {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.mipmap.ic_radio_black_24dp)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setContentTitle(context.getString(R.string.notification_title))
                         .setContentText(context.getString(R.string.notification_text))
-                        .addAction(R.mipmap.ic_launcher, text, playPendingIntent)
+                        .addAction(R.mipmap.ic_radio_black_24dp, text, playPendingIntent)
                         .setAutoCancel(true);
 
         Intent resultIntent = new Intent(context, RadioActivity.class);

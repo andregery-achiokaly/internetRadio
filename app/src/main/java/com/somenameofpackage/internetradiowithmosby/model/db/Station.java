@@ -5,6 +5,12 @@ import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
 public class Station extends RealmObject {
+    public static final String STATION = "Station";
+    public static final String STATION_NAME = "name";
+    public static final String STATION_SOURCE = "source";
+    public static final String STATION_IS_PLAY = "isPlay";
+    public static final String STATION_ID_KEY = "id_key";
+
     private boolean isPlay;
     @PrimaryKey
     private int id_key;
@@ -13,12 +19,12 @@ public class Station extends RealmObject {
     @Required
     private String source;
 
-    Station(String name, String source) {
-        this.name = name;
-        this.source = source;
+    public Station() {
     }
 
-    public Station() {
+    public Station(String name, String source) {
+        this.name = name;
+        this.source = source;
     }
 
     public String getName() {
@@ -37,7 +43,6 @@ public class Station extends RealmObject {
         this.source = source;
     }
 
-
     public boolean isPlay() {
         return isPlay;
     }
@@ -52,25 +57,5 @@ public class Station extends RealmObject {
 
     public void setId_key(int id_key) {
         this.id_key = id_key;
-    }
-
-    public static String getSourceFieldName() {
-        return "source";
-    }
-
-    public static String getNameFieldName() {
-        return "name";
-    }
-
-    public static String getIsPlayFieldName() {
-        return "isPlay";
-    }
-
-    public static String getsetId_keyFieldName() {
-        return "id_key";
-    }
-
-    public static String getNameTable() {
-        return Station.class.getSimpleName();
     }
 }
