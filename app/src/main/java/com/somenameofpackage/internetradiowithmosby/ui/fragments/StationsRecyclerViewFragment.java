@@ -12,18 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.hannesdorfmann.mosby.mvp.MvpFragment;
+import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateFragment;
+import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.presenter.StationsListPresenter;
 import com.somenameofpackage.internetradiowithmosby.ui.adapters.StationsRecyclerViewAdapter;
+import com.somenameofpackage.internetradiowithmosby.ui.viewStates.ListStationsViewState;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.OrderedRealmCollection;
 
-public class StationsRecyclerViewFragment extends MvpFragment<StationsView, StationsListPresenter> implements StationsView {
+public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsView, StationsListPresenter> implements StationsView {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
@@ -32,6 +34,17 @@ public class StationsRecyclerViewFragment extends MvpFragment<StationsView, Stat
     }
 
     public StationsRecyclerViewFragment() {
+    }
+
+    @NonNull
+    @Override
+    public ViewState createViewState() {
+        return new ListStationsViewState();
+    }
+
+    @Override
+    public void onNewViewStateInstance() {
+        presenter.getStations();
     }
 
     @Override
@@ -58,7 +71,6 @@ public class StationsRecyclerViewFragment extends MvpFragment<StationsView, Stat
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.getStations();
     }
 
     public void showDeleteDialog(String source) {
@@ -85,8 +97,14 @@ public class StationsRecyclerViewFragment extends MvpFragment<StationsView, Stat
     }
 
     @Override
-    public void setListStations(OrderedRealmCollection<Station> value) {
-        recyclerView.setAdapter(new StationsRecyclerViewAdapter(this, value));
+    public void setListStations(OrderedRealmCollection<Station> data) {
+        ((ListStationsViewState) viewState).setData(data);
+        setAdapter(data);
+    }
+
+    @Override
+    public void setAdapter(OrderedRealmCollection<Station> data) {
+        recyclerView.setAdapter(new StationsRecyclerViewAdapter(this, data));
     }
 
     @Override

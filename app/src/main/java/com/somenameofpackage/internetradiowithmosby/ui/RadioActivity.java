@@ -17,7 +17,6 @@ import com.somenameofpackage.internetradiowithmosby.ui.fragments.dialogs.AddStat
 import com.somenameofpackage.internetradiowithmosby.ui.views.RadioActivityView;
 
 import butterknife.ButterKnife;
-import fresh.Test;
 
 public class RadioActivity extends MvpActivity<RadioActivityView, RadioActivityPresenter> implements RadioActivityView, AddStation {
     final private static String CREATE_STATION = "CREATE_STATION";
@@ -26,8 +25,6 @@ public class RadioActivity extends MvpActivity<RadioActivityView, RadioActivityP
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Test t = new Test();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

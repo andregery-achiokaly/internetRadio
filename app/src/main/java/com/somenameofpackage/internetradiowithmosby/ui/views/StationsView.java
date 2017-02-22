@@ -8,4 +8,5 @@ import io.realm.OrderedRealmCollection;
 
 public interface StationsView extends MvpView {
     void setListStations(OrderedRealmCollection<Station> value);
+    void setAdapter(OrderedRealmCollection<Station> data);
 }
