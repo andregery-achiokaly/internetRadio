@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.somenameofpackage.internetradiowithmosby.R;
-import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 
@@ -16,7 +15,7 @@ import rx.Observable;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class StationsRelamDB implements DataBase {
+public class StationsRelamDB {
     @Inject
     Realm realm;
     final private static String INITIAL_DB = "DB_IS_INITIAL";
@@ -58,7 +57,6 @@ public class StationsRelamDB implements DataBase {
         addStation(station.getName(), station.getSource());
     }
 
-    @Override
     public void setPlayingStationSource(Station station) {
         if (station == null) return;
         int id = station.getId_key();

@@ -9,7 +9,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
+import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import com.somenameofpackage.internetradiowithmosby.ui.notifications.RadioNotification;
@@ -30,7 +30,7 @@ public class RadioService extends Service {
     @Inject
     Radio radio;
     @Inject
-    DataBase dataBase;
+    StationsRelamDB dataBase;
 
     @Override
     public void onCreate() {

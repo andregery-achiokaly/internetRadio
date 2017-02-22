@@ -7,8 +7,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
-import com.somenameofpackage.internetradiowithmosby.model.db.DataBase;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
+import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
@@ -19,7 +19,7 @@ import rx.subjects.BehaviorSubject;
 
 public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     @Inject
-    DataBase dataBase;
+    StationsRelamDB dataBase;
     private boolean isBind = false;
     private ServiceConnection servCon;
     private BehaviorSubject<String> changePlayStateSubject = BehaviorSubject.create();

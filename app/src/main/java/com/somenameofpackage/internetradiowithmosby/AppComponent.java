@@ -1,7 +1,6 @@
 package com.somenameofpackage.internetradiowithmosby;
 
 
-import com.somenameofpackage.internetradiowithmosby.model.db.DataBaseModule;
 import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.RealmModule;
 import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioModule;
@@ -16,7 +15,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {RadioModule.class, VisualizerModule.class, DataBaseModule.class, RealmModule.class})
+@Component(modules = {RadioModule.class, VisualizerModule.class, RealmModule.class})
 public interface AppComponent {
     void injectsRadioService(RadioService radioService);
     void injectsAudioWavePresenter(AudioWavePresenter audioWavePresenter);

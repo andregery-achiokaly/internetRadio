@@ -14,6 +14,11 @@ import io.realm.RealmConfiguration;
 public class RealmModule {
     private Application application;
 
+    @Provides
+    StationsRelamDB provideStationsRelamDB() {
+        return new StationsRelamDB();
+    }
+
     private void initRealm() {
         Realm.init(application);
         RealmConfiguration realmConfig = new RealmConfiguration.Builder().build();
