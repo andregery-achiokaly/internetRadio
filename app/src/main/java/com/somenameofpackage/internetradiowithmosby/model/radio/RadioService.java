@@ -9,7 +9,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
+import com.somenameofpackage.internetradiowithmosby.model.db.sqliteDB.SqliteDBHelper;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
 import com.somenameofpackage.internetradiowithmosby.ui.notifications.RadioNotification;
@@ -30,7 +30,7 @@ public class RadioService extends Service {
     @Inject
     Radio radio;
     @Inject
-    StationsRelamDB dataBase;
+    SqliteDBHelper dataBase;
 
     @Override
     public void onCreate() {
@@ -51,8 +51,7 @@ public class RadioService extends Service {
         if (intent != null) {
             String action = intent.getStringExtra(ACTION);
             if (action != null && action.equals(PLAY)) {
-                dataBase.getCurrentStation()
-                        .subscribe(station -> changePlayStateSubject.onNext(station.getSource()));
+                changePlayStateSubject.onNext(dataBase.getCurrentStation().getSource());
             }
         }
         return Service.START_STICKY;

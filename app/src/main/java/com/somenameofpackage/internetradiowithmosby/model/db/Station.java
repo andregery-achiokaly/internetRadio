@@ -1,23 +1,16 @@
 package com.somenameofpackage.internetradiowithmosby.model.db;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
-
-public class Station extends RealmObject {
-    public static final String STATION = "Station";
+public class Station{
+    public static final String TABLE_NAME = "Station";
     public static final String STATION_NAME = "name";
     public static final String STATION_SOURCE = "source";
     public static final String STATION_IS_PLAY = "isPlay";
     public static final String STATION_ID_KEY = "id_key";
 
-    private boolean isPlay;
-    @PrimaryKey
     private int id_key;
-    @Required
     private String name;
-    @Required
     private String source;
+    private boolean isPlay;
 
     public Station() {
     }
@@ -25,6 +18,13 @@ public class Station extends RealmObject {
     public Station(String name, String source) {
         this.name = name;
         this.source = source;
+    }
+
+    public Station(String name, String source, int isPlay, int id) {
+        this.name = name;
+        this.source = source;
+        this.isPlay = isPlay != 0;
+        this.id_key = id;
     }
 
     public String getName() {

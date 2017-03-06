@@ -8,7 +8,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
-import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
+import com.somenameofpackage.internetradiowithmosby.model.db.sqliteDB.SqliteDBHelper;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.views.ControlView;
@@ -21,7 +21,7 @@ import rx.subjects.BehaviorSubject;
 
 public class ControlPresenter extends MvpBasePresenter<ControlView> {
     @Inject
-    StationsRelamDB dataBase;
+    SqliteDBHelper dataBase;
     private boolean isBind = false;
     private ServiceConnection serviceConnection;
     private BehaviorSubject<String> changePlayStateSubject = BehaviorSubject.create();
@@ -29,7 +29,6 @@ public class ControlPresenter extends MvpBasePresenter<ControlView> {
     public ControlPresenter(Context context) {
         serviceConnection = new RadioServiceConnection();
         RadioApplication.getComponent().injectsControlPresenter(this);
-        dataBase.setDefaultValues(context);
         bindToRadioService(context);
     }
 
@@ -40,8 +39,7 @@ public class ControlPresenter extends MvpBasePresenter<ControlView> {
 
 
     public void changePlayState() {
-        dataBase.getCurrentStation()
-                .subscribe(station -> changePlayStateSubject.onNext(station.getSource()));
+        changePlayStateSubject.onNext(dataBase.getCurrentStation().getSource());
     }
 
     public void onPause(Context context) {

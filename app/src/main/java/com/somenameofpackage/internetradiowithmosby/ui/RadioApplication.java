@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import com.somenameofpackage.internetradiowithmosby.AppComponent;
 import com.somenameofpackage.internetradiowithmosby.DaggerAppComponent;
-import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.RealmModule;
+import com.somenameofpackage.internetradiowithmosby.model.db.sqliteDB.SqliteModule;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 
 public class RadioApplication extends Application {
@@ -14,7 +14,7 @@ public class RadioApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        component = DaggerAppComponent.builder().realmModule(new RealmModule(RadioApplication.this)).build();
+        component = DaggerAppComponent.builder().sqliteModule(new SqliteModule(RadioApplication.this)).build();
         getApplicationContext().startService(new Intent(getApplicationContext(), RadioService.class));
     }
 

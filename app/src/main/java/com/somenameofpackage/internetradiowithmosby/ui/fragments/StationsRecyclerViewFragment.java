@@ -21,6 +21,8 @@ import com.somenameofpackage.internetradiowithmosby.ui.adapters.StationsRecycler
 import com.somenameofpackage.internetradiowithmosby.ui.viewStates.ListStationsViewState;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.OrderedRealmCollection;
@@ -96,14 +98,15 @@ public class StationsRecyclerViewFragment extends MvpViewStateFragment<StationsV
         };
     }
 
+
     @Override
-    public void setListStations(OrderedRealmCollection<Station> data) {
+    public void setListStations(List<Station> data) {
         ((ListStationsViewState) viewState).setData(data);
         setAdapter(data);
     }
 
     @Override
-    public void setAdapter(OrderedRealmCollection<Station> data) {
+    public void setAdapter(List<Station> data) {
         recyclerView.setAdapter(new StationsRecyclerViewAdapter(this, data));
     }
 

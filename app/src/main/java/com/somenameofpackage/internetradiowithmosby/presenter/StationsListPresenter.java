@@ -8,7 +8,7 @@ import android.os.IBinder;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
-import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
+import com.somenameofpackage.internetradiowithmosby.model.db.sqliteDB.SqliteDBHelper;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.views.StationsView;
@@ -19,7 +19,7 @@ import rx.subjects.BehaviorSubject;
 
 public class StationsListPresenter extends MvpBasePresenter<StationsView> {
     @Inject
-    StationsRelamDB dataBase;
+    SqliteDBHelper dataBase;
     private boolean isBind = false;
     private ServiceConnection servCon;
     private BehaviorSubject<String> changePlayStateSubject = BehaviorSubject.create();
@@ -28,15 +28,10 @@ public class StationsListPresenter extends MvpBasePresenter<StationsView> {
         RadioApplication.getComponent().injectsStationsListPresenter(this);
         servCon = new StationsListServiceConnection();
         if (!isBind) context.bindService(new Intent(context, RadioService.class), servCon, Context.BIND_AUTO_CREATE);
-
-        dataBase.setDefaultValues(context);
     }
 
     public void getStations() {
-        dataBase.getStations()
-                .filter(stations -> stations.isLoaded() && stations.isValid())
-                .filter(stations -> getView() != null)
-                .subscribe(stations -> getView().setListStations(stations));
+               getView().setListStations(dataBase.getStations());
     }
 
     public void closeBD() {

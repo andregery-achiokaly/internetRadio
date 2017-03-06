@@ -2,7 +2,7 @@ package com.somenameofpackage.internetradiowithmosby.presenter;
 
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
-import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
+import com.somenameofpackage.internetradiowithmosby.model.db.sqliteDB.SqliteDBHelper;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.views.RadioActivityView;
 
@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 public class RadioActivityPresenter  implements MvpPresenter<RadioActivityView> {
     @Inject
-    StationsRelamDB dataBase;
+    SqliteDBHelper dataBase;
 
     public RadioActivityPresenter() {
         RadioApplication.getComponent().injectsRadioActivityPresenter(this);

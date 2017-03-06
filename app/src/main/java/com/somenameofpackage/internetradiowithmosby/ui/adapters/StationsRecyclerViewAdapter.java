@@ -2,6 +2,8 @@ package com.somenameofpackage.internetradiowithmosby.ui.adapters;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -10,26 +12,32 @@ import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.ui.fragments.StationsRecyclerViewFragment;
 
-import io.realm.OrderedRealmCollection;
-import io.realm.RealmRecyclerViewAdapter;
+import java.util.List;
 
-public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Station, StationsRecyclerViewAdapter.StationViewHolder> {
+public class StationsRecyclerViewAdapter extends RecyclerView.Adapter<StationsRecyclerViewAdapter.StationViewHolder> {
     private StationsRecyclerViewFragment fragment;
+    private List<Station> data;
 
-    public StationsRecyclerViewAdapter(StationsRecyclerViewFragment fragment, OrderedRealmCollection<Station> data) {
-        super(fragment.getContext(), data, true);
+    public StationsRecyclerViewAdapter(StationsRecyclerViewFragment fragment, List<Station> data) {
         this.fragment = fragment;
+        this.data = data;
     }
 
     @Override
-    public StationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.item_station, parent, false);
+    public StationViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_station, viewGroup, false);
+        ;
         return new StationViewHolder(itemView);
     }
 
     @Override
+    public int getItemCount() {
+        return data.size();
+    }
+
+    @Override
     public void onBindViewHolder(StationViewHolder holder, int position) {
-        Station station = getData().get(position);
+        Station station = data.get(position);
 
         holder.stationNameTextView.setText(station.getName());
         holder.stationSourceTextView.setText(station.getSource());
@@ -63,6 +71,7 @@ public class StationsRecyclerViewAdapter extends RealmRecyclerViewAdapter<Statio
 
         @Override
         public void onClick(View v) {
+            Log.v("GGG", station.getId_key()+ " ");
             fragment.getPresenter().stationClick(station);
             notifyDataSetChanged();
         }
