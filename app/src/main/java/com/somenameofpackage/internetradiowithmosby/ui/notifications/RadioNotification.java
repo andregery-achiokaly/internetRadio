@@ -11,7 +11,7 @@ import android.support.v4.app.TaskStackBuilder;
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioActivity;
-import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.RadioStatus;
 
 import static com.somenameofpackage.internetradiowithmosby.model.radio.RadioService.ACTION;
 import static com.somenameofpackage.internetradiowithmosby.model.radio.RadioService.PLAY;
@@ -22,7 +22,7 @@ public class RadioNotification {
     public final static int ID = 123;
 
     public RadioNotification(Context context) {
-        this(context, Status.isStop.toString());
+        this(context, RadioStatus.isStop.toString());
     }
 
     public RadioNotification(Context context, String text) {
@@ -45,11 +45,7 @@ public class RadioNotification {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(RadioActivity.class);
         stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
         notification = mBuilder.build();
     }

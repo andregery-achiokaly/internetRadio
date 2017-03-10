@@ -16,8 +16,6 @@ public class RadioActivityPresenter  implements MvpPresenter<RadioActivityView> 
         RadioApplication.getComponent().injectsRadioActivityPresenter(this);
     }
 
-
-
     public void addStationToBD(String name, String source) {
         dataBase.addStation(new Station(name, source));
     }

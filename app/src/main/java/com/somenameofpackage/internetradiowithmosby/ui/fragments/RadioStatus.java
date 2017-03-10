@@ -1,11 +1,11 @@
 package com.somenameofpackage.internetradiowithmosby.ui.fragments;
 
-public enum Status {
-    isPlay("Stop"), isStop("Play"), Error("Error");
+public enum RadioStatus {
+    isPlay("Stop"), isStop("Play"), Error("Error"), Wait("Wait");
 
     private final String status;
 
-    Status(String s) {
+    RadioStatus(String s) {
         status = s;
     }
 

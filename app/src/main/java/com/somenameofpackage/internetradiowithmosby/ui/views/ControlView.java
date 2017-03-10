@@ -2,8 +2,8 @@ package com.somenameofpackage.internetradiowithmosby.ui.views;
 
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
-import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.RadioStatus;
 
 public interface ControlView extends MvpView{
-    void showStatus(Status status);
+    void showStatus(RadioStatus radioStatus);
 }

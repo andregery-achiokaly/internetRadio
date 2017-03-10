@@ -12,7 +12,7 @@ import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRel
 import com.somenameofpackage.internetradiowithmosby.model.radio.RadioService;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
 import com.somenameofpackage.internetradiowithmosby.ui.views.ControlView;
-import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.RadioStatus;
 
 import javax.inject.Inject;
 
@@ -52,7 +52,7 @@ public class ControlPresenter extends MvpBasePresenter<ControlView> {
     }
 
     private class RadioServiceConnection implements ServiceConnection {
-        Subscriber<Status> statusSubscriber = getStatusSubscriber();
+        Subscriber<RadioStatus> statusSubscriber = getStatusSubscriber();
 
         public void onServiceConnected(ComponentName name, IBinder binder) {
             isBind = true;
@@ -61,15 +61,15 @@ public class ControlPresenter extends MvpBasePresenter<ControlView> {
         }
 
         public void onServiceDisconnected(ComponentName name) {
-            if (getView() != null) getView().showStatus(Status.isStop);
+            if (getView() != null) getView().showStatus(RadioStatus.isStop);
             isBind = false;
             if (!statusSubscriber.isUnsubscribed()) statusSubscriber.unsubscribe();
         }
     }
 
     @NonNull
-    private Subscriber<Status> getStatusSubscriber() {
-        return new Subscriber<Status>() {
+    private Subscriber<RadioStatus> getStatusSubscriber() {
+        return new Subscriber<RadioStatus>() {
             @Override
             public void onCompleted() {
 
@@ -77,12 +77,12 @@ public class ControlPresenter extends MvpBasePresenter<ControlView> {
 
             @Override
             public void onError(Throwable e) {
-                if (getView() != null) getView().showStatus(Status.Error);
+                if (getView() != null) getView().showStatus(RadioStatus.Error);
             }
 
             @Override
-            public void onNext(Status status) {
-                if (getView() != null) getView().showStatus(status);
+            public void onNext(RadioStatus radioStatus) {
+                if (getView() != null) getView().showStatus(radioStatus);
             }
         };
     }

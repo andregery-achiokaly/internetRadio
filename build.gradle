@@ -2,6 +2,7 @@
 buildscript {
     ext {
         realmVersion = '2.3.1'
+        gradleVersion = '2.2.2'
         retroLyambdaVersion = '3.5.0'
     }
 
@@ -10,7 +11,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath "com.android.tools.build:gradle:${gradleVersion}"
         classpath "io.realm:realm-gradle-plugin:${realmVersion}"
         classpath "me.tatarka:gradle-retrolambda:${retroLyambdaVersion}"
     }

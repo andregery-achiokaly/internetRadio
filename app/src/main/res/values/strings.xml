@@ -13,7 +13,7 @@
     <string name="add_radiostation">add station</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="do_you_want_to_delete">Do you want to delete</string>
+    <string name="do_you_want_to_delete">Do you want to delete </string>
     <string name="delete">Delete</string>
     <string name="notification_text">Click here to open radio</string>
     <string name="notification_title">Radio</string>

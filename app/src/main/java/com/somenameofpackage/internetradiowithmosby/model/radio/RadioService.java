@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 
 import com.somenameofpackage.internetradiowithmosby.model.db.realmDB.StationsRelamDB;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioApplication;
-import com.somenameofpackage.internetradiowithmosby.ui.fragments.Status;
+import com.somenameofpackage.internetradiowithmosby.ui.fragments.RadioStatus;
 import com.somenameofpackage.internetradiowithmosby.ui.notifications.RadioNotification;
 
 import javax.inject.Inject;
@@ -25,7 +25,7 @@ public class RadioService extends Service {
     final static public String PLAY = "PLAY";
     private Notification notification;
     private BehaviorSubject<String> changePlayStateSubject = BehaviorSubject.create();
-    private Subscriber<Status> radioStatusSubscriber = getRadioModelObserver();
+    private Subscriber<RadioStatus> radioStatusSubscriber = getRadioModelObserver();
 
     @Inject
     Radio radio;
@@ -65,7 +65,7 @@ public class RadioService extends Service {
     }
 
     public class RadioBinder extends Binder {
-        public void subscribeStatus(Subscriber<Status> subscriber) {
+        public void subscribeStatus(Subscriber<RadioStatus> subscriber) {
             radio.getRadioModelStatusObservable().subscribe(subscriber);
         }
 
@@ -85,8 +85,8 @@ public class RadioService extends Service {
         radio.closeMediaPlayer();
     }
 
-    private Subscriber<Status> getRadioModelObserver() {
-        return new Subscriber<Status>() {
+    private Subscriber<RadioStatus> getRadioModelObserver() {
+        return new Subscriber<RadioStatus>() {
             @Override
             public void onCompleted() {
 
@@ -94,7 +94,7 @@ public class RadioService extends Service {
 
             @Override
             public void onError(Throwable e) {
-                notification = new RadioNotification(getBaseContext(), Status.Error.toString())
+                notification = new RadioNotification(getBaseContext(), RadioStatus.Error.toString())
                         .getNotification();
                 NotificationManager mNotificationManager = (NotificationManager) getBaseContext()
                         .getSystemService(Context.NOTIFICATION_SERVICE);
@@ -102,8 +102,8 @@ public class RadioService extends Service {
             }
 
             @Override
-            public void onNext(Status status) {
-                notification = new RadioNotification(getBaseContext(), status.toString())
+            public void onNext(RadioStatus radioStatus) {
+                notification = new RadioNotification(getBaseContext(), radioStatus.toString())
                         .getNotification();
                 NotificationManager mNotificationManager = (NotificationManager) getBaseContext()
                         .getSystemService(Context.NOTIFICATION_SERVICE);
