@@ -4,9 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.somenameofpackage.internetradiowithmosby.AppComponent;
 import com.somenameofpackage.internetradiowithmosby.model.ApplicationComponentTest;
-import com.somenameofpackage.internetradiowithmosby.model.RepositoryModuleTest;
 
 import org.junit.runner.RunWith;
 
@@ -24,13 +22,13 @@ public class RadioApplicationTest extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        DaggerRadioApplicationTest.builder()
-                .repositoryModuleTest(
-                        new RepositoryModuleTest(new RadioApplicationTest().getApplication(),
-                                true,
-                                true,
-                                true,
-                                true)).build();
+//        DaggerRadioApplicationTest.builder()
+//                .repositoryModuleTest(
+//                        new RepositoryModuleTest(new RadioApplicationTest().getApplication(),
+//                                true,
+//                                true,
+//                                true,
+//                                true)).build();
     }
 
     public static ApplicationComponentTest getComponent() {

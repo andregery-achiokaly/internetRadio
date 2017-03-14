@@ -4,14 +4,11 @@ import android.support.test.rule.ActivityTestRule;
 
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioActivity;
-import com.somenameofpackage.internetradiowithmosby.ui.RadioApplicationTest;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import javax.inject.Inject;
 
 import io.realm.RealmResults;
 import rx.Subscriber;
@@ -20,14 +17,12 @@ public class StationsRelamDBTest {
     @Rule
     public ActivityTestRule<RadioActivity> activityTestRule = new ActivityTestRule<>(RadioActivity.class);
 
-    @Inject
     StationsRelamDB stationsRelamDB;
 
     @Before
     public void setUp() throws Exception {
-        RadioApplicationTest.getComponent().injectRelamDBTest(this);
+         stationsRelamDB = new StationsRelamDB();
     }
-
 
     @Test
     public void setDefaultValues() throws Throwable {
