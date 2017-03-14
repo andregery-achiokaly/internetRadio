@@ -55,7 +55,7 @@ public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter>
     @Override
     public void onResume() {
         super.onResume();
-        presenter.checkCanShow();
+        presenter.checkCanShow(getActivity().getApplicationContext());
     }
 
     @Override
@@ -74,9 +74,9 @@ public class AudioWaveFragment extends MvpFragment<WaveView, AudioWavePresenter>
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == WAVE_VIEW_RECORD_AUDIO_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                presenter.checkCanShow(true);
+                presenter.checkCanShow(getActivity().getApplicationContext());
             } else {
-                presenter.checkCanShow(false);
+                presenter.checkCanShow(getActivity().getApplicationContext());
             }
         }
     }

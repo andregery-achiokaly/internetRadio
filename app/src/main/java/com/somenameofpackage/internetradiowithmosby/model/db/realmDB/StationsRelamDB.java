@@ -2,6 +2,7 @@ package com.somenameofpackage.internetradiowithmosby.model.db.realmDB;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.somenameofpackage.internetradiowithmosby.R;
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
@@ -79,7 +80,7 @@ public class StationsRelamDB {
             int newID = 0;
             Number number = realm1.where(Station.class).max(Station.STATION_ID_KEY);
             if (number != null) newID = number.intValue();
-
+            Log.v("GGG", "TTTT");
             station.setId_key(newID + 1);
             station.setName(stationName);
             station.setSource(stationSource);

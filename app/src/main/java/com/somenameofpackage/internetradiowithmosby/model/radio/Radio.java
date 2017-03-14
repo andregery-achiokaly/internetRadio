@@ -14,6 +14,7 @@ import rx.subjects.ReplaySubject;
 import rx.subjects.Subject;
 
 public class Radio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+    //TODO: add working with AudioManager
     private MediaPlayer mediaPlayer;
     private String currentSource = "";
     private PublishSubject<RadioStatus> statusObserver = PublishSubject.create();

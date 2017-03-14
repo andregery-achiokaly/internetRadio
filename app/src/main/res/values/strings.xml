@@ -18,7 +18,8 @@
     <string name="notification_text">Click here to open radio</string>
     <string name="notification_title">Radio</string>
     <string name="delete_dialog_start_message">Station:</string>
-    <string name="delete_dialog_end_message">was removed!</string>
+    <string name="delete_dialog_end_message"> was removed!</string>
     <string name="play_button">Play button</string>
     <string name="add_station_dialog_title">Add station</string>
+    <string name="text_add_station_button">add</string>
 </resources>

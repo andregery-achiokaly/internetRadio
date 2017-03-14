@@ -60,7 +60,7 @@ public class ControlFragment extends MvpViewStateFragment<ControlView, ControlPr
     @Override
     public void showStatus(RadioStatus radioStatus) {
         ControlViewState controlViewState = (ControlViewState) viewState;
-        controlViewState.setRadioStatus(radioStatus);
+        if (controlViewState != null) controlViewState.setRadioStatus(radioStatus);
         switch (radioStatus) {
             case isPlay:
                 playButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.mipmap.ic_pause_black_24dp));
