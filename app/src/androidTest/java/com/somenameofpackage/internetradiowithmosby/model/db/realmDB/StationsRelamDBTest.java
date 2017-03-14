@@ -4,6 +4,7 @@ import android.support.test.rule.ActivityTestRule;
 
 import com.somenameofpackage.internetradiowithmosby.model.db.Station;
 import com.somenameofpackage.internetradiowithmosby.ui.RadioActivity;
+import com.somenameofpackage.internetradiowithmosby.ui.RadioApplicationTest;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,13 +25,7 @@ public class StationsRelamDBTest {
 
     @Before
     public void setUp() throws Exception {
-//        DaggerStationsRelamDBTest.builder()
-//                .repositoryModuleTest(
-//                        new RepositoryModuleTest(new RadioApplicationTest().getApplication(),
-//                                true,
-//                                true,
-//                                true,
-//                                true)).build();
+        RadioApplicationTest.getComponent().injectRelamDBTest(this);
     }
 
 
