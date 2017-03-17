@@ -24,7 +24,7 @@ public class RadioService extends Service {
     final static public String ACTION = "ACTION";
     final static public String PLAY = "PLAY";
     private Notification notification;
-    private BehaviorSubject<String> changePlayStateSubject = BehaviorSubject.create();
+    private BehaviorSubject<String> changePlaySubject = BehaviorSubject.create();
     private Subscriber<RadioStatus> radioStatusSubscriber = getRadioModelObserver();
 
     @Inject
@@ -40,7 +40,7 @@ public class RadioService extends Service {
         notification = new RadioNotification(getBaseContext()).getNotification();
 
         radio.getRadioModelStatusObservable().subscribe(radioStatusSubscriber);
-        radio.setChangePlaySubject(changePlayStateSubject);
+        radio.setChangePlaySubject(changePlaySubject);
 
         startForeground(RadioNotification.ID, notification);
     }
@@ -52,7 +52,7 @@ public class RadioService extends Service {
             String action = intent.getStringExtra(ACTION);
             if (action != null && action.equals(PLAY)) {
                 dataBase.getCurrentStation()
-                        .subscribe(station -> changePlayStateSubject.onNext(station.getSource()));
+                        .subscribe(station -> changePlaySubject.onNext(station.getSource()));
             }
         }
         return Service.START_STICKY;
@@ -65,16 +65,16 @@ public class RadioService extends Service {
     }
 
     public class RadioBinder extends Binder {
-        public void subscribeStatus(Subscriber<RadioStatus> subscriber) {
-            radio.getRadioModelStatusObservable().subscribe(subscriber);
+        public void subscribeStatus(Subscriber<RadioStatus> radioModelStatusSubscriber) {
+            radio.getRadioModelStatusObservable().subscribe(radioModelStatusSubscriber);
         }
 
-        public void subscribePlayerId(Subscriber<Integer> subscriber) {
-            radio.getRadioIdObservable().subscribe(subscriber);
+        public void subscribePlayerId(Subscriber<Integer> radioIdSubscriber) {
+            radio.getRadioIdObservable().subscribe(radioIdSubscriber);
         }
 
-        public void setChangeStateObservable(Subject<String, String> changeStateSubject) {
-            radio.setChangePlaySubject(changeStateSubject);
+        public void setChangeStateObservable(Subject<String, String> changePlaySubject) {
+            radio.setChangePlaySubject(changePlaySubject);
         }
     }
 
